@@ -1,5 +1,5 @@
 """
-Module Docstring
+Main Application File
 """
 from flask import Flask
 from flask_cors import CORS
