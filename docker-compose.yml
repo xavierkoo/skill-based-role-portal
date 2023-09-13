@@ -10,7 +10,8 @@ services:
         ports:
             - "8080:8080"
         depends_on:
-            - eduhub_db
+            eduhub_db:
+                condition: service_healthy
         networks:
             - eduhub_network
 
@@ -23,50 +24,55 @@ services:
         ports:
             - "5101:5101"
         depends_on:
-            - eduhub_db
+            eduhub_db:
+                condition: service_healthy
         networks:
             - eduhub_network
 
-# The `eduhub_db` section in the Docker Compose file is defining a service for a PostgreSQL database container.
+# The `eduhub_db` section in the Docker Compose file is defining a service for a MySQL database container.
     eduhub_db:
-        container_name: eduhub_db_postgres
-        image: postgres:14.2-alpine
+        container_name: eduhub_db_mysql
+        image: mysql:8.0
         restart: always
         ports:
-            - "5100:5432"
+            - "5100:3306"
         networks:
             - eduhub_network
         environment:
-            POSTGRES_DB: ${POSTGRES_DB}
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         volumes:
             - ./data:/docker-entrypoint-initdb.d
-            - postgres_data:/var/lib/postgresql/data
+            - mysql-data:/var/lib/mysql
         healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U admin -d ${POSTGRES_DB}"]
+            test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "-ppass"]
             interval: 5s
             timeout: 5s
-            retries: 5
+            retries: 20
 
-# The `pgadmin` section in the Docker Compose file is defining a service for a PgAdmin container.
-    pgadmin:
-        container_name: pgadmin
-        image: dpage/pgadmin4
+# The `phpmyadmin` section in the Docker Compose file is defining a service for a phpMyAdmin container.
+    phpmyadmin:
+        container_name: phpmyadmin
+        image: phpmyadmin
         restart: always
         ports:
             - "8081:80"
         networks:
             - eduhub_network
         environment:
-            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+            PMA_ARBITRARY: 1
+            PMA_HOST: ${PHPADMIN_HOST}
+            PMA_USER: ${PHPADMIN_USER}
+            PMA_PASSWORD: ${PHPADMIN_PASSWORD}
         depends_on:
-            - eduhub_db
+            eduhub_db:
+                condition: service_healthy
 
 # The `volumes` section in the Docker Compose file is defining a named volume called `postgres_data`.
 volumes:
-    postgres_data:
+    mysql-data:
 
 # The `networks` section in the Docker Compose file is defining a network called `eduhub_network` with the driver set to `bridge`.
 networks:
