@@ -41,7 +41,7 @@ jobs:
       run: pip install -r server/requirements.txt
 
     - name: Run Backend Tests
-      run: pytest server
+      run: pytest
 
     - name: Lint Python Code
       run: pylint server
