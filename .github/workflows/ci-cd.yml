@@ -1,0 +1,65 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install Vue Dependencies
+      run: npm ci --prefix client
+
+    - name: Run Vue Tests
+      run: npm run test --prefix client
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install Python Dependencies
+      run: pip install -r server/requirements.txt
+
+    - name: Run Backend Tests
+      run: pytest server
+
+    - name: Lint Python Code
+      run: pylint server
+
+    - name: Lint Vue Code
+      run: npm run lint --prefix client
+
+    # TODO: setup cypress tests
+    # - name: Set up Cypress
+    #   run: npm install cypress --prefix client
+
+    # - name: Run Cypress Tests
+    #   run: npm run test:e2e --prefix client
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Build and Run Docker Containers
+      run: |
+        docker-compose build
+        docker-compose up -d
+
+    - name: Deploy
+      run: |
+        # Add your deployment steps here
