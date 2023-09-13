@@ -1,0 +1,74 @@
+version: "3.8"
+
+services:
+# This section of the Docker Compose file is defining a service called `client_frontend`.
+    client_frontend:
+        container_name: eduhub_frontend_vue
+        build:
+            context: ./client
+            dockerfile: client.Dockerfile
+        ports:
+            - "8080:8080"
+        depends_on:
+            - eduhub_db
+        networks:
+            - eduhub_network
+
+# The `server_backend` section in the Docker Compose file is defining a service called `server_backend`.
+    server_backend:
+        container_name: eduhub_backend_flask
+        build:
+            context: ./server
+            dockerfile: server.Dockerfile
+        ports:
+            - "5101:5101"
+        depends_on:
+            - eduhub_db
+        networks:
+            - eduhub_network
+
+# The `eduhub_db` section in the Docker Compose file is defining a service for a PostgreSQL database container.
+    eduhub_db:
+        container_name: eduhub_db_postgres
+        image: postgres:14.2-alpine
+        restart: always
+        ports:
+            - "5100:5432"
+        networks:
+            - eduhub_network
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        volumes:
+            - ./data:/docker-entrypoint-initdb.d
+            - postgres_data:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U admin -d ${POSTGRES_DB}"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+# The `pgadmin` section in the Docker Compose file is defining a service for a PgAdmin container.
+    pgadmin:
+        container_name: pgadmin
+        image: dpage/pgadmin4
+        restart: always
+        ports:
+            - "8081:80"
+        networks:
+            - eduhub_network
+        environment:
+            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+        depends_on:
+            - eduhub_db
+
+# The `volumes` section in the Docker Compose file is defining a named volume called `postgres_data`.
+volumes:
+    postgres_data:
+
+# The `networks` section in the Docker Compose file is defining a network called `eduhub_network` with the driver set to `bridge`.
+networks:
+    eduhub_network:
+        driver: bridge
