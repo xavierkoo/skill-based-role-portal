@@ -9,15 +9,6 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
-    env:
-      MYSQL_ROOT_PASSWORD="root"
-      MYSQL_DATABASE="eduhub_db_mysql"
-      MYSQL_USER="eduhub_user"
-      MYSQL_PASSWORD="eduhub_password"
-      PHPADMIN_HOST="eduhub_db_mysql"
-      PHPADMIN_USER="eduhub_user"
-      PHPADMIN_PASSWORD="eduhub_password"
-
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
