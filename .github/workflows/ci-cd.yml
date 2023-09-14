@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - name: 'Create env file'
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+  
       - name: Checkout Repository
         uses: actions/checkout@v2
   
@@ -59,14 +63,7 @@ jobs:
     - name: Build and Run Docker Containers
       run: |
         docker-compose build
-        docker-compose --env MYSQL_ROOT_PASSWORD=root \
-                       --env MYSQL_DATABASE=eduhub_db_mysql \
-                       --env MYSQL_USER=eduhub_user \
-                       --env MYSQL_PASSWORD=eduhub_password \
-                       --env PHPADMIN_HOST=eduhub_db_mysql \
-                       --env PHPADMIN_USER=eduhub_user \
-                       --env PHPADMIN_PASSWORD=eduhub_password \
-                       up -d
+        docker-compose up -d
 
     - name: Deploy
       run: |
