@@ -12,53 +12,52 @@ jobs:
     steps:
       - name: Set up environment variables
         run: |
-          echo "MYSQL_ROOT_PASSWORD=root" >> $GITHUB_ENV
-          echo "MYSQL_DATABASE=eduhub_db_mysql" >> $GITHUB_ENV
-          echo "MYSQL_USER=eduhub_user" >> $GITHUB_ENV
-          echo "MYSQL_PASSWORD=eduhub_password" >> $GITHUB_ENV
-          echo "PHPADMIN_HOST=eduhub_db_mysql" >> $GITHUB_ENV
-          echo "PHPADMIN_USER=eduhub_user" >> $GITHUB_ENV
-          echo "PHPADMIN_PASSWORD=eduhub_password" >> $GITHUB_ENV
+          echo "::set-env name=MYSQL_ROOT_PASSWORD::root"
+          echo "::set-env name=MYSQL_DATABASE::eduhub_db_mysql"
+          echo "::set-env name=MYSQL_USER::eduhub_user"
+          echo "::set-env name=MYSQL_PASSWORD::eduhub_password"
+          echo "::set-env name=PHPADMIN_HOST::eduhub_db_mysql"
+          echo "::set-env name=PHPADMIN_USER::eduhub_user"
+          echo "::set-env name=PHPADMIN_PASSWORD::eduhub_password"
 
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+  
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.x'
+  
+      - name: Install Vue Dependencies
+        run: npm ci --prefix client
+  
+      - name: Run Vitest
+        run: npm run test:unit --prefix client
+  
+      # TODO: setup cypress tests
+      # - name: Set up Cypress
+      #   run: npm install cypress --prefix client
+  
+      # - name: Run Cypress Tests
+      #   run: npm run test:e2e --prefix client
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '18.x'
 
-    - name: Install Vue Dependencies
-      run: npm ci --prefix client
-
-    - name: Run Vitest
-      run: npm run test:unit --prefix client
-
-    # TODO: setup cypress tests
-    # - name: Set up Cypress
-    #   run: npm install cypress --prefix client
-
-    # - name: Run Cypress Tests
-    #   run: npm run test:e2e --prefix client
-
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-
-    - name: Install Python Dependencies
-      run: pip install -r server/requirements.txt
-
-    - name: Run Backend Tests
-      run: pytest
-
-    - name: Lint Python Code
-      run: pylint server
-
-    - name: Lint Vue Code
-      run: npm run lint --prefix client
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+  
+      - name: Install Python Dependencies
+        run: pip install -r server/requirements.txt
+  
+      - name: Run Backend Tests
+        run: pytest
+  
+      - name: Lint Python Code
+        run: pylint server
+  
+      - name: Lint Vue Code
+        run: npm run lint --prefix client
     
   deploy:
     runs-on: ubuntu-latest
