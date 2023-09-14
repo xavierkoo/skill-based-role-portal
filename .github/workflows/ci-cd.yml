@@ -9,17 +9,16 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Set up environment variables
-        run: |
-          echo "::set-env name=MYSQL_ROOT_PASSWORD::root"
-          echo "::set-env name=MYSQL_DATABASE::eduhub_db_mysql"
-          echo "::set-env name=MYSQL_USER::eduhub_user"
-          echo "::set-env name=MYSQL_PASSWORD::eduhub_password"
-          echo "::set-env name=PHPADMIN_HOST::eduhub_db_mysql"
-          echo "::set-env name=PHPADMIN_USER::eduhub_user"
-          echo "::set-env name=PHPADMIN_PASSWORD::eduhub_password"
+    env:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: eduhub_db_mysql
+      MYSQL_USER: eduhub_user
+      MYSQL_PASSWORD: eduhub_password
+      PHPADMIN_HOST: eduhub_db_mysql
+      PHPADMIN_USER: eduhub_user
+      PHPADMIN_PASSWORD: eduhub_password
 
+    steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
   
