@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-      MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-      MYSQL_USER: ${{ secrets.MYSQL_USER }}
-      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-      PHPADMIN_HOST: ${{ secrets.PHPADMIN_HOST }}
-      PHPADMIN_USER: ${{ secrets.PHPADMIN_USER }}
-      PHPADMIN_PASSWORD: ${{ secrets.PHPADMIN_PASSWORD }}
+      MYSQL_ROOT_PASSWORD="root"
+      MYSQL_DATABASE="eduhub_db_mysql"
+      MYSQL_USER="eduhub_user"
+      MYSQL_PASSWORD="eduhub_password"
+      PHPADMIN_HOST="eduhub_db_mysql"
+      PHPADMIN_USER="eduhub_user"
+      PHPADMIN_PASSWORD="eduhub_password"
 
     steps:
     - name: Checkout Repository
