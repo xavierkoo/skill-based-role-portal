@@ -7,7 +7,18 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: CI/CD Pipeline
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up environment variables
+        run: |
+          echo "MYSQL_ROOT_PASSWORD=root" >> $GITHUB_ENV
+          echo "MYSQL_DATABASE=eduhub_db_mysql" >> $GITHUB_ENV
+          echo "MYSQL_USER=eduhub_user" >> $GITHUB_ENV
+          echo "MYSQL_PASSWORD=eduhub_password" >> $GITHUB_ENV
+          echo "PHPADMIN_HOST=eduhub_db_mysql" >> $GITHUB_ENV
+          echo "PHPADMIN_USER=eduhub_user" >> $GITHUB_ENV
+          echo "PHPADMIN_PASSWORD=eduhub_password" >> $GITHUB_ENV
 
     steps:
     - name: Checkout Repository
