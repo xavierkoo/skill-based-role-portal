@@ -1,53 +1,53 @@
 name: CI/CD Pipeline
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
+    
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+  
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.x'
+  
+      - name: Install Vue Dependencies
+        run: npm ci --prefix client
+  
+      - name: Run Vitest
+        run: npm run test:unit --prefix client
+  
+      # TODO: setup cypress tests
+      # - name: Set up Cypress
+      #   run: npm install cypress --prefix client
+  
+      # - name: Run Cypress Tests
+      #   run: npm run test:e2e --prefix client
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '18.x'
 
-    - name: Install Vue Dependencies
-      run: npm ci --prefix client
-
-    - name: Run Vitest
-      run: npm run test:unit --prefix client
-
-    # TODO: setup cypress tests
-    # - name: Set up Cypress
-    #   run: npm install cypress --prefix client
-
-    # - name: Run Cypress Tests
-    #   run: npm run test:e2e --prefix client
-
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-
-    - name: Install Python Dependencies
-      run: pip install -r server/requirements.txt
-
-    - name: Run Backend Tests
-      run: pytest
-
-    - name: Lint Python Code
-      run: pylint server
-
-    - name: Lint Vue Code
-      run: npm run lint --prefix client
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+  
+      - name: Install Python Dependencies
+        run: pip install -r server/requirements.txt
+  
+      - name: Run Backend Tests
+        run: pytest
+  
+      - name: Lint Python Code
+        run: pylint server
+  
+      - name: Lint Vue Code
+        run: npm run lint --prefix client
     
   deploy:
     runs-on: ubuntu-latest

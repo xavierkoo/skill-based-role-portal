@@ -70,7 +70,7 @@ services:
             eduhub_db:
                 condition: service_healthy
 
-# The `volumes` section in the Docker Compose file is defining a named volume called `postgres_data`.
+# The `volumes` section in the Docker Compose file is defining a named volume called `mysql_data`.
 volumes:
     mysql-data:
 
