@@ -1,7 +1,7 @@
 name: CI/CD Pipeline
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
@@ -10,17 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Create .env file
-        uses: SpicyPizza/create-envfile@v2.0.2
-        with:
-          envkey_MYSQL_ROOT_PASSWORD: root
-          envkey_MYSQL_DATABASE: eduhub_db_mysql
-          envkey_MYSQL_USER: eduhub_user
-          envkey_MYSQL_PASSWORD: eduhub_password
-          envkey_PHPADMIN_HOST: eduhub_db_mysql
-          envkey_PHPADMIN_USER: eduhub_user
-          envkey_PHPADMIN_PASSWORD: eduhub_password
-  
       - name: Checkout Repository
         uses: actions/checkout@v2
   
