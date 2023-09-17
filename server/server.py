@@ -4,15 +4,17 @@ Main Application File
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import mysql.connector
-import datetime, json
 
 
 app = Flask(__name__)
 CORS(app)
 
 
-##Get Connection
 def get_db_connection():
+    """
+    The function `get_db_connection` returns a connection object to a MySQL database.
+    :return: a connection object to a MySQL database.
+    """
     return mysql.connector.connect(
         user="eduhub_user",
         host="eduhub_db_mysql",
@@ -23,10 +25,10 @@ def get_db_connection():
 
 
 # Create rolelisting variable to be added infront of the app.route
-rolelisting = "/rolelistings"
+ROLELISTING = "/rolelistings"
 
 # Create version variable to be added infront of the app.route
-v1 = "/v1"
+V1 = "/v1"
 
 
 @app.route("/")
@@ -38,8 +40,16 @@ def hello():
 
 
 # Role Listings
-@app.route(f"{v1}{rolelisting}/create", methods=["POST"])
+@app.route(f"{V1}{ROLELISTING}/create", methods=["POST"])
 def create_role():
+    """
+    The function `create_role()` creates a new role listing record in a database based on the input data
+    provided in JSON format.
+    :return: a JSON response. If the request is in JSON format and the data passes validation, it
+    returns a JSON response with code 201 and message "Created Role". If there is an exception or the
+    request is not in JSON format, it returns a JSON response with code 400 and an appropriate error
+    message.
+    """
     if request.is_json:
         print("\nReceived data in JSON format")
         try:
@@ -74,7 +84,7 @@ def create_role():
                 err_msg.append("Input Correct Date")
             if not isinstance(role_listing_close, str):
                 err_msg.append("Input Correct Date")
-            if err_msg != []:
+            if err_msg:
                 return print(err_msg[0])
             else:
                 print("\n Clear Validation")
@@ -100,14 +110,16 @@ def create_role():
                     conn.commit()
                     # Return json code 201 for created
                     return jsonify({"code": 201, "message": "Created Role"})
-                except Exception as e:
+                except Exception as err:  # pylint: disable=broad-except
                     # Return json code 400 for bad request
-                    return jsonify({"code": 400, "message": "Bad Request"})
+                    return jsonify(
+                        {"code": 400, "message": "Bad Request", "error": err}
+                    )
                 finally:
                     conn.close()
-        except Exception as e:
+        except Exception as err:  # pylint: disable=broad-except
             # Return json code 400 for bad request
-            return jsonify({"code": 400, "message": err_msg})
+            return jsonify({"code": 400, "message": err_msg, "error": err})
 
     else:
         return jsonify({"code": 400, "message": "Request not in JSON format"})
