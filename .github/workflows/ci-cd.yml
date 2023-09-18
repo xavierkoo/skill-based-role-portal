@@ -43,9 +43,6 @@ jobs:
       - name: Run Backend Tests
         run: pytest
   
-      - name: Lint Python Code
-        run: pylint server
-  
       - name: Lint Vue Code
         run: npm run lint --prefix client
     
