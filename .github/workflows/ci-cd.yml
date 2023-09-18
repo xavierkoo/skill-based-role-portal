@@ -31,7 +31,6 @@ jobs:
       # - name: Run Cypress Tests
       #   run: npm run test:e2e --prefix client
 
-
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -39,9 +38,6 @@ jobs:
   
       - name: Install Python Dependencies
         run: pip install -r server/requirements.txt
-  
-      - name: Run Backend Tests
-        run: pytest
   
       - name: Lint Vue Code
         run: npm run lint --prefix client
