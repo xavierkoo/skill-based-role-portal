@@ -1,0 +1,87 @@
+@import './variable';
+
+@font-face {
+    font-family: $baseFont;
+    src: url("./fonts/Gotham\ Book.otf") format("opentype");
+}
+
+html {
+    font-size: $font-base-rem;
+}
+
+body {
+    font-family: $baseFont;
+    font-weight: $font-base-weight;
+    font-size: $font-size-base;
+    color: $dark;
+}
+.description{
+    font-family: $baseFont;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: $baseFont;
+    font-weight: $font-header-weight;
+    line-height: $font-variable-line-height;
+    overflow-wrap: break-word;
+}
+
+h1 {
+    font-size: $font-size-h1;
+}
+
+h2 {
+    font-size: $font-size-h2;
+}
+
+h3 {
+    font-size: $font-size-h3;
+}
+
+p {
+    font-size: $font-size-base;
+}
+
+.defaultBtn{
+    border-radius: 16px;
+    padding:8px 16px;
+    background-color: rgb(35, 78, 170);
+    color:white;
+    &:hover {
+		background-color: $hoverColor;
+		color: #ffffff;
+	}
+}
+
+.roleDetails{
+    @media (min-width: 320px) {
+		font-size: calc(0.7em + 0.5vw);
+        .details{
+            display: block;
+            justify-content: start;
+        }
+	}
+    @media (min-width: 400px) {
+        .details{
+            display: flex;
+            justify-content:space-between;
+        }
+    }
+	@media (min-width: 766px) {
+		font-size: calc(0.7em + 0.5vw);
+        width: 75%;
+        .details{
+            display: flex;
+            justify-content:space-between;
+        }
+	}
+	@media (min-width: 2040px) {
+		font-size: calc(0.5em + 0.5vw);
+        width: 75%;
+	}
+}
