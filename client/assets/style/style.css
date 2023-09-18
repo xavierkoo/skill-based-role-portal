@@ -74,7 +74,7 @@ p {
 @media (min-width: 766px) {
   .roleDetails {
     font-size: calc(0.7em + 0.5vw);
-    width: 50%;
+    width: 75%;
   }
   .roleDetails .details {
     display: flex;
@@ -84,6 +84,6 @@ p {
 @media (min-width: 2040px) {
   .roleDetails {
     font-size: calc(0.5em + 0.5vw);
-    width: 50%;
+    width: 75%;
   }
 }

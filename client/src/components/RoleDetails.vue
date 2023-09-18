@@ -6,22 +6,12 @@ const { roleDetails } = defineProps({
     required: true,
     default: () => ({
       role_name: 'TBC',
-      role_description: 'No description available',
+      role_listing_desc: 'No description available',
       role_listing_open: 'TBC',
       role_listing_close: 'TBC',
       role_skills: ['TBC'],
-      creator: {
-        role_listing_creator: 'TBC',
-        fname: 'TBC',
-        email: 'TBC',
-        dept: 'TBC'
-      },
-      updater: {
-        role_listing_updater: 'TBC',
-        fname: 'TBC',
-        email: 'TBC',
-        dept: 'TBC'
-      }
+      role_listing_creator: ['TBC', 'TBC'],
+      role_listing_updater: ['TBC', 'TBC']
     })
   }
 })
@@ -57,13 +47,15 @@ onMounted(() => {
       <div>
         <span class="fw-bold isPosted"
           >{{
-            roleDetails.updater.fname == 'TBC' || user == 'Staff' ? 'Posted By: ' : 'Updated By: '
+            roleDetails.role_listing_updater[0] == 'TBC' || user == 'Staff'
+              ? 'Posted By: '
+              : 'Updated By: '
           }}
         </span>
         <a class="f-underline check isCreated">{{
-          roleDetails.updater.fname == 'TBC' || user == 'Staff'
-            ? roleDetails.creator.fname
-            : roleDetails.updater.fname
+          roleDetails.role_listing_updater.fname == 'TBC' || user == 'Staff'
+            ? roleDetails.role_listing_creator[0]
+            : roleDetails.role_listing_updater[0]
         }}</a>
       </div>
     </div>
@@ -148,7 +140,7 @@ onMounted(() => {
     <h2>About the job</h2>
     <h5 class="my-3">Responsibilities</h5>
     <div class="description">
-      {{ roleDetails.role_description }}
+      {{ roleDetails.role_listing_desc }}
     </div>
   </div>
 </template>
