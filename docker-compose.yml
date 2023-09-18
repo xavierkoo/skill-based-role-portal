@@ -22,8 +22,8 @@ services:
             context: ./server
             dockerfile: server.Dockerfile
         command: sh -c "uvicorn main:app --reload --port=5101 --host=0.0.0.0"
-        volumes:
-            - ./server:/app
+        # volumes:
+        #     - ./server:/app
         ports:
             - "5101:5101"
         depends_on:
