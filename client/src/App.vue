@@ -5,11 +5,11 @@ import RoleDetails from './components/RoleDetails.vue'
 
 <template>
   <header>
-    <div class="wrapper">
-      <nav>
+    <div class="wrapper d-flex justify-content-center w-100">
+      <!-- <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
-      </nav>
+      </nav> -->
       <RoleDetails />
     </div>
   </header>

@@ -5,29 +5,6 @@ const { roleDetails } = defineProps({
     type: Object,
     required: true,
     default: () => ({
-      // role_name: 'Head, Talent Attraction',
-      // role_description:
-      //   "The Head, Talent Attraction is responsible for strategic workforce planning to support the organisation's growth strategies through establishing talent sourcing strategies, determining the philosophy for the selection and securing of candidates and overseeing the onboarding and integration of new hires into the organisation. He/She develops various approaches to meet workforce requirements and designs employer branding strategies. He oversees the selection processes and collaborates with business stakeholders for the hiring of key leadership roles. As a department head, he is responsible for setting the direction and articulating goals and objectives for the team, and driving the integration of Skills Frameworks across the organisation's talent attraction plans.The Head, Talent Attraction is an influential and inspiring leader who adopts a broad perspective in the decisions he makes. He is articulate and displays a genuine passion for motivating and developing his team.",
-      // role_listing_open: '10/11/2023',
-      // role_listing_close: '24/11/2023',
-      // role_skills: [
-      //   'Pascal Programming',
-      //   'Python Programming',
-      //   'Certified Scrum Master',
-      //   'Product Owner'
-      // ],
-      // creator: {
-      //   role_listing_creator: 123456788,
-      //   fname: 'Vincent Rex',
-      //   email: 'colins_vincent_rex@all-in-one.com.sg',
-      //   dept: 'HUMAN RESOURCE AND ADMIN'
-      // },
-      // updater: {
-      //   role_listing_updater: 123456788,
-      //   fname: 'Vincent Rex',
-      //   email: 'colins_vincent_rex@all-in-one.com.sg',
-      //   dept: 'HUMAN RESOURCE AND ADMIN'
-      // }
       role_name: 'TBC',
       role_description: 'No description available',
       role_listing_open: 'TBC',
@@ -169,7 +146,7 @@ onMounted(() => {
       <span class="artdeco-button__text"> Update </span>
     </button>
     <h2>About the job</h2>
-    <h6 class="my-3">Responsibilities</h6>
+    <h5 class="my-3">Responsibilities</h5>
     <div class="description">
       {{ roleDetails.role_description }}
     </div>
