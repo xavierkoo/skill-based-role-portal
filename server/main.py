@@ -79,6 +79,14 @@ async def get_role_listings(db: db_dependancy):
             .first()
         )
 
+        # get role name from roleDetails
+        role_name = (
+            db.query(models.RoleDetail)
+            .filter(models.RoleDetail.role_id == role.role_id)
+            .first()
+        )
+
+        role.role_name = role_name.role_name
         role.role_listing_updater = [updater.f_name, updater.email]
         role.role_listing_creator = [creator.f_name, creator.email]
         role.role_skills = role_skill_list
