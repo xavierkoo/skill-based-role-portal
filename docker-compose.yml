@@ -76,8 +76,8 @@ services:
         environment:
             PMA_ARBITRARY: 1
             PMA_HOST: ${PHPADMIN_HOST}
-            PMA_USER: ${PHPADMIN_USER}
-            PMA_PASSWORD: ${PHPADMIN_PASSWORD}
+            PMA_USER: root
+            PMA_PASSWORD: root
         depends_on:
             eduhub_db:
                 condition: service_healthy

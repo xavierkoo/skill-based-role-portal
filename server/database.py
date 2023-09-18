@@ -3,6 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import pymysql
 import models
+from seed import seed_db
 
 
 db_config = {
@@ -49,5 +50,7 @@ def initDB():
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
     models.Base.metadata.create_all(bind=engine)
+    session = SessionLocal()
+    seed_db(session)
 
     return engine, SessionLocal

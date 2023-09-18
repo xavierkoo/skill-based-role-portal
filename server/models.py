@@ -56,8 +56,8 @@ class RoleDetail(Base):
 
 class StaffReportingOfficer(Base):
     __tablename__ = "staff_reporting_officer"
-    staff_id = Column(Integer, primary_key=True)
-    RO_id = Column(Integer, ForeignKey("staff_details.staff_id"), nullable=False)
+    staff_id = Column(Integer, ForeignKey("staff_details.staff_id"), primary_key=True)
+    RO_id = Column(Integer, ForeignKey("staff_details.staff_id"), primary_key=True)
     staff = relationship("StaffDetail", foreign_keys=[staff_id])
     RO = relationship("StaffDetail", foreign_keys=[RO_id])
 

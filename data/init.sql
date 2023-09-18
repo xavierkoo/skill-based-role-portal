@@ -1,8 +1,11 @@
--- Create a MySQL user
-CREATE USER 'eduhub_user' @'%' IDENTIFIED BY 'eduhub_password';
+-- Create a new user with the name `new_user` and the password `password`.
+CREATE USER 'eduhub_user' @'eduhub_db' IDENTIFIED BY 'eduhub_password';
 
--- Grant privileges to the user on a specific database (change 'your_database' to your actual database name)
-GRANT ALL PRIVILEGES ON *.* TO 'eduhub_user' @'%' WITH GRANT OPTION;
+-- Grant the user all privileges on all databases and tables.
+GRANT ALL PRIVILEGES ON *.* TO 'eduhub_user' @'eduhub_db' WITH GRANT OPTION;
+
+-- Flush the privileges to make the changes take effect immediately.
+FLUSH PRIVILEGES;
 
 -- Stage 1 Tables (Primary)
 -- This table stores the different staff in the company
