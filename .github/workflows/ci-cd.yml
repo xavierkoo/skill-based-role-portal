@@ -31,7 +31,6 @@ jobs:
       # - name: Run Cypress Tests
       #   run: npm run test:e2e --prefix client
 
-
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
