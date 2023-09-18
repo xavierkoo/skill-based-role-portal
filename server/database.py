@@ -29,6 +29,7 @@ def create_database_if_not_exists():
         )
 
         with connection.cursor() as cursor:
+            cursor.execute(f"DROP DATABASE IF EXISTS {db_config['database']}")
             cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_config['database']}")
             cursor.execute(f"USE {db_config['database']}")
 
