@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import RoleDetails from './components/RoleDetails.vue'
+import JobRoleList from './components/JobRoleList.vue'
 </script>
 
 <template>
@@ -15,6 +16,7 @@ import RoleDetails from './components/RoleDetails.vue'
   </header>
 
   <RouterView />
+  <JobRoleList />
 </template>
 
 <style scoped>
