@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-# This section of the Docker Compose file is defining a service called `client_frontend`.
+    # This section of the Docker Compose file is defining a service called `client_frontend`.
     client_frontend:
         container_name: eduhub_frontend_vue
         build:
@@ -15,12 +15,15 @@ services:
         networks:
             - eduhub_network
 
-# The `server_backend` section in the Docker Compose file is defining a service called `server_backend`.
+    # The `server_backend` section in the Docker Compose file is defining a service called `server_backend`.
     server_backend:
         container_name: eduhub_backend_flask
         build:
             context: ./server
             dockerfile: server.Dockerfile
+        command: sh -c "uvicorn main:app --reload --port=5101 --host=0.0.0.0"
+        volumes:
+            - ./server:/app
         ports:
             - "5101:5101"
         depends_on:
@@ -29,7 +32,7 @@ services:
         networks:
             - eduhub_network
 
-# The `eduhub_db` section in the Docker Compose file is defining a service for a MySQL database container.
+    # The `eduhub_db` section in the Docker Compose file is defining a service for a MySQL database container.
     eduhub_db:
         container_name: eduhub_db_mysql
         image: mysql:8.0
@@ -47,12 +50,21 @@ services:
             - ./data:/docker-entrypoint-initdb.d
             - mysql-data:/var/lib/mysql
         healthcheck:
-            test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "-ppass"]
+            test:
+                [
+                    "CMD",
+                    "mysqladmin",
+                    "ping",
+                    "-h",
+                    "localhost",
+                    "-uroot",
+                    "-ppass",
+                ]
             interval: 5s
             timeout: 5s
             retries: 20
 
-# The `phpmyadmin` section in the Docker Compose file is defining a service for a phpMyAdmin container.
+    # The `phpmyadmin` section in the Docker Compose file is defining a service for a phpMyAdmin container.
     phpmyadmin:
         container_name: phpmyadmin
         image: phpmyadmin
@@ -64,8 +76,8 @@ services:
         environment:
             PMA_ARBITRARY: 1
             PMA_HOST: ${PHPADMIN_HOST}
-            PMA_USER: ${PHPADMIN_USER}
-            PMA_PASSWORD: ${PHPADMIN_PASSWORD}
+            PMA_USER: root
+            PMA_PASSWORD: root
         depends_on:
             eduhub_db:
                 condition: service_healthy

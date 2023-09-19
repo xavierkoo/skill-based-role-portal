@@ -1,19 +1,16 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import JobRoleList from './components/JobRoleList.vue'
+import RoleDetails from './components/RoleDetails.vue'
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <!-- <HelloWorld msg="You did it!" /> -->
+    <div class="wrapper d-flex justify-content-center w-100">
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
+      <RoleDetails />
     </div>
   </header>
 
