@@ -15,12 +15,12 @@ export default defineConfig({
     host: true, // enable routing from external (webpage served to user) to intenal container (docker container with the vue)
     port: 8080,
     proxy: {
-      // '/companies': {
-      //     // auto appends to the target
-      //     target: 'http://search:5101', // URL of Container 2
-      //     changeOrigin: true,
-      //     secure: false // Insecure, but okay for local development
-      // },
+      '/api/v1/rolelistings/': {
+        // auto appends to the target
+        target: 'http://server_backend:5101', // URL of Container 2
+        changeOrigin: true,
+        secure: false // Insecure, but okay for local development
+      }
       // '^/records/.*': {
       //     // auto appends to the target
       //     target: 'http://search:5101', // URL of Container 2
