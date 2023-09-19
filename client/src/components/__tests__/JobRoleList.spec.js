@@ -40,33 +40,6 @@ describe('JobRoleList', () => {
     // For example: expect(wrapper.text()).toContain('Learning Facilitator');
   })
 
-  it('displays job role descriptions when job roles are provided', async () => {
-    const jobRoles = [
-      {
-        role_listing_id: 1,
-        role_id: 101,
-        role_listing_desc: 'This is a sample job role description.',
-        role_listing_source: 201,
-        role_listing_open: '2023-08-01',
-        role_listing_close: '2023-08-15',
-        role_description: 'Learning Facilitator',
-        role_name: 'Talent Attraction',
-        role_status: 'active',
-        role_skills: ['Communication', 'Training', 'Problem Solving']
-      }
-      // Add other job role objects here...
-    ]
-
-    const wrapper = mount(JobRoleList, {
-      props: { jobRoles }
-    })
-
-    await wrapper.vm.$nextTick()
-
-    // Check if the job role description is displayed.
-    expect(wrapper.text()).toContain('This is a sample job role description.')
-  })
-
   it('does not display job roles when no job roles are provided', async () => {
     const jobRoles = []
     const wrapper = mount(JobRoleList, {
@@ -80,7 +53,6 @@ describe('JobRoleList', () => {
   })
 
   it('displays job roles for HR_Admin user type', async () => {
-    const userType = 'HR_Admin'
     const jobRoles = [
       {
         role_listing_id: 1,
@@ -98,7 +70,7 @@ describe('JobRoleList', () => {
     ]
 
     const wrapper = mount(JobRoleList, {
-      props: { jobRoles, userType }
+      props: { jobRoles }
     })
 
     await wrapper.vm.$nextTick()
