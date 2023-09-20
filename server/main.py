@@ -1,11 +1,14 @@
 # main.py
 
-from fastapi import FastAPI, HTTPException, Depends, status
+from fastapi import FastAPI, HTTPException, Depends, status, Request
 from pydantic import BaseModel
 from typing import Annotated
 from database import initDB
 from sqlalchemy.orm import Session
+from flask import request
 import models
+import math
+import random
 
 app = FastAPI()
 
@@ -111,3 +114,58 @@ async def get_role_details(db: db_dependancy):
         role.role_status = role.role_status
 
     return roleDetails
+
+def get_random_id():
+    digits = [i for i in range(0, 10)]
+    random_str = ""
+    for i in range(6):
+        index = math.floor(random.random() * 10)
+        random_str += str(digits[index])
+    return int(random_str)
+
+# endpoint for inserting role listings
+@app.post("/api/v1/rolelistings/create", status_code=status.HTTP_200_OK)
+async def create_role_listing(request: Request, db: db_dependancy):
+
+    # Get the role listing data from the request body.
+    role_listing_data = await request.json()
+    
+    # Data Validation
+    err_msg = []
+    role_listing_id = get_random_id()
+    while db.query(models.RoleListing).filter(models.RoleListing.role_listing_id == role_listing_id).first():
+        role_listing_id = get_random_id()
+    if not isinstance(role_listing_data["role_listing_creator"], int):
+        err_msg.append("Enter correct Creator")
+    if not isinstance(role_listing_data["role_listing_source"], int):
+        err_msg.append("Enter correct Source")
+    if not isinstance(role_listing_data["role_listing_updater"], int):
+        err_msg.append("Enter correct Updater")
+    if not isinstance(role_listing_data["role_id"], int):
+        err_msg.append("Enter correct Role Id")
+    if not isinstance(role_listing_data["role_listing_desc"], str):
+        err_msg.append("Enter correct type of description")
+    if len(err_msg) > 0:
+        return err_msg[0]
+    else:
+        # Create a new role listing object.
+        role_listing = models.RoleListing(
+            role_listing_id = role_listing_id,
+            role_listing_creator = role_listing_data["role_listing_creator"],
+            role_listing_source = role_listing_data["role_listing_source"],
+            role_listing_updater = role_listing_data["role_listing_updater"],
+            role_id = role_listing_data["role_id"],
+            role_listing_desc = role_listing_data["role_listing_desc"],
+            role_listing_open = role_listing_data["role_listing_open"],
+            role_listing_close = role_listing_data["role_listing_close"]
+        )
+
+        # Save the new role listing to the database.
+        db.add(role_listing)
+        db.commit()
+        role_listing = {'role_listing_id': role_listing_id}
+        role_listing.update(role_listing_data)
+
+        # Return the newly created role listing.
+        return role_listing
+
