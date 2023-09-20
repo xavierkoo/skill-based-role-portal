@@ -9,6 +9,7 @@ from flask import request
 import models
 import math
 import random
+import datetime
 
 app = FastAPI()
 
@@ -122,6 +123,14 @@ def get_random_id():
         index = math.floor(random.random() * 10)
         random_str += str(digits[index])
     return int(random_str)
+def validate_date(date_string_1, date_string_2):
+    date_1 = datetime.datetime.strptime(date_string_1, "%Y-%m-%d")
+    date_2 = datetime.datetime.strptime(date_string_2, "%Y-%m-%d")
+
+    if date_2 >= date_1:
+        return True
+    else:
+        return False
 
 # endpoint for inserting role listings
 @app.post("/api/v1/rolelistings/create", status_code=status.HTTP_200_OK)
@@ -135,25 +144,21 @@ async def create_role_listing(request: Request, db: db_dependancy):
     role_listing_id = get_random_id()
     while db.query(models.RoleListing).filter(models.RoleListing.role_listing_id == role_listing_id).first():
         role_listing_id = get_random_id()
-    if not isinstance(role_listing_data["role_listing_creator"], int):
-        err_msg.append("Enter correct Creator")
-    if not isinstance(role_listing_data["role_listing_source"], int):
-        err_msg.append("Enter correct Source")
-    if not isinstance(role_listing_data["role_listing_updater"], int):
-        err_msg.append("Enter correct Updater")
     if not isinstance(role_listing_data["role_id"], int):
         err_msg.append("Enter correct Role Id")
     if not isinstance(role_listing_data["role_listing_desc"], str):
         err_msg.append("Enter correct type of description")
+    if not validate_date(role_listing_data["role_listing_open"], role_listing_data["role_listing_close"]):
+        err_msg.append("Enter correct type of date format or Close Date cannot be before Open Date")
     if len(err_msg) > 0:
         return err_msg[0]
     else:
         # Create a new role listing object.
         role_listing = models.RoleListing(
             role_listing_id = role_listing_id,
-            role_listing_creator = role_listing_data["role_listing_creator"],
-            role_listing_source = role_listing_data["role_listing_source"],
-            role_listing_updater = role_listing_data["role_listing_updater"],
+            role_listing_creator = 123456788,
+            role_listing_source = 123456788,
+            role_listing_updater = 123456788,
             role_id = role_listing_data["role_id"],
             role_listing_desc = role_listing_data["role_listing_desc"],
             role_listing_open = role_listing_data["role_listing_open"],
@@ -163,7 +168,7 @@ async def create_role_listing(request: Request, db: db_dependancy):
         # Save the new role listing to the database.
         db.add(role_listing)
         db.commit()
-        role_listing = {'role_listing_id': role_listing_id}
+        role_listing = {'role_listing_id': role_listing_id, 'role_listing_creator': 123456788, "role_listing_source": 123456788, "role_listing_updater": 123456788}
         role_listing.update(role_listing_data)
 
         # Return the newly created role listing.
