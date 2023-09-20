@@ -1,16 +1,18 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+// import { RouterLink, RouterView } from 'vue-router'
 import RoleDetails from './components/RoleDetails.vue'
+import UpdateRoleListingView from './views/UpdateRoleListingView.vue'
 </script>
 
 <template>
   <header>
     <div class="wrapper d-flex justify-content-center w-100">
-      <nav>
+      <!-- <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
-      </nav>
-      <RoleDetails />
+      </nav> -->
+      <UpdateRoleListingView />
+      <!-- <RoleDetails /> -->
     </div>
   </header>
 

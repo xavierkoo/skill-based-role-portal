@@ -56,6 +56,75 @@ p {
   color: #ffffff;
 }
 
+.updateRoleListing .header {
+  background-color: rgb(35, 78, 170);
+  color: #ffffff;
+  padding: 8px;
+  border-radius: 8px;
+}
+.updateRoleListing .searchResults {
+  position: absolute;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  z-index: 1000;
+}
+.updateRoleListing .result {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.updateRoleListing .result:hover {
+  background-color: #f2f2f2;
+}
+@media (min-width: 320px) {
+  .updateRoleListing {
+    font-size: calc(0.7em + 0.5vw);
+  }
+  .updateRoleListing .back {
+    height: 20%;
+    width: 20%;
+  }
+  .updateRoleListing h1 {
+    font-size: 10px;
+  }
+  .updateRoleListing .details {
+    display: block;
+    justify-content: start;
+  }
+}
+@media (min-width: 400px) {
+  .updateRoleListing h1 {
+    font-size: 20px;
+  }
+  .updateRoleListing .details {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+@media (min-width: 766px) {
+  .updateRoleListing {
+    font-size: calc(0.7em + 0.5vw);
+    width: 75%;
+  }
+  .updateRoleListing .back {
+    height: 30px;
+    width: 30px;
+  }
+  .updateRoleListing .details {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+@media (min-width: 2040px) {
+  .updateRoleListing {
+    font-size: calc(0.5em + 0.5vw);
+    width: 75%;
+  }
+}
+
 @media (min-width: 320px) {
   .roleDetails {
     font-size: calc(0.7em + 0.5vw);
