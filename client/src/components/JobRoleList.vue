@@ -1,4 +1,5 @@
 <template>
+  <NavBar />
   <div class="container-fluid mt-5">
     <!-- Conditional rendering for when no job roles are available -->
     <div v-if="jobRoles.length === 0">
@@ -18,7 +19,14 @@
             <div class="row">
               <div class="col-9">
                 <h5 class="card-title no-underline">
-                  <a href="#" class="card-link text-normal">{{ jobRole.role_name }}</a>
+                  <a id="hi" href="#" class="card-link text-normal me-2">{{ jobRole.role_name }}</a>
+                  <p
+                    v-if="calculateDaysUntilOpen(jobRole.role_listing_close) < 0"
+                    class="badge rounded-pill bg-danger text-white p-2"
+                  >
+                    Inactive
+                  </p>
+                  <p v-else class="badge rounded-pill bg-success text-white p-2">Active</p>
                 </h5>
               </div>
               <div class="col">
@@ -61,27 +69,124 @@
           </div>
         </div>
       </div>
+
+      <div v-if="userType == 'staff'">
+        <div
+          v-for="(jobRole, index) in jobRoles"
+          :key="index"
+          class="job-role-item mb-4 border-bottom"
+          @click="goToRolePage(index)"
+        >
+          <div class="card-body">
+            <div class="row">
+              <div class="col-9">
+                <h5 class="card-title no-underline">
+                  <a href="#" class="card-link text-normal">{{ jobRole.role_name }}</a>
+                </h5>
+              </div>
+              <div class="col">
+                <p class="badge rounded-pill bg-primary text-white p-2">
+                  Apply
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-send"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"
+                    />
+                  </svg>
+                </p>
+              </div>
+            </div>
+            <div class="mb-2">
+              <div
+                v-for="(roleSkill, index2) in jobRole.role_skills"
+                :key="index2"
+                class="badge rounded-pill bg-light text-dark p-2 me-2"
+              >
+                {{ roleSkill }}
+              </div>
+            </div>
+            <p class="card-text">
+              {{ truncateText(jobRole.role_listing_desc, 150) }}
+            </p>
+            <div class="row">
+              <small class="text-muted">
+                {{ calculateDaysSinceOpen(jobRole.role_listing_open) }}
+                {{ calculateDaysSinceOpen(jobRole.role_listing_open) > 1 ? 'days' : 'day' }}
+                ago
+                {{
+                  calculateDaysUntilOpen(jobRole.role_listing_close) >= 0
+                    ? '| ' + calculateDaysUntilOpen(jobRole.role_listing_close)
+                    : ''
+                }}
+                {{
+                  calculateDaysUntilOpen(jobRole.role_listing_close) >= 0
+                    ? calculateDaysUntilOpen(jobRole.role_listing_close) > 1
+                      ? 'days left'
+                      : 'day left'
+                    : ''
+                }}
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import NavBar from './NavBar.vue'
+import { fetchRoleListings } from '../service/rolelisting.service'
 
 const jobRoles = ref([])
 const userType = ref('')
+const currentDate = new Date()
+
+// Function to calculate the days until the listing opens
+const calculateDaysUntilOpen = (closeDate) => {
+  const listingOpenDate = new Date(closeDate)
+  const timeDifference = listingOpenDate - currentDate
+  const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24))
+  return daysDifference
+}
+
+const calculateDaysSinceOpen = (openDate) => {
+  const listingOpenDate = new Date(openDate)
+  const timeDifference = currentDate - listingOpenDate
+  const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24))
+  return daysDifference
+}
 
 const goToRolePage = (index) => {
   console.log('Go to role page for index', index)
 }
 
+const setData = (data) => {
+  jobRoles.value = data
+}
+
 const getData = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/v1/rolelistings/')
-    jobRoles.value = response.data
+    const response = await fetchRoleListings()
+    setData(response)
   } catch (error) {
     console.error('Error fetching data:', error)
+  }
+  if (userType.value === 'staff') {
+    jobRoles.value = jobRoles.value.filter((jobRole) => {
+      // Convert role_listing_close to a date object
+      const closeDate = new Date(jobRole.role_listing_close)
+
+      // Compare the closeDate with today's date
+      return closeDate >= currentDate
+    })
   }
 }
 
