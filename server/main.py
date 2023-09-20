@@ -142,16 +142,19 @@ async def create_role_listing(request: Request, db: db_dependancy):
     # Data Validation
     err_msg = []
     role_listing_id = get_random_id()
-    while db.query(models.RoleListing).filter(models.RoleListing.role_listing_id == role_listing_id).first():
+    while db.query(models.RoleListing).filter(models.RoleListing.role_listing_id == role_listing_id).first() is not None:
         role_listing_id = get_random_id()
-    if not isinstance(role_listing_data["role_id"], int):
+    if db.query(models.RoleDetail).filter(models.RoleDetail.role_id == role_listing_data["role_id"]).first() is None:
         err_msg.append("Enter correct Role Id")
     if not isinstance(role_listing_data["role_listing_desc"], str):
         err_msg.append("Enter correct type of description")
     if not validate_date(role_listing_data["role_listing_open"], role_listing_data["role_listing_close"]):
         err_msg.append("Enter correct type of date format or Close Date cannot be before Open Date")
     if len(err_msg) > 0:
-        return err_msg[0]
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=err_msg[0]
+        )
     else:
         # Create a new role listing object.
         role_listing = models.RoleListing(
