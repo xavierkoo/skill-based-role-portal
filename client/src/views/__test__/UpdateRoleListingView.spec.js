@@ -8,13 +8,14 @@ describe('UpdateRoleListing.vue', () => {
   it('renders all necessary form elements', () => {
     const wrapper = mount(UpdateRoleListing)
 
+    expect(wrapper.find('#update').exists()).toBe(true)
     expect(wrapper.find('#roleListingID').exists()).toBe(true)
     expect(wrapper.find('#roleName').exists()).toBe(true)
     expect(wrapper.find('#startDate').exists()).toBe(true)
     expect(wrapper.find('#closeDate').exists()).toBe(true)
     expect(wrapper.find('#skills').exists()).toBe(true)
     expect(wrapper.find('#textarea').exists()).toBe(true)
-    expect(wrapper.find('#update').exists()).toBe(true)
+    expect(wrapper.find('.back').exists()).toBe(true)
   })
 
   //role listing id field is disabled
@@ -22,7 +23,9 @@ describe('UpdateRoleListing.vue', () => {
     const wrapper = mount(UpdateRoleListing)
 
     const roleListingIDInput = wrapper.find('#roleListingID')
+    const roleNameInput = wrapper.find('#roleName')
     expect(roleListingIDInput.attributes('disabled')).exist
+    expect(roleNameInput.attributes('disabled')).exist
   })
 
   //Check if role name input change accordingly
