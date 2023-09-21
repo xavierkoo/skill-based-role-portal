@@ -186,9 +186,8 @@ async def update_role_listing(request: Request, db: db_dependancy):
     
     # Data Validation
     err_msg = []
-    role_listing_id = get_random_id()
-    while db.query(models.RoleListing).filter(models.RoleListing.role_listing_id == role_listing_id).first() is not None:
-        role_listing_id = get_random_id()
+    if db.query(models.RoleListing).filter(models.RoleListing.role_listing_id == role_listing_data["role_listing_id"]).first() is None:
+        err_msg.append("Enter Role Listing Id")
     if db.query(models.RoleDetail).filter(models.RoleDetail.role_id == role_listing_data["role_id"]).first() is None:
         err_msg.append("Enter correct Role Id")
     if not isinstance(role_listing_data["role_listing_desc"], str):
@@ -202,8 +201,9 @@ async def update_role_listing(request: Request, db: db_dependancy):
         )
     else:
         # Update an existing role listing object.
+        role_listing_record = db.query(models.RoleListing).filter(models.RoleListing.role_id == role_listing_data["role_id"]).first()
         role_listing = models.RoleListing(
-            role_listing_id = role_listing_id,
+            role_listing_id = role_listing_record.role_listing_id,
             role_listing_creator = 123456788,
             role_listing_source = 123456788,
             role_listing_updater = 123456788,
@@ -214,13 +214,10 @@ async def update_role_listing(request: Request, db: db_dependancy):
         )
 
         # Save the updated role listing to the database.
-        db.add(role_listing)
-        # Remove existing record in RoleListing Table with same Role_id
-        prev_role_listing = db.query(models.RoleListing).filter(models.RoleListing.role_id == role_listing_data["role_id"]).first()
-        db.delete(prev_role_listing)
-        db.commit()
-        role_listing = {'role_listing_id': role_listing_id, 'role_listing_creator': 123456788, "role_listing_source": 123456788, "role_listing_updater": 123456788}
+        role_listing = {'role_listing_id': role_listing_record.role_listing_id, 'role_listing_creator': 123456788, "role_listing_source": 123456788, "role_listing_updater": 123456788}
         role_listing.update(role_listing_data)
+        db.query(models.RoleListing).filter(models.RoleListing.role_id == role_listing_data["role_id"]).update(role_listing)
+        db.commit()
 
         # Return the newly created role listing.
         return role_listing
