@@ -177,3 +177,50 @@ async def create_role_listing(request: Request, db: db_dependancy):
         # Return the newly created role listing.
         return role_listing
 
+# endpoint for updating role listings
+@app.put("/api/v1/rolelistings/update", status_code=status.HTTP_200_OK)
+async def update_role_listing(request: Request, db: db_dependancy):
+
+    # Get the role listing data from the request body.
+    role_listing_data = await request.json()
+    
+    # Data Validation
+    err_msg = []
+    role_listing_id = get_random_id()
+    while db.query(models.RoleListing).filter(models.RoleListing.role_listing_id == role_listing_id).first() is not None:
+        role_listing_id = get_random_id()
+    if db.query(models.RoleDetail).filter(models.RoleDetail.role_id == role_listing_data["role_id"]).first() is None:
+        err_msg.append("Enter correct Role Id")
+    if not isinstance(role_listing_data["role_listing_desc"], str):
+        err_msg.append("Enter correct type of description")
+    if not validate_date(role_listing_data["role_listing_open"], role_listing_data["role_listing_close"]):
+        err_msg.append("Enter correct type of date format or Close Date cannot be before Open Date")
+    if len(err_msg) > 0:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=err_msg[0]
+        )
+    else:
+        # Update an existing role listing object.
+        role_listing = models.RoleListing(
+            role_listing_id = role_listing_id,
+            role_listing_creator = 123456788,
+            role_listing_source = 123456788,
+            role_listing_updater = 123456788,
+            role_id = role_listing_data["role_id"],
+            role_listing_desc = role_listing_data["role_listing_desc"],
+            role_listing_open = role_listing_data["role_listing_open"],
+            role_listing_close = role_listing_data["role_listing_close"]
+        )
+
+        # Save the updated role listing to the database.
+        db.add(role_listing)
+        # Remove existing record in RoleListing Table with same Role_id
+        prev_role_listing = db.query(models.RoleListing).filter(models.RoleListing.role_id == role_listing_data["role_id"]).first()
+        db.delete(prev_role_listing)
+        db.commit()
+        role_listing = {'role_listing_id': role_listing_id, 'role_listing_creator': 123456788, "role_listing_source": 123456788, "role_listing_updater": 123456788}
+        role_listing.update(role_listing_data)
+
+        # Return the newly created role listing.
+        return role_listing
