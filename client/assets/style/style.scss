@@ -58,6 +58,74 @@ p {
 	}
 }
 
+.updateRoleListing{
+    .header{
+        background-color: rgb(35, 78, 170);
+        color:#ffffff;
+        padding:8px;
+        border-radius: 8px;
+    }
+    .searchResults {
+        position: absolute;
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #fff;
+        z-index: 1000;
+    }
+    
+    .result {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    }
+    
+    .result:hover {
+    background-color: #f2f2f2;
+    }
+
+    @media (min-width: 320px) {
+    font-size: calc(0.7em + 0.5vw);
+    .back{
+        height:20%;
+        width: 20%;
+    }
+    h1 {
+        font-size: 10px;
+    }
+    .details{
+        display: block;
+        justify-content: start;
+    }
+    }
+    @media (min-width: 400px) {
+        h1 {
+            font-size: 20px;
+        }
+        .details{
+            display: flex;
+            justify-content:space-between;
+        }
+    }
+    @media (min-width: 766px) {
+        font-size: calc(0.7em + 0.5vw);
+        width: 75%;
+        .back{
+            height:30px;
+            width: 30px;
+        }
+        .details{
+            display: flex;
+            justify-content:space-between;
+        }
+    }
+    @media (min-width: 2040px) {
+        font-size: calc(0.5em + 0.5vw);
+        width: 75%;
+    }
+}
+
 .roleDetails{
     @media (min-width: 320px) {
 		font-size: calc(0.7em + 0.5vw);
