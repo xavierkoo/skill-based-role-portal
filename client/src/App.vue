@@ -1,17 +1,17 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import RoleDetails from './components/RoleDetails.vue'
-import JobRoleList from './components/JobRoleList.vue'
+// import { RouterLink, RouterView } from 'vue-router'
+import CreateRoleListingView from './views/CreateRoleListingView.vue'
 </script>
 
 <template>
   <header>
     <div class="wrapper d-flex justify-content-center w-100">
-      <nav>
+      <!-- <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
-      </nav>
-      <RoleDetails />
+      </nav> -->
+      <CreateRoleListingView />
+      <!-- <RoleDetails /> -->
     </div>
   </header>
 
