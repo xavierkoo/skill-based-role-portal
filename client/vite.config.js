@@ -22,6 +22,10 @@ export default defineConfig({
         secure: false // Insecure, but okay for local development
       },
       '/api/v1/rolelistings/update': {
+        target: 'http://server_backend:5101', // URL of Container 2
+        changeOrigin: true,
+        secure: false // Insecure, but okay for local development
+      },
       '/api/v1/roledetails/': {
         // auto appends to the target
         target: 'http://server_backend:5101', // URL of Container 2
