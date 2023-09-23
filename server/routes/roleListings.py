@@ -147,6 +147,7 @@ async def create_role_listing(request: Request, db: Session = Depends(get_db)):
             "role_listing_updater": 123456788,
         }
         role_listing.update(role_listing_data)
+        db.close()
 
         # Return the newly created role listing.
         return role_listing
@@ -234,6 +235,7 @@ async def update_role_listing(request: Request, db: Session = Depends(get_db)):
             models.RoleListing.role_id == role_listing_data["role_id"]
         ).update(role_listing)
         db.commit()
+        db.close()
 
         # Return the newly created role listing.
         return role_listing

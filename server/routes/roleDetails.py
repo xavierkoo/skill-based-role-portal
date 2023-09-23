@@ -34,5 +34,7 @@ async def get_role_details(db: Session = Depends(get_db)):
         role.role_name = role.role_name
         role.role_description = role.role_description
         role.role_status = role.role_status
+    
+    db.close()
 
     return roleDetails
