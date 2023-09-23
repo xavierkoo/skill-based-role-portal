@@ -1,13 +1,13 @@
 import axios from 'axios'
 
-const BASE_URL = 'http://localhost:8080/api/v1/'
+const BASE_URL = 'http://localhost:8080/api/v1/rolelistings/'
 
 export const fetchRoleListings = async () => {
-  return (await axios.get(`${BASE_URL}rolelistings/`)).data
+  return (await axios.get(`${BASE_URL}`)).data
 }
 
 export const createRoleListing = async (role) => {
-  return await axios.post(`${BASE_URL}rolelistings/create`, role)
+  return await axios.post(`${BASE_URL}`, role)
 }
 
 // export const createUser = async (user) => {
