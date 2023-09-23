@@ -77,7 +77,7 @@ async def get_role_listings(db: Session = Depends(get_db)):
 
 
 @router.post(
-    "/api/v1/rolelistings/create", status_code=status.HTTP_200_OK, tags=["Role Listing"]
+    "/api/v1/rolelistings/", status_code=status.HTTP_201_CREATED, tags=["Role Listing"]
 )
 async def create_role_listing(request: Request, db: Session = Depends(get_db)):
     """
@@ -154,7 +154,7 @@ async def create_role_listing(request: Request, db: Session = Depends(get_db)):
 
 
 @router.put(
-    "/api/v1/rolelistings/update", status_code=status.HTTP_200_OK, tags=["Role Listing"]
+    "/api/v1/rolelistings/", status_code=status.HTTP_200_OK, tags=["Role Listing"]
 )
 async def update_role_listing(request: Request, db: Session = Depends(get_db)):
     """
