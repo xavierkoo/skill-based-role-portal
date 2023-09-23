@@ -97,9 +97,22 @@ async def get_role_listings(db: db_dependancy):
 
     return roleListing
 
+
 # endpoint for retrieving all role details
 @app.get("/api/v1/roledetails/", status_code=status.HTTP_200_OK)
 async def get_role_details(db: db_dependancy):
+    """
+    The `get_role_details` function retrieves role details from a database, while the `get_random_id`
+    function generates a random 6-digit ID, and the `validate_date` function checks if one date is
+    greater than or equal to another date.
+
+    :param db: The parameter `db` is a dependency injection for a database connection or session. It is
+    used to query the database and retrieve role details
+    :type db: db_dependancy
+    :return: The `get_role_details` function returns a list of role details. The `get_random_id`
+    function returns a randomly generated integer ID. The `validate_date` function returns a boolean
+    value indicating whether the second date is greater than or equal to the first date.
+    """
 
     roleDetails = db.query(models.RoleDetail).all()
     if not roleDetails:
@@ -107,7 +120,7 @@ async def get_role_details(db: db_dependancy):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Role details not found",
         )
-    
+
     for role in roleDetails:
         role.role_id = role.role_id
         role.role_name = role.role_name
@@ -116,6 +129,7 @@ async def get_role_details(db: db_dependancy):
 
     return roleDetails
 
+
 def get_random_id():
     digits = [i for i in range(0, 10)]
     random_str = ""
@@ -123,6 +137,8 @@ def get_random_id():
         index = math.floor(random.random() * 10)
         random_str += str(digits[index])
     return int(random_str)
+
+
 def validate_date(date_string_1, date_string_2):
     date_1 = datetime.datetime.strptime(date_string_1, "%Y-%m-%d")
     date_2 = datetime.datetime.strptime(date_string_2, "%Y-%m-%d")
@@ -132,91 +148,162 @@ def validate_date(date_string_1, date_string_2):
     else:
         return False
 
+
 # endpoint for inserting role listings
 @app.post("/api/v1/rolelistings/create", status_code=status.HTTP_200_OK)
 async def create_role_listing(request: Request, db: db_dependancy):
+    """
+    The function `create_role_listing` creates a new role listing object and saves it to the database,
+    while performing data validation on the input.
+
+    :param request: The `request` parameter is an instance of the `Request` class, which represents an
+    HTTP request received by the server. It contains information about the request, such as the HTTP
+    method, headers, and body
+    :type request: Request
+    :param db: The `db` parameter is a dependency injection for the database connection. It allows the
+    function to interact with the database by executing queries and committing changes
+    :type db: db_dependancy
+    :return: a dictionary object containing the details of the newly created role listing.
+    """
 
     # Get the role listing data from the request body.
     role_listing_data = await request.json()
-    
+
     # Data Validation
     err_msg = []
     role_listing_id = get_random_id()
-    while db.query(models.RoleListing).filter(models.RoleListing.role_listing_id == role_listing_id).first() is not None:
+    while (
+        db.query(models.RoleListing)
+        .filter(models.RoleListing.role_listing_id == role_listing_id)
+        .first()
+        is not None
+    ):
         role_listing_id = get_random_id()
-    if db.query(models.RoleDetail).filter(models.RoleDetail.role_id == role_listing_data["role_id"]).first() is None:
+    if (
+        db.query(models.RoleDetail)
+        .filter(models.RoleDetail.role_id == role_listing_data["role_id"])
+        .first()
+        is None
+    ):
         err_msg.append("Enter correct Role Id")
     if not isinstance(role_listing_data["role_listing_desc"], str):
         err_msg.append("Enter correct type of description")
-    if not validate_date(role_listing_data["role_listing_open"], role_listing_data["role_listing_close"]):
-        err_msg.append("Enter correct type of date format or Close Date cannot be before Open Date")
-    if len(err_msg) > 0:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=err_msg[0]
+    if not validate_date(
+        role_listing_data["role_listing_open"], role_listing_data["role_listing_close"]
+    ):
+        err_msg.append(
+            "Enter correct type of date format or Close Date cannot be before Open Date"
         )
+    if len(err_msg) > 0:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=err_msg[0])
     else:
         # Create a new role listing object.
         role_listing = models.RoleListing(
-            role_listing_id = role_listing_id,
-            role_listing_creator = 123456788,
-            role_listing_source = 123456788,
-            role_listing_updater = 123456788,
-            role_id = role_listing_data["role_id"],
-            role_listing_desc = role_listing_data["role_listing_desc"],
-            role_listing_open = role_listing_data["role_listing_open"],
-            role_listing_close = role_listing_data["role_listing_close"]
+            role_listing_id=role_listing_id,
+            role_listing_creator=123456788,
+            role_listing_source=123456788,
+            role_listing_updater=123456788,
+            role_id=role_listing_data["role_id"],
+            role_listing_desc=role_listing_data["role_listing_desc"],
+            role_listing_open=role_listing_data["role_listing_open"],
+            role_listing_close=role_listing_data["role_listing_close"],
         )
 
         # Save the new role listing to the database.
         db.add(role_listing)
         db.commit()
-        role_listing = {'role_listing_id': role_listing_id, 'role_listing_creator': 123456788, "role_listing_source": 123456788, "role_listing_updater": 123456788}
+        role_listing = {
+            "role_listing_id": role_listing_id,
+            "role_listing_creator": 123456788,
+            "role_listing_source": 123456788,
+            "role_listing_updater": 123456788,
+        }
         role_listing.update(role_listing_data)
 
         # Return the newly created role listing.
         return role_listing
 
+
 # endpoint for updating role listings
 @app.put("/api/v1/rolelistings/update", status_code=status.HTTP_200_OK)
 async def update_role_listing(request: Request, db: db_dependancy):
+    """
+    The function `update_role_listing` updates an existing role listing object in the database based on
+    the data provided in the request body.
+
+    :param request: The `request` parameter is an instance of the `Request` class, which represents an
+    HTTP request made to the server. It contains information about the request, such as the HTTP method,
+    headers, and body
+    :type request: Request
+    :param db: The `db` parameter is a dependency injection for the database connection. It allows the
+    function to interact with the database and perform CRUD operations
+    :type db: db_dependancy
+    :return: The updated role listing object is being returned.
+    """
 
     # Get the role listing data from the request body.
     role_listing_data = await request.json()
-    
+
     # Data Validation
     err_msg = []
-    if db.query(models.RoleListing).filter(models.RoleListing.role_listing_id == role_listing_data["role_listing_id"]).first() is None:
+    if (
+        db.query(models.RoleListing)
+        .filter(
+            models.RoleListing.role_listing_id == role_listing_data["role_listing_id"]
+        )
+        .first()
+        is None
+    ):
         err_msg.append("Enter Role Listing Id")
-    if db.query(models.RoleDetail).filter(models.RoleDetail.role_id == role_listing_data["role_id"]).first() is None:
+
+    if (
+        db.query(models.RoleDetail)
+        .filter(models.RoleDetail.role_id == role_listing_data["role_id"])
+        .first()
+        is None
+    ):
         err_msg.append("Enter correct Role Id")
+
     if not isinstance(role_listing_data["role_listing_desc"], str):
         err_msg.append("Enter correct type of description")
-    if not validate_date(role_listing_data["role_listing_open"], role_listing_data["role_listing_close"]):
-        err_msg.append("Enter correct type of date format or Close Date cannot be before Open Date")
-    if len(err_msg) > 0:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=err_msg[0]
+
+    if not validate_date(
+        role_listing_data["role_listing_open"], role_listing_data["role_listing_close"]
+    ):
+        err_msg.append(
+            "Enter correct type of date format or Close Date cannot be before Open Date"
         )
+    if len(err_msg) > 0:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=err_msg[0])
     else:
         # Update an existing role listing object.
-        role_listing_record = db.query(models.RoleListing).filter(models.RoleListing.role_id == role_listing_data["role_id"]).first()
+        role_listing_record = (
+            db.query(models.RoleListing)
+            .filter(models.RoleListing.role_id == role_listing_data["role_id"])
+            .first()
+        )
         role_listing = models.RoleListing(
-            role_listing_id = role_listing_record.role_listing_id,
-            role_listing_creator = 123456788,
-            role_listing_source = 123456788,
-            role_listing_updater = 123456788,
-            role_id = role_listing_data["role_id"],
-            role_listing_desc = role_listing_data["role_listing_desc"],
-            role_listing_open = role_listing_data["role_listing_open"],
-            role_listing_close = role_listing_data["role_listing_close"]
+            role_listing_id=role_listing_record.role_listing_id,
+            role_listing_creator=123456788,
+            role_listing_source=123456788,
+            role_listing_updater=123456788,
+            role_id=role_listing_data["role_id"],
+            role_listing_desc=role_listing_data["role_listing_desc"],
+            role_listing_open=role_listing_data["role_listing_open"],
+            role_listing_close=role_listing_data["role_listing_close"],
         )
 
         # Save the updated role listing to the database.
-        role_listing = {'role_listing_id': role_listing_record.role_listing_id, 'role_listing_creator': 123456788, "role_listing_source": 123456788, "role_listing_updater": 123456788}
+        role_listing = {
+            "role_listing_id": role_listing_record.role_listing_id,
+            "role_listing_creator": 123456788,
+            "role_listing_source": 123456788,
+            "role_listing_updater": 123456788,
+        }
         role_listing.update(role_listing_data)
-        db.query(models.RoleListing).filter(models.RoleListing.role_id == role_listing_data["role_id"]).update(role_listing)
+        db.query(models.RoleListing).filter(
+            models.RoleListing.role_id == role_listing_data["role_id"]
+        ).update(role_listing)
         db.commit()
 
         # Return the newly created role listing.

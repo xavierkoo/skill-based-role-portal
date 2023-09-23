@@ -1,5 +1,6 @@
 <script setup>
 // import { RouterLink, RouterView } from 'vue-router'
+import CreateRoleListingView from './views/CreateRoleListingView.vue'
 </script>
 
 <template>
@@ -9,6 +10,8 @@
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav> -->
+      <CreateRoleListingView />
+      <!-- <RoleDetails /> -->
     </div>
   </header>
   <RouterView />
