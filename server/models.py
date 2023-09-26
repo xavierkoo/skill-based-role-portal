@@ -109,6 +109,7 @@ class RoleApplication(Base):
     )
     staff_id = Column(Integer, ForeignKey("staff_details.staff_id"), nullable=False)
     role_app_status = Column(Enum("applied", "withdrawn"), nullable=False)
+    role_app_reason = Column(Text, nullable=False)
     role_application_ts_create = Column(
         TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"), nullable=False
     )
