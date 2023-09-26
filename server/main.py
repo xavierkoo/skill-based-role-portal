@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from database import init_db
 
-from routes import roleListings, roleDetails, roleApplications
+from routes import roleListings, roleDetails, roleApplications, staffSkills
 import models
 
 
@@ -24,3 +24,4 @@ async def root():
 app.include_router(roleListings.router)
 app.include_router(roleDetails.router)
 app.include_router(roleApplications.router)
+app.include_router(staffSkills.router)
