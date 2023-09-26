@@ -2,8 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from database import get_db
 import models
+from pydantic import BaseModel
 
 router = APIRouter()
+
+class RoleApplication(BaseModel):
+    role_listing_id: int
+    staff_id: int
+    role_app_reason: str    
 
 
 @router.get(
@@ -79,3 +85,51 @@ async def get_role_applications_by_staff_id(
     db.close()
 
     return roleApplications
+
+
+@router.post(
+    "/api/v1/applications/",
+    status_code=status.HTTP_201_CREATED,
+    tags=["Role Applications"],
+)
+async def create_role_application(request: RoleApplication, db: Session = Depends(get_db)):
+    """
+    The function `create_role_application` creates a new role application in the database and returns
+    the created role application.
+    
+    :param request: The `request` parameter is of type `RoleApplication`, which is a data model
+    representing the role application data. It contains the following attributes:
+    :type request: RoleApplication
+    :param db: The `db` parameter is a database session object. It is used to interact with the database
+    and perform database operations such as adding data, committing changes, and querying data. In this
+    code snippet, it is used to add a new role application to the database, commit the changes, and
+    query the
+    :type db: Session
+    :return: the created role application object.
+    """
+    
+    roleApplicationData = request.dict()
+
+    roleApplication = models.RoleApplication(
+        role_listing_id=roleApplicationData["role_listing_id"],
+        staff_id=roleApplicationData["staff_id"],
+        role_app_status="applied",
+        role_app_reason=roleApplicationData["role_app_reason"],
+    )
+
+    db.add(roleApplication)
+    db.commit()
+    db.close()
+
+    # find the role application
+    roleApplication = (
+        db.query(models.RoleApplication)
+        .filter(models.RoleApplication.staff_id == roleApplicationData["staff_id"])
+        .filter(
+            models.RoleApplication.role_listing_id
+            == roleApplicationData["role_listing_id"]
+        )
+        .first()
+    )
+
+    return roleApplication
