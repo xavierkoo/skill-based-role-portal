@@ -25,7 +25,7 @@
               >
                 <div class="card-body">
                   <div class="row">
-                    <div class="col-9">
+                    <div class="col-md-8 col-xl-8 col-xxl-8">
                       <h5 class="card-title no-underline">
                         <a id="hi" href="#" class="card-link text-normal me-2">{{
                           jobRole.role_name
@@ -261,10 +261,10 @@ function goBack() {
   updateShouldHide()
 }
 
-const shouldHide = ref(window.innerWidth < 768 && roleDetails.value.role_name !== 'TBC')
+const shouldHide = ref(window.innerWidth < 992 && roleDetails.value.role_name !== 'TBC')
 
 function updateShouldHide() {
-  shouldHide.value = window.innerWidth < 768 && roleDetails.value.role_name !== 'TBC'
+  shouldHide.value = window.innerWidth < 992 && roleDetails.value.role_name !== 'TBC'
 }
 
 onBeforeUnmount(() => {
