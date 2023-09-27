@@ -6,18 +6,14 @@ const { roleDetails } = defineProps({
     type: Object,
     required: true,
     default: () => ({
-      role_listing_creator: ['TBC', 'TBC'],
-      role_listing_source: 'TBC',
-      role_id: 'TBC',
-      role_listing_desc: 'TBC',
-      role_listing_close: 'TBC',
-      role_listing_ts_update: 'TBC',
-      role_listing_id: 'TBC',
-      role_listing_updater: ['TBC', 'TBC'],
-      role_listing_open: 'TBC',
-      role_listing_ts_create: 'TBC',
       role_name: 'TBC',
-      role_skills: ['TBC']
+      role_listing_desc: 'No description available',
+      role_listing_open: 'TBC',
+      role_listing_close: 'TBC',
+      role_skills: ['TBC'],
+      role_listing_creator: ['TBC', 'TBC'],
+      role_listing_updater: ['TBC', 'TBC'],
+      role_listing_id: 'TBC'
     })
   }
 })
