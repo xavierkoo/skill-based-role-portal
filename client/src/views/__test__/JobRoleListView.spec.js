@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import JobRoleList from '../JobRoleList.vue'
+import JobRoleListView from '../JobRoleListView.vue'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 
@@ -9,8 +9,8 @@ describe('JobRoleList', () => {
     const mock = new MockAdapter(axios)
     mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, [])
 
-    const wrapper = mount(JobRoleList)
-
+    const wrapper = mount(JobRoleListView)
+    wrapper.vm.isMounted = true
     await wrapper.vm.$nextTick()
 
     expect(wrapper.text()).toContain('No job roles available.')
@@ -39,7 +39,8 @@ describe('JobRoleList', () => {
     mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, mockResponse)
 
     // Mount the component
-    const wrapper = mount(JobRoleList)
+    const wrapper = mount(JobRoleListView)
+    wrapper.vm.isMounted = true
     // Set the userType variable to 'HR_admin'
     wrapper.vm.userType = 'HR_admin'
 
@@ -62,15 +63,6 @@ describe('JobRoleList', () => {
     mock.restore()
   })
 
-  it('displays "No job roles available" message when no job roles are provided', () => {
-    const jobRoles = []
-    const wrapper = mount(JobRoleList, {
-      props: { jobRoles }
-    })
-
-    expect(wrapper.text()).toContain('No job roles available.')
-  })
-
   it('displays job roles when job roles are provided', async () => {
     const jobRoles = [
       {
@@ -88,7 +80,7 @@ describe('JobRoleList', () => {
       // Add other job role objects here...
     ]
 
-    const wrapper = mount(JobRoleList, {
+    const wrapper = mount(JobRoleListView, {
       props: { jobRoles }
     })
 
@@ -100,7 +92,7 @@ describe('JobRoleList', () => {
 
   it('does not display job roles when no job roles are provided', async () => {
     const jobRoles = []
-    const wrapper = mount(JobRoleList, {
+    const wrapper = mount(JobRoleListView, {
       props: { jobRoles }
     })
 
@@ -127,7 +119,7 @@ describe('JobRoleList', () => {
       // Add other job role objects here...
     ]
 
-    const wrapper = mount(JobRoleList, {
+    const wrapper = mount(JobRoleListView, {
       props: { jobRoles }
     })
 
