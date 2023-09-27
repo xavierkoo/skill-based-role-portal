@@ -35,7 +35,7 @@ async def get_staff_skills(db: Session = Depends(get_db)):
                 .filter(models.SkillDetail.skill_id == skill.skill_id)
                 .first()
             )
-        staff_skill_list.append([skill_detail.skill_name, skill.ss_status])
+        staff_skill_list.append({"skill_name": skill_detail.skill_name, "skill.ss_status": skill.ss_status})
 
     db.close()
 
@@ -81,7 +81,7 @@ async def get_staff_skills_by_staff_id(
                 .filter(models.SkillDetail.skill_id == skill.skill_id)
                 .first()
             )
-        staff_skill_list.append([skill_detail.skill_name, skill.ss_status])
+        staff_skill_list.append({"skill_name": skill_detail.skill_name, "skill.ss_status": skill.ss_status})
 
     db.close()
 
