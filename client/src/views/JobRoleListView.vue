@@ -23,10 +23,16 @@
                 class="job-role-item mb-4 border-bottom"
                 @click="goToRolePage(jobRole)"
               >
-                <div class="card-body">
+                <div
+                  class="card-body"
+                  :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
+                >
                   <div class="row">
                     <div class="col-md-8 col-xl-8 col-xxl-8">
-                      <h5 class="card-title no-underline">
+                      <h5
+                        class="card-title"
+                        :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
+                      >
                         <a id="hi" href="#" class="card-link text-normal me-2">{{
                           jobRole.role_name
                         }}</a>
