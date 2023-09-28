@@ -106,6 +106,7 @@
                         :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
                       >
                         <a href="#" class="card-link text-normal">{{ jobRole.role_name }}</a>
+                        <CalculateRoleMatch :role-skills="jobRole.role_skills" />
                       </h5>
                     </div>
                     <div class="col">
@@ -177,6 +178,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import NavBar from '../components/NavBar.vue'
 import { fetchRoleListings } from '../service/rolelisting.service'
 import RoleDetails from '../components/RoleDetails.vue'
+import CalculateRoleMatch from '../components/CalculateRoleMatch.vue'
 
 const jobRoles = ref([])
 const userType = ref('')
@@ -232,19 +234,19 @@ const getData = async () => {
   } catch (error) {
     console.error('Error fetching data:', error)
   }
-  if (userType.value === 'staff') {
-    jobRoles.value = jobRoles.value.filter((jobRole) => {
-      // Convert role_listing_close to a date object
-      const closeDate = new Date(jobRole.role_listing_close)
+  // if (userType.value === 'staff') {
+  //   jobRoles.value = jobRoles.value.filter((jobRole) => {
+  //     // Convert role_listing_close to a date object
+  //     const closeDate = new Date(jobRole.role_listing_close)
 
-      // Compare the closeDate with today's date
-      return closeDate >= currentDate
-    })
-  }
+  //     // Compare the closeDate with today's date
+  //     return closeDate >= currentDate
+  //   })
+  // }
 }
 
 const getUserType = async () => {
-  userType.value = 'HR_admin'
+  userType.value = 'staff'
 }
 function truncateText(text, maxLength) {
   if (text.length <= maxLength) {
