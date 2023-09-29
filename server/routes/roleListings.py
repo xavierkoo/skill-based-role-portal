@@ -2,8 +2,19 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from database import get_db
 import models
+from pydantic import BaseModel
 from utils import get_random_id, validate_date
-
+class RoleListing(BaseModel):
+    role_id: int
+    role_listing_desc: str
+    role_listing_open: str 
+    role_listing_close: str
+class RoleListing_Update(BaseModel):
+    role_listing_id: int
+    role_id: int
+    role_listing_desc: str
+    role_listing_open: str 
+    role_listing_close: str      
 
 router = APIRouter()
 
@@ -79,7 +90,7 @@ async def get_role_listings(db: Session = Depends(get_db)):
 @router.post(
     "/api/v1/rolelistings/", status_code=status.HTTP_201_CREATED, tags=["Role Listing"]
 )
-async def create_role_listing(request: Request, db: Session = Depends(get_db)):
+async def create_role_listing(request: RoleListing, db: Session = Depends(get_db)):
     """
     The function `create_role_listing` creates a new role listing object and saves it to the database,
     while performing data validation on the input.
@@ -95,7 +106,7 @@ async def create_role_listing(request: Request, db: Session = Depends(get_db)):
     """
 
     # Get the role listing data from the request body.
-    role_listing_data = await request.json()
+    role_listing_data = request.dict()
 
     # Data Validation
     err_msg = []
@@ -156,7 +167,7 @@ async def create_role_listing(request: Request, db: Session = Depends(get_db)):
 @router.put(
     "/api/v1/rolelistings/", status_code=status.HTTP_200_OK, tags=["Role Listing"]
 )
-async def update_role_listing(request: Request, db: Session = Depends(get_db)):
+async def update_role_listing(request: RoleListing_Update, db: Session = Depends(get_db)):
     """
     The function `update_role_listing` updates an existing role listing object in the database based on
     the data provided in the request body.
@@ -172,7 +183,7 @@ async def update_role_listing(request: Request, db: Session = Depends(get_db)):
     """
 
     # Get the role listing data from the request body.
-    role_listing_data = await request.json()
+    role_listing_data = request.dict()
 
     # Data Validation
     err_msg = []
