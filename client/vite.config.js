@@ -32,13 +32,10 @@ export default defineConfig({
         changeOrigin: true,
         secure: false // Insecure, but okay for local development
       },
-      '/api/v1/staffskills/*': {
-        target: 'http://server_backend:5101',
+      '/api/v1/staffskills/': {
+        target: 'http://server_backend:5101', // Update with the correct backend URL
         changeOrigin: true,
-        secure: false,
-        pathRewrite: {
-          '^/api/v1/staffskills/': (staff_id) => `/api/v1/staffskills/${staff_id}`
-        }
+        secure: false
       }
       // '^/records/.*': {
       //     // auto appends to the target
