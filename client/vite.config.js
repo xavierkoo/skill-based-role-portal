@@ -31,6 +31,12 @@ export default defineConfig({
         target: 'http://server_backend:5101', // URL of Container 2
         changeOrigin: true,
         secure: false // Insecure, but okay for local development
+      },
+      '/api/v1/applications/': {
+        // auto appends to the target
+        target: 'http://server_backend:5101', // URL of Container 2
+        changeOrigin: true,
+        secure: false // Insecure, but okay for local development
       }
       // '^/records/.*': {
       //     // auto appends to the target
