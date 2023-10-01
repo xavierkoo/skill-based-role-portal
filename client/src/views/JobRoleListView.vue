@@ -182,7 +182,8 @@ import CalculateRoleMatch from '../components/CalculateRoleMatch.vue'
 
 const jobRoles = ref([])
 const userType = ref('')
-const currentDate = new Date()
+// const currentDate = new Date()
+const currentDate = new Date('2020-01-16')
 const isMounted = ref(false)
 
 const roleDetails = ref({
