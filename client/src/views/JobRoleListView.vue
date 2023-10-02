@@ -23,10 +23,16 @@
                 class="job-role-item mb-4 border-bottom"
                 @click="goToRolePage(jobRole)"
               >
-                <div class="card-body">
+                <div
+                  class="card-body"
+                  :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
+                >
                   <div class="row">
                     <div class="col-md-8 col-xl-8 col-xxl-8">
-                      <h5 class="card-title no-underline">
+                      <h5
+                        class="card-title"
+                        :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
+                      >
                         <a id="hi" href="#" class="card-link text-normal me-2">{{
                           jobRole.role_name
                         }}</a>
@@ -100,6 +106,7 @@
                         :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
                       >
                         <a href="#" class="card-link text-normal">{{ jobRole.role_name }}</a>
+                        <CalculateRoleMatch :role-skills="jobRole.role_skills" />
                       </h5>
                     </div>
                     <div class="col">
@@ -171,10 +178,12 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import NavBar from '../components/NavBar.vue'
 import { fetchRoleListings } from '../service/rolelisting.service'
 import RoleDetails from '../components/RoleDetails.vue'
+import CalculateRoleMatch from '../components/CalculateRoleMatch.vue'
 
 const jobRoles = ref([])
 const userType = ref('')
-const currentDate = new Date()
+// const currentDate = new Date()
+const currentDate = new Date('2020-01-16')
 const isMounted = ref(false)
 
 const roleDetails = ref({
@@ -226,19 +235,19 @@ const getData = async () => {
   } catch (error) {
     console.error('Error fetching data:', error)
   }
-  if (userType.value === 'staff') {
-    jobRoles.value = jobRoles.value.filter((jobRole) => {
-      // Convert role_listing_close to a date object
-      const closeDate = new Date(jobRole.role_listing_close)
+  // if (userType.value === 'staff') {
+  //   jobRoles.value = jobRoles.value.filter((jobRole) => {
+  //     // Convert role_listing_close to a date object
+  //     const closeDate = new Date(jobRole.role_listing_close)
 
-      // Compare the closeDate with today's date
-      return closeDate >= currentDate
-    })
-  }
+  //     // Compare the closeDate with today's date
+  //     return closeDate >= currentDate
+  //   })
+  // }
 }
 
 const getUserType = async () => {
-  userType.value = 'HR_admin'
+  userType.value = 'staff'
 }
 function truncateText(text, maxLength) {
   if (text.length <= maxLength) {
