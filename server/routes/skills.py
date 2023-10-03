@@ -79,7 +79,7 @@ async def get_staff_skills_by_staff_id(
         skill.ss_status = skill.ss_status
     db.close()
 
-    return staffSkills
+    return {"Results": staffSkills}
 
 @router.get("/api/v1/allskills/", status_code=status.HTTP_200_OK, tags=["Skills"])
 async def get_all_skills(db: Session = Depends(get_db)):
@@ -103,4 +103,4 @@ async def get_all_skills(db: Session = Depends(get_db)):
 
     db.close()
 
-    return allSkills
+    return {"Results": allSkills}
