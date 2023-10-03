@@ -1,6 +1,5 @@
 <script>
 import { createRoleApplication } from '../service/roleApplication.service.js'
-import { Modal } from 'bootstrap'
 
 export default {
   props: {
