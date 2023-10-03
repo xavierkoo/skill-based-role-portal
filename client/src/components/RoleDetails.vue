@@ -1,42 +1,70 @@
-<script setup>
-import { ref, onMounted, defineProps } from 'vue'
-const { roleDetails } = defineProps({
-  roleDetails: {
-    type: Object,
-    required: true,
-    default: () => ({
-      role_name: 'TBC',
-      role_listing_desc: 'No description available',
-      role_listing_open: 'TBC',
-      role_listing_close: 'TBC',
-      role_skills: ['TBC'],
-      role_listing_creator: ['TBC', 'TBC'],
-      role_listing_updater: ['TBC', 'TBC']
-    })
-  }
-})
-const user = 'HR'
-const skillsList = ref(null)
-const maxSkillsToShow = 2
-const visibleSkills = ref(roleDetails.role_skills.slice(0, maxSkillsToShow))
-const remainingSkills = ref(roleDetails.role_skills.slice(maxSkillsToShow))
-const showMore = ref(remainingSkills.value.length > 0)
+<script>
+import { ref, onMounted, watch } from 'vue'
+import RoleApplication from '../components/RoleApplication.vue'
 
-const toggleShowMore = () => {
-  if (showMore.value) {
-    visibleSkills.value = roleDetails.role_skills
-    showMore.value = false
+export default {
+  components: { RoleApplication },
+  props: {
+    roleDetails: {
+      type: Object,
+      required: true,
+      default: () => ({
+        role_name: 'TBC',
+        role_listing_desc: 'No description available',
+        role_listing_open: 'TBC',
+        role_listing_close: 'TBC',
+        role_skills: ['TBC'],
+        role_listing_creator: ['TBC', 'TBC'],
+        role_listing_updater: ['TBC', 'TBC']
+      })
+    }
+  },
+  setup(props) {
+    const user = 'Staff'
+    const skillsList = ref(null)
+    const maxSkillsToShow = 2
+    const visibleSkills = ref(props.roleDetails.role_skills.slice(0, maxSkillsToShow))
+    const remainingSkills = ref(props.roleDetails.role_skills.slice(maxSkillsToShow))
+    const showMore = ref(remainingSkills.value.length > 0)
+
+    const toggleShowMore = () => {
+      if (showMore.value) {
+        visibleSkills.value = props.roleDetails.role_skills
+        showMore.value = false
+      }
+    }
+
+    onMounted(() => {
+      if (skillsList.value.offsetWidth < skillsList.value.scrollWidth) {
+        showMore.value = true
+      }
+    })
+
+    watch(
+      () => props.roleDetails,
+      (newRoleDetails) => {
+        // Update visibleSkills, remainingSkills, and showMore
+        visibleSkills.value = newRoleDetails.role_skills.slice(0, maxSkillsToShow)
+        remainingSkills.value = newRoleDetails.role_skills.slice(maxSkillsToShow)
+        showMore.value = remainingSkills.value.length > 0
+      }
+    )
+
+    return {
+      user,
+      skillsList,
+      maxSkillsToShow,
+      visibleSkills,
+      remainingSkills,
+      showMore,
+      toggleShowMore
+    }
   }
 }
-
-onMounted(() => {
-  if (skillsList.value.offsetWidth < skillsList.value.scrollWidth) {
-    showMore.value = true
-  }
-})
 </script>
 
 <template>
+  <RoleApplication :role-details="roleDetails" />
   <div class="roleDetails container-fluid px-5">
     <h1 class="check">{{ roleDetails.role_name }}</h1>
     <div class="details">
@@ -96,6 +124,8 @@ onMounted(() => {
       role="link"
       aria-label="Apply to Backend Engineer Intern, Stream Computing - 2024 on company website"
       class="defaultBtn my-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view"
+      data-bs-toggle="modal"
+      data-bs-target="#applicationModal"
     >
       <li-icon aria-hidden="true" type="link-external" class="artdeco-button__icon" size="small"
         ><svg
