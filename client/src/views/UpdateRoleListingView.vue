@@ -89,14 +89,21 @@ import { updateRoleListing } from '../service/UpdateRoleListing.service'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const selectedData = JSON.parse(route.query.selectedData)
+let selectedData = null
+
+try {
+  selectedData = JSON.parse(route.query.selectedData)
+} catch (error) {
+  // Handle the JSON parsing error, e.g., log the error or provide a default value
+  console.error('Error parsing JSON data:', error)
+}
 
 // Define refs for selectedData properties
-const role_name = ref(selectedData.role_name)
-const role_listing_open = ref(selectedData.role_listing_open)
-const role_listing_close = ref(selectedData.role_listing_close)
-const role_listing_desc = ref(selectedData.role_listing_desc)
-const role_listing_id = ref(selectedData.role_listing_id)
+const role_name = ref(selectedData?.role_name || '')
+const role_listing_open = ref(selectedData?.role_listing_open || '')
+const role_listing_close = ref(selectedData?.role_listing_close || '')
+const role_listing_desc = ref(selectedData?.role_listing_desc || '')
+const role_listing_id = ref(selectedData?.role_listing_id || '')
 const showSuccess = ref(false)
 const showError = ref(false)
 const errors = ref([])
