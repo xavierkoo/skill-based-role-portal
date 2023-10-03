@@ -1,5 +1,13 @@
 <template>
   <NavBar />
+  <div class="d-flex justify-content-end me-5 mt-3">
+    <label class="me-2 mt-2">Filter by skill:</label>
+    <select class="form-select" style="max-width: 200px">
+      <option v-for="skill in availableSkills" :key="skill.skill_name" :value="skill.skill_name">
+        {{ skill.skill_name }}
+      </option>
+    </select>
+  </div>
   <div class="container-fluid mt-5">
     <div v-if="isMounted">
       <div class="row">
@@ -177,9 +185,11 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import NavBar from '../components/NavBar.vue'
 import { fetchRoleListings } from '../service/rolelisting.service'
+import { getAllAvailableSkills } from '../service/staffskills.service'
 import RoleDetails from '../components/RoleDetails.vue'
 import CalculateRoleMatch from '../components/CalculateRoleMatch.vue'
 
+const availableSkills = ref([])
 const jobRoles = ref([])
 const userType = ref('')
 // const currentDate = new Date()
@@ -222,6 +232,15 @@ const goToRolePage = (index) => {
     role_listing_updater: index.role_listing_updater
   }
   updateShouldHide()
+}
+
+const getAvailableSkills = async () => {
+  try {
+    const response = await getAllAvailableSkills()
+    availableSkills.value = response
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  }
 }
 
 const setData = (data) => {
@@ -281,6 +300,7 @@ onBeforeUnmount(() => {
 })
 // Call the getData function when the component is mounted
 onMounted(() => {
+  getAvailableSkills()
   getUserType()
   getData()
   window.addEventListener('resize', updateShouldHide)
