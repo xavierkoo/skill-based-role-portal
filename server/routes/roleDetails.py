@@ -37,4 +37,4 @@ async def get_role_details(db: Session = Depends(get_db)):
     
     db.close()
 
-    return roleDetails
+    return {"Results": roleDetails}
