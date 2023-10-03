@@ -1,20 +1,29 @@
 <template>
   <div class="updateRoleListing container-fluid w-50 text-center">
-    <div class="text-start mt-3">
+    <div class="d-flex mt-3 align-items-center">
       <img
         class="back"
         src="https://cdn-icons-png.flaticon.com/512/93/93634.png"
         alt="Back Button free icon"
         title="Back Button free icon"
+        @click="$router.push('/rolelisting')"
       />
+      <div class="flex-grow-1"></div>
+      <div v-if="showSuccess" class="text-center noti">Role Listing Successfully Updated</div>
+      <div class="flex-grow-1"></div>
     </div>
-    <h1 class="my-3 header">Role Listing Submission</h1>
+    <div v-if="showError" class="text-center error mt-2">
+      <ul class="my-auto">
+        <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+      </ul>
+    </div>
+    <h1 class="my-3 header">Update Role Listing</h1>
     <div class="col mx-auto text-start">
       <div class="mb-3">
         <label for="roleListingID" class="form-label">Role Listing ID</label>
         <input
           id="roleListingID"
-          v-model="roleListingID"
+          v-model="role_listing_id"
           type="text"
           class="form-control role"
           disabled
@@ -25,7 +34,7 @@
         <label for="roleName" class="form-label">Role Name</label>
         <input
           id="roleName"
-          v-model="roleName"
+          v-model="role_name"
           type="text"
           class="form-control"
           placeholder=""
@@ -35,14 +44,20 @@
 
       <div class="mb-3">
         <label for="startDate" class="form-label">Application Start Date</label>
-        <input id="startDate" v-model="startDate" type="date" class="form-control" placeholder="" />
+        <input
+          id="startDate"
+          v-model="role_listing_open"
+          type="date"
+          class="form-control"
+          placeholder=""
+        />
       </div>
 
       <div class="mb-3">
         <label for="closeDate" class="form-label">Application Close Date</label>
         <input
           id="closeDate"
-          v-model="closeDate"
+          v-model="role_listing_close"
           type="date"
           class="form-control"
           placeholder=""
@@ -50,20 +65,14 @@
         />
       </div>
 
-      <div id="skills" class="mb-3">
-        <label for="skills" class="form-label d-block">Skills</label>
-        <div
-          v-for="(roleSkill, i) in selectedData.skills"
-          :key="i"
-          class="badge rounded-pill bg-light text-dark p-2 me-2 mb-2"
-        >
-          {{ roleSkill }}
-        </div>
-      </div>
-
       <div class="mb-3">
         <label for="textarea">Role Description</label>
-        <textarea id="textarea" v-model="roleDescription" class="form-control" rows="5"></textarea>
+        <textarea
+          id="textarea"
+          v-model="role_listing_desc"
+          class="form-control"
+          rows="5"
+        ></textarea>
         <div class="invalid-feedback">Valid last name is required.</div>
       </div>
 
@@ -77,57 +86,52 @@
 <script setup>
 import { ref } from 'vue'
 import { updateRoleListing } from '../service/UpdateRoleListing.service'
+import { useRoute } from 'vue-router'
 
-//to be replace with data sent by other components/page
+const route = useRoute()
+const selectedData = JSON.parse(route.query.selectedData)
 
-const selectedData = {
-  role_listing_id: 2,
-  role_name: 'Head, Talent Acquisition',
-  role_id: 234567892,
-  skills: [
-    'Scrum Master1',
-    'Product Owner2',
-    'Scrum Master3',
-    'Product Owner4',
-    'Scrum Master5',
-    'Product Owner6',
-    'Scrum Master7',
-    'Product Owner8',
-    'Scrum Master9',
-    'Product Owner10',
-    'Scrum Master11',
-    'Product Owner12'
-  ],
-  role_listing_desc: 'Test Description',
-  role_listing_open: '2023-09-17',
-  role_listing_close: '2023-09-20'
-}
-
-const roleListingID = ref(selectedData.role_listing_id)
-const roleName = ref(selectedData.role_name)
-const startDate = ref(selectedData.role_listing_open)
-const closeDate = ref(selectedData.role_listing_close)
-const roleDescription = ref(selectedData.role_listing_desc)
+// Define refs for selectedData properties
+const role_name = ref(selectedData.role_name)
+const role_listing_open = ref(selectedData.role_listing_open)
+const role_listing_close = ref(selectedData.role_listing_close)
+const role_listing_desc = ref(selectedData.role_listing_desc)
+const role_listing_id = ref(selectedData.role_listing_id)
+const showSuccess = ref(false)
+const showError = ref(false)
+const errors = ref([])
 
 function update() {
-  // const updater = currentUser.id (get updater userid)
-
+  errors.value = []
   const dataToUpdate = {
-    role_listing_id: roleListingID.value,
+    role_listing_id: selectedData.role_listing_id,
     role_id: selectedData.role_id,
-    // role_listing_updater:updater,
-    role_listing_desc: roleDescription.value,
-    role_listing_open: startDate.value,
-    role_listing_close: closeDate.value
+    role_listing_desc: role_listing_desc.value,
+    role_listing_open: role_listing_open.value,
+    role_listing_close: role_listing_close.value
   }
-  console.log(dataToUpdate)
 
-  updateRoleListing(dataToUpdate)
-    .then((result) => {
-      console.log('success' + result)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+  if (!role_listing_desc.value) {
+    errors.value.push("Role Listing Description can't be empty")
+  }
+  if (role_listing_open.value >= role_listing_close.value) {
+    errors.value.push('Role Listing Open must be a date earlier than Role Listing Close')
+  }
+  if (errors.value.length > 0) {
+    showError.value = true
+  } else {
+    updateRoleListing(dataToUpdate)
+      .then((result) => {
+        console.log('success' + result)
+        showError.value = false
+        showSuccess.value = true
+        setTimeout(() => {
+          showSuccess.value = false
+        }, 5000)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
 }
 </script>

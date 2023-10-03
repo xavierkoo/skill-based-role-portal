@@ -27,7 +27,7 @@ describe('updateRoleListing', () => {
     }
 
     mock
-      .onPut('http://localhost:8080/api/v1/rolelistings/update', updatedRoleListing)
+      .onPut('http://localhost:8080/api/v1/rolelistings/', updatedRoleListing)
       .reply(200, expectedResult)
 
     const result = await updateRoleListing(updatedRoleListing)
@@ -48,7 +48,7 @@ describe('updateRoleListing', () => {
 
     // Mock Axios response to simulate validation error
     mock
-      .onPut('http://localhost:8080/api/v1/rolelistings/update', updatedRoleListing)
+      .onPut('http://localhost:8080/api/v1/rolelistings/', updatedRoleListing)
       .reply(404, { detail: expectedError })
 
     // Act & Assert
@@ -74,7 +74,7 @@ describe('updateRoleListing', () => {
     const expectedError = 'Enter correct Role Id' // The expected error message
 
     mock
-      .onPut('http://localhost:8080/api/v1/rolelistings/update', updatedRoleListing)
+      .onPut('http://localhost:8080/api/v1/rolelistings/', updatedRoleListing)
       .reply(404, { detail: expectedError })
 
     // Act & Assert
@@ -99,7 +99,7 @@ describe('updateRoleListing', () => {
     const expectedError = 'Enter correct type of description' // The expected error message
 
     mock
-      .onPut('http://localhost:8080/api/v1/rolelistings/update', updatedRoleListing)
+      .onPut('http://localhost:8080/api/v1/rolelistings/', updatedRoleListing)
       .reply(404, { detail: expectedError })
 
     // Act & Assert
@@ -125,7 +125,7 @@ describe('updateRoleListing', () => {
       'Enter correct type of date format or Close Date cannot be before Open Date' // The expected error message
 
     mock
-      .onPut('http://localhost:8080/api/v1/rolelistings/update', updatedRoleListing)
+      .onPut('http://localhost:8080/api/v1/rolelistings/', updatedRoleListing)
       .reply(404, { detail: expectedError })
 
     // Act & Assert

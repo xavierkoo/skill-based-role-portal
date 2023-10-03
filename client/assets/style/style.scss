@@ -52,8 +52,36 @@ p {
     padding:8px 16px;
     background-color: rgb(35, 78, 170);
     color:white;
+    border: none;
     &:hover {
 		background-color: $hoverColor;
+		color: #ffffff;
+	}
+}
+
+.noti{
+    border: none;
+    border-radius: 16px;
+    background-color: rgb(111, 223, 111);
+    color:  rgb(54, 122, 54);
+    padding:8px;
+}
+
+.error{
+    border: none;
+    border-radius: 16px;
+    background-color: rgb(223, 111, 111);
+    color:  rgb(122, 54, 54);
+    padding:8px;
+}
+
+.updateBtn{
+    border-radius: 16px;
+    padding:8px 16px;
+    background-color: rgb(255, 255, 255);
+    color:black;
+    &:hover {
+		background-color: rgb(35, 78, 170);;
 		color: #ffffff;
 	}
 }
@@ -101,7 +129,7 @@ p {
     }
     @media (min-width: 400px) {
         h1 {
-            font-size: 20px;
+            font-size: 18px;
         }
         .details{
             display: flex;
