@@ -18,7 +18,7 @@
           :hidden="shouldHide"
         >
           <!-- Conditional rendering for when no job roles are available -->
-          <div v-if="jobRoles.length === 0">
+          <div v-if="jobRoles?.length === 0">
             <p class="text-primary text-center">No job roles available.</p>
           </div>
 
@@ -205,7 +205,9 @@ const roleDetails = ref({
   role_listing_close: 'TBC',
   role_skills: ['TBC'],
   role_listing_creator: ['TBC', 'TBC'],
-  role_listing_updater: ['TBC', 'TBC']
+  role_listing_updater: ['TBC', 'TBC'],
+  role_listing_id: 'TBC',
+  role_id: 'TBC'
 })
 
 // Function to calculate the days until the listing opens
@@ -231,7 +233,9 @@ const goToRolePage = (index) => {
     role_listing_close: index.role_listing_close,
     role_skills: index.role_skills,
     role_listing_creator: index.role_listing_creator,
-    role_listing_updater: index.role_listing_updater
+    role_listing_updater: index.role_listing_updater,
+    role_listing_id: index.role_listing_id,
+    role_id: index.role_id
   }
   updateShouldHide()
 }
@@ -299,7 +303,9 @@ function goBack() {
     role_listing_close: 'TBC',
     role_skills: ['TBC'],
     role_listing_creator: ['TBC', 'TBC'],
-    role_listing_updater: ['TBC', 'TBC']
+    role_listing_updater: ['TBC', 'TBC'],
+    role_listing_id: 'TBC',
+    role_id: 'TBC'
   }
   updateShouldHide()
 }

@@ -22,7 +22,8 @@ const router = createRouter({
     {
       path: '/update',
       name: 'UpdateRoleListing',
-      component: UpdateRoleListingView
+      component: UpdateRoleListingView,
+      props: true
     },
     {
       path: '/create',
