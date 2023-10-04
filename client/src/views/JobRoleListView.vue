@@ -10,7 +10,7 @@
           :hidden="shouldHide"
         >
           <!-- Conditional rendering for when no job roles are available -->
-          <div v-if="jobRoles.length === 0">
+          <div v-if="jobRoles?.length === 0">
             <p class="text-primary">No job roles available.</p>
           </div>
 
@@ -235,7 +235,7 @@ const setData = (data) => {
 const getData = async () => {
   try {
     const response = await fetchRoleListings()
-    setData(response)
+    setData(response.Results)
   } catch (error) {
     console.error('Error fetching data:', error)
   }
