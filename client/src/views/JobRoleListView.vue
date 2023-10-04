@@ -1,5 +1,13 @@
 <template>
   <NavBar />
+  <div class="d-flex justify-content-end me-5 mt-3">
+    <label class="me-2 mt-2">Filter by skill:</label>
+    <select v-model="selectedSkill" class="form-select" style="max-width: 200px">
+      <option v-for="skill in availableSkills" :key="skill.skill_name" :value="skill.skill_name">
+        {{ skill.skill_name }}
+      </option>
+    </select>
+  </div>
   <div class="container-fluid mt-5">
     <div v-if="isMounted">
       <div class="row">
@@ -11,7 +19,7 @@
         >
           <!-- Conditional rendering for when no job roles are available -->
           <div v-if="jobRoles?.length === 0">
-            <p class="text-primary">No job roles available.</p>
+            <p class="text-primary text-center">No job roles available.</p>
           </div>
 
           <div v-else class="container">
@@ -169,17 +177,21 @@
         </div>
       </div>
     </div>
-    <div v-else><i class="fa fa-spinner fa-spin"></i> Loading...</div>
+    <div v-else><i class="fa fa-spinner fa-spin text-center"></i> Loading...</div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watchEffect } from 'vue'
 import NavBar from '../components/NavBar.vue'
 import { fetchRoleListings } from '../service/rolelisting.service'
+import { getAllAvailableSkills } from '../service/staffskills.service'
 import RoleDetails from '../components/RoleDetails.vue'
 import CalculateRoleMatch from '../components/CalculateRoleMatch.vue'
 
+const initialRoles = ref([])
+const availableSkills = ref([])
+const selectedSkill = ref('')
 const jobRoles = ref([])
 const userType = ref('')
 // const currentDate = new Date()
@@ -228,14 +240,36 @@ const goToRolePage = (index) => {
   updateShouldHide()
 }
 
+const getAvailableSkills = async () => {
+  try {
+    const response = await getAllAvailableSkills()
+    availableSkills.value = response
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  }
+}
+
 const setData = (data) => {
   jobRoles.value = data
 }
 
+watchEffect(() => {
+  // Filter job roles based on selected skill
+  if (selectedSkill.value) {
+    jobRoles.value = initialRoles.value.filter((jobRole) =>
+      jobRole.role_skills.includes(selectedSkill.value)
+    )
+  } else {
+    // If no skill is selected, show all job roles
+    setData(initialRoles.value)
+  }
+})
+
 const getData = async () => {
   try {
     const response = await fetchRoleListings()
-    setData(response.Results)
+    setData(response)
+    initialRoles.value = response
   } catch (error) {
     console.error('Error fetching data:', error)
   }
@@ -287,6 +321,7 @@ onBeforeUnmount(() => {
 })
 // Call the getData function when the component is mounted
 onMounted(() => {
+  getAvailableSkills()
   getUserType()
   getData()
   window.addEventListener('resize', updateShouldHide)
