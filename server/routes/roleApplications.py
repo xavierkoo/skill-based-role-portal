@@ -34,7 +34,7 @@ async def get_role_applications(db: Session = Depends(get_db)):
 
     db.close()
 
-    return roleApplications
+    return {"Results": roleApplications}
 
 
 @router.get(
@@ -84,7 +84,7 @@ async def get_role_applications_by_staff_id(
 
     db.close()
 
-    return roleApplications
+    return {"Results": roleApplications}
 
 
 @router.post(
