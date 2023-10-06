@@ -115,17 +115,4 @@ export default {
     }
   }
 }
-
-const fetchStaffSkills = async () => {
-  try {
-    const response = await getStaffSkills(123456789)
-    setData(response.Results)
-  } catch (error) {
-    console.error('Error fetching data:', error)
-  }
-}
-
-onMounted(() => {
-  fetchStaffSkills()
-})
 </script>
