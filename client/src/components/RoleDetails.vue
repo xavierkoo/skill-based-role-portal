@@ -1,9 +1,11 @@
 <script>
 import { ref, onMounted, watch } from 'vue'
-import RoleApplication from '../components/RoleApplication.vue'
+import RoleApplication from './RoleApplication.vue'
+import CalculateRoleMatch from './CalculateRoleMatch.vue'
+import { getStaffSkills } from '../service/staffskills.service'
 
 export default {
-  components: { RoleApplication },
+  components: { RoleApplication, CalculateRoleMatch },
   props: {
     roleDetails: {
       type: Object,
@@ -21,10 +23,13 @@ export default {
       })
     }
   },
+
   setup(props) {
     const user = 'HR'
     const skillsList = ref(null)
+    const staffSkills = ref([])
     const maxSkillsToShow = 2
+    const allRoleSkills = ref([])
     const visibleSkills = ref(props.roleDetails.role_skills.slice(0, maxSkillsToShow))
     const remainingSkills = ref(props.roleDetails.role_skills.slice(maxSkillsToShow))
     const showMore = ref(remainingSkills.value.length > 0)
@@ -37,15 +42,34 @@ export default {
     }
 
     onMounted(() => {
+      fetchStaffSkills()
       if (skillsList.value.offsetWidth < skillsList.value.scrollWidth) {
         showMore.value = true
       }
     })
 
+    const setData = (data) => {
+      for (const skills of data) {
+        if (skills.ss_status === 'active') {
+          staffSkills.value.push(skills.skill_name)
+        }
+      }
+    }
+
+    const fetchStaffSkills = async () => {
+      try {
+        const response = await getStaffSkills(123456789)
+        setData(response.Results)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
     watch(
       () => props.roleDetails,
       (newRoleDetails) => {
         // Update visibleSkills, remainingSkills, and showMore
+        allRoleSkills.value = props.roleDetails.role_skills
         visibleSkills.value = newRoleDetails.role_skills.slice(0, maxSkillsToShow)
         remainingSkills.value = newRoleDetails.role_skills.slice(maxSkillsToShow)
         showMore.value = remainingSkills.value.length > 0
@@ -59,7 +83,9 @@ export default {
       visibleSkills,
       remainingSkills,
       showMore,
-      toggleShowMore
+      toggleShowMore,
+      staffSkills,
+      allRoleSkills
     }
   }
 }
@@ -107,7 +133,7 @@ export default {
       <span class="fw-bold">Deadline: </span>
       <span class="check">{{ roleDetails.role_listing_close }}</span>
     </div>
-    <br />
+    <CalculateRoleMatch class="my-2" :role-skills="allRoleSkills" />
     <div class="d-flex align-items-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -126,8 +152,10 @@ export default {
       <div class="skills-container">
         <div ref="skillsList" class="skills-list">
           <span class="fw-bold">Skills: </span>
-          <span v-for="(skill, index) in visibleSkills" :key="index" class="">
-            <div class="badge rounded-pill text-dark bg-light">{{ skill }}</div>
+          <span v-for="(skill, index) in visibleSkills" :key="index">
+            <div>
+              {{ skill }}
+            </div>
             <template v-if="index !== visibleSkills.length - 1 || showMore"> </template>
           </span>
           <a v-if="showMore" class="showMore f-underline" @click="toggleShowMore">

@@ -114,7 +114,7 @@
                         :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
                       >
                         <a href="#" class="card-link text-normal">{{ jobRole.role_name }}</a>
-                        <CalculateRoleMatch :role-skills="jobRole.role_skills" />
+                        <CalculateRoleMatch class="ms-2" :role-skills="jobRole.role_skills" />
                       </h5>
                     </div>
                     <div class="col">
@@ -268,8 +268,8 @@ watchEffect(() => {
 const getData = async () => {
   try {
     const response = await fetchRoleListings()
-    setData(response)
-    initialRoles.value = response
+    setData(response.Results)
+    initialRoles.value = response.Results
   } catch (error) {
     console.error('Error fetching data:', error)
   }
@@ -283,16 +283,20 @@ const getData = async () => {
   //   })
   // }
 }
+//     // Compare the closeDate with today's date
+//     return closeDate >= currentDate
+//   })
+// }
 
-const getUserType = async () => {
-  userType.value = 'staff'
-}
 function truncateText(text, maxLength) {
   if (text.length <= maxLength) {
     return text
   } else {
     return text.substring(0, maxLength) + '...'
   }
+}
+const getUserType = async () => {
+  userType.value = 'staff'
 }
 
 function goBack() {
