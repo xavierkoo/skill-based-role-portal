@@ -153,7 +153,13 @@ export default {
         <div ref="skillsList" class="skills-list">
           <span class="fw-bold">Skills: </span>
           <span v-for="(skill, index) in visibleSkills" :key="index">
-            <div>
+            <div
+              :class="
+                skill !== 'TBC' && staffSkills && staffSkills.includes(skill)
+                  ? 'badge rounded-pill bg-success mx-1'
+                  : 'badge rounded-pill bg-secondary mx-1'
+              "
+            >
               {{ skill }}
             </div>
             <template v-if="index !== visibleSkills.length - 1 || showMore"> </template>
