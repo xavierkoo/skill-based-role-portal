@@ -8,13 +8,19 @@ const emptyError = ref(null)
 const route = useRoute()
 
 onMounted(async () => {
-  roleApplications.value = await getRoleApplications()
-
   // check if there is a path parameter
   const id = route.params.id
   if (id) {
     try {
       roleApplications.value = await getRoleApplicationById(id)
+      roleApplications.value = roleApplications.value.data.Results
+    } catch (error) {
+      console.log(error)
+      roleApplications.value = []
+    }
+  } else {
+    try {
+      roleApplications.value = await getRoleApplications()
       roleApplications.value = roleApplications.value.data.Results
     } catch (error) {
       console.log(error)
@@ -64,9 +70,13 @@ function formatDate(date) {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="roleApplication in roleApplications" :key="roleApplication.role_app_id">
+        <tr
+          v-for="roleApplication in roleApplications"
+          :key="roleApplication.role_app_id"
+          class="py-2"
+        >
           <th scope="row">{{ roleApplication.role_app_id }}</th>
-          <td>{{ roleApplication.role_listing_id }}</td>
+          <td>{{ roleApplication.role_title }}</td>
           <td>{{ formatDate(roleApplication.role_application_ts_create) }}</td>
           <td>{{ roleApplication.role_app_status }}</td>
           <td>{{ roleApplication.role_app_reason }}</td>
