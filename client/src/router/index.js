@@ -44,7 +44,7 @@ const router = createRouter({
     },
     {
       path: '/status/:id',
-      name: 'ApplicationStatus',
+      name: 'ApplicationStatusByStaffID',
       component: ApplicationStatusView
     },
 
