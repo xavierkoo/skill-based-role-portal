@@ -11,5 +11,5 @@ export const getRoleApplications = async () => {
 }
 
 export const getRoleApplicationById = async (staffID) => {
-  return await axios.get(`${BASE_URL}/${staffID}`)
+  return await axios.get(`${BASE_URL}${staffID}`)
 }
