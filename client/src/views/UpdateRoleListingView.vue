@@ -6,7 +6,7 @@
         src="https://cdn-icons-png.flaticon.com/512/93/93634.png"
         alt="Back Button free icon"
         title="Back Button free icon"
-        @click="$router.push('/rolelisting')"
+        @click="$router.push('/')"
       />
       <div class="flex-grow-1"></div>
       <div v-if="showSuccess" class="text-center noti">Role Listing Successfully Updated</div>
