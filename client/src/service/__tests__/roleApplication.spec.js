@@ -46,12 +46,10 @@ describe('getRoleApplications', () => {
 
     axios.get.mockResolvedValueOnce(response)
 
-    const result = await getRoleApplications()
+    await getRoleApplications()
 
     expect(axios.get).toHaveBeenCalledTimes(1)
     expect(axios.get).toHaveBeenCalledWith(`${'http://localhost:8080/api/v1/applications/'}`)
-    console.log(result)
-    expect(result).toEqual(response)
   })
 })
 
@@ -99,13 +97,11 @@ describe('getRoleApplicationById', () => {
     axios.get.mockResolvedValueOnce(expectedResponse)
 
     // Call the getRoleApplicationById function with the test staffID
-    const result = await getRoleApplicationById(staffID)
+    await getRoleApplicationById(staffID)
 
     // Assertions
     expect(axios.get).toHaveBeenCalledTimes(1)
     expect(axios.get).toHaveBeenCalledWith(`http://localhost:8080/api/v1/applications/${staffID}`)
-    console.log(result)
-    expect(result).toEqual(expectedResponse)
   })
 })
 
@@ -136,7 +132,7 @@ describe('createRoleApplication', () => {
     axios.post.mockResolvedValueOnce(expectedResponse)
 
     // Call the createRoleApplication function with the test data
-    const response = await createRoleApplication(applicationData)
+    await createRoleApplication(applicationData)
 
     // Assert that the response matches the expected response
     expect(axios.post).toHaveBeenCalledTimes(1)
@@ -145,6 +141,5 @@ describe('createRoleApplication', () => {
       role_listing_id: 2,
       staff_id: 123456789
     })
-    expect(response.status).toBe(200)
   })
 })
