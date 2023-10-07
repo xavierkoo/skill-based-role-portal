@@ -81,6 +81,20 @@ async def get_role_applications_by_staff_id(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Role applications not found",
         )
+    
+    # based on the jobID in the role application, get the roleid from role listing and then get the role title from role details
+    for roleApplication in roleApplications:
+        roleListing = (
+            db.query(models.RoleListing)
+            .filter(models.RoleListing.role_listing_id == roleApplication.role_listing_id)
+            .first()
+        )
+        roleApplication.role_title = (
+            db.query(models.RoleDetail)
+            .filter(models.RoleDetail.role_id == roleListing.role_id)
+            .first()
+            .role_name
+        )
 
     db.close()
 

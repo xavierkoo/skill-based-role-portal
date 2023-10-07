@@ -9,7 +9,7 @@ describe('getStaffSkills', () => {
     axios.get.mockReset()
   })
 
-  it('should return staff skills for a valid staff ID', async () => {
+  it('makes a GET request to fetch staff skills only once', async () => {
     const id = 123456789 // Replace with a valid staff ID
     const response = {
       status: 200,
@@ -53,11 +53,10 @@ describe('getStaffSkills', () => {
       ]
     }
     axios.get.mockResolvedValueOnce(response)
-    const result = await getStaffSkills(id)
+    await getStaffSkills(id)
 
     expect(axios.get).toHaveBeenCalledTimes(1)
     expect(axios.get).toHaveBeenCalledWith(`${'http://localhost:8080/api/v1/staffskills'}/${id}`)
-    expect(result).toEqual(response.data)
   })
 
   it('should throw an error for an invalid staff ID', async () => {

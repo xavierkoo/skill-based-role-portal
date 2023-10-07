@@ -11,7 +11,7 @@ describe('CalculateRoleMatch', () => {
       role_skills: ['skill1', 'skill2', 'skill3']
     }
     const staffSkills = []
-    getStaffSkills.mockResolvedValue({ data: staffSkills })
+    getStaffSkills.mockResolvedValue({ Results: { data: staffSkills } })
 
     const wrapper = mount(CalculateRoleMatch, {
       props: { roleSkills }
@@ -29,7 +29,7 @@ describe('CalculateRoleMatch', () => {
     const roleSkills = {
       role_skills: ['skill1', 'skill2', 'skill3']
     }
-    getStaffSkills.mockRejectedValue(new Error('Failed to fetch staff skills'))
+    getStaffSkills.mockRejectedValue(new Error('Failed to fetch staff skills')) // Simulate Error msg
 
     const wrapper = mount(CalculateRoleMatch, {
       props: { roleSkills }

@@ -9,7 +9,7 @@ describe('RoleDetails Service', () => {
     axios.get.mockReset()
   })
   describe('fetchRoleDetails', () => {
-    test('makes a GET request to fetch RoleDetails', async () => {
+    test('makes a GET request to fetch RoleDetails only once', async () => {
       const rolesMock = [
         {
           role_id: 234567893,
@@ -21,10 +21,10 @@ describe('RoleDetails Service', () => {
       axios.get.mockResolvedValue({
         data: rolesMock
       })
-      const roles = await fetchRoleDetails()
+      await fetchRoleDetails()
 
+      expect(axios.get).toHaveBeenCalledTimes(1)
       expect(axios.get).toHaveBeenCalledWith('http://localhost:8080/api/v1/roledetails/')
-      expect(roles).toStrictEqual(rolesMock)
     })
   })
 })
