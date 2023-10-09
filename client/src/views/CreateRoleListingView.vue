@@ -6,6 +6,7 @@
         src="https://cdn-icons-png.flaticon.com/512/93/93634.png"
         alt="Back Button free icon"
         title="Back Button free icon"
+        @click="$router.push('/')"
       />
     </div>
     <h1 class="my-3 header">Role Listing Submission</h1>
@@ -65,7 +66,7 @@ const selectedRole = ref('')
 const getData = async () => {
   try {
     const response = await fetchRoleDetails()
-    roleDetails.value = response
+    roleDetails.value = response.Results
   } catch (error) {
     console.log(error)
   }
