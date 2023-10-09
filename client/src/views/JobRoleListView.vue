@@ -182,7 +182,6 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watchEffect } from 'vue'
-import NavBar from '../components/NavBar.vue'
 import { fetchRoleListings } from '../service/rolelisting.service'
 import { getAllAvailableSkills } from '../service/staffskills.service'
 import RoleDetails from '../components/RoleDetails.vue'
