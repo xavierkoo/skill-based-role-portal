@@ -66,7 +66,7 @@ const selectedRole = ref('')
 const getData = async () => {
   try {
     const response = await fetchRoleDetails()
-    roleDetails.value = response
+    roleDetails.value = response.Results
   } catch (error) {
     console.log(error)
   }

@@ -173,25 +173,26 @@ export default {
     <button
       role="link"
       aria-label="Apply to Backend Engineer Intern, Stream Computing - 2024 on company website"
-      class="defaultBtn w-sm-50 my-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view"
+      class="defaultBtn d-flex w-sm-50 my-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view"
       data-bs-toggle="modal"
       data-bs-target="#applicationModal"
     >
-      <li-icon aria-hidden="true" type="link-external" class="artdeco-button__icon" size="small"
-        ><svg
+      <div aria-hidden="true" type="link-external" class="artdeco-button__icon" size="small">
+        <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16"
           data-supported-dps="16x16"
           fill="currentColor"
-          class="mercado-match"
+          class="mercado-match me-1"
           width="16"
           height="16"
           focusable="false"
         >
           <path
             d="M15 1v6h-2V4.41L7.41 10 6 8.59 11.59 3H9V1zm-4 10a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1h2V3H5a3 3 0 00-3 3v5a3 3 0 003 3h5a3 3 0 003-3V9h-2z"
-          ></path></svg
-      ></li-icon>
+          ></path>
+        </svg>
+      </div>
       <span class="artdeco-button__text"> Apply </span>
     </button>
     <h2>About the job</h2>

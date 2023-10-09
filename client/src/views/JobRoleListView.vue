@@ -1,5 +1,4 @@
 <template>
-  <NavBar />
   <div class="d-flex justify-content-end me-5 mt-3">
     <label class="me-2 mt-2">Filter by skill:</label>
     <select v-model="selectedSkill" class="form-select" style="max-width: 200px">
@@ -243,7 +242,7 @@ const goToRolePage = (index) => {
 const getAvailableSkills = async () => {
   try {
     const response = await getAllAvailableSkills()
-    availableSkills.value = response
+    availableSkills.value = response.Results
   } catch (error) {
     console.error('Error fetching data:', error)
   }
