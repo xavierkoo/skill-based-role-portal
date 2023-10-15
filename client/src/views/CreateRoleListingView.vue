@@ -1,4 +1,30 @@
 <template>
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div
+          class="modal-body fw-bold"
+          :class="message.includes('Failed') ? 'text-danger' : 'text-success'"
+        >
+          {{ message }}
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="updateRoleListing container-fluid w-50 text-center">
     <div class="text-start mt-3">
       <img
@@ -23,11 +49,13 @@
             {{ role.role_name }}
           </option>
         </select>
+        <div v-if="invalidRoleID" class="fs-6 text-danger">Role Name cannot be empty.</div>
       </div>
 
       <div class="mb-3">
         <label for="startDate" class="form-label">Application Start Date</label>
         <input id="startDate" v-model="startDate" type="date" class="form-control" placeholder="" />
+        <div v-if="emptyStartDate" class="fs-6 text-danger">Start date cannot be empty.</div>
       </div>
 
       <div class="mb-3">
@@ -40,16 +68,29 @@
           placeholder=""
           required=""
         />
+        <div v-if="invalidClosingDate" class="fs-6 text-danger">
+          Closing date cannot be earlier than start date.
+        </div>
+        <div v-if="emptyClosingDate" class="fs-6 text-danger">Closing date cannot be empty.</div>
       </div>
-
       <div class="mb-3">
         <label for="textarea">Role Description</label>
         <textarea id="textarea" v-model="roleDescription" class="form-control" rows="5"></textarea>
         <div class="invalid-feedback">Valid last name is required.</div>
+        <div v-if="invalidRoleDescription" class="fs-6 text-danger">
+          Role Description cannot be empty.
+        </div>
       </div>
-
       <div class="mb-3 text-end">
-        <button id="create" class="defaultBtn" @click="create()">Create</button>
+        <button
+          id="create"
+          class="defaultBtn"
+          @click="create()"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
+          Create
+        </button>
       </div>
     </div>
   </div>
@@ -62,6 +103,7 @@ import { fetchRoleDetails } from '../service/roledetails.service'
 
 const roleDetails = ref([])
 const selectedRole = ref('')
+const message = ref('')
 
 const getData = async () => {
   try {
@@ -80,14 +122,42 @@ const roleID = ref(selectedData.value.role_id)
 const startDate = ref(selectedData.value.role_listing_open)
 const closeDate = ref(selectedData.value.role_listing_close)
 const roleDescription = ref(selectedData.value.role_description)
-
+const invalidRoleID = ref(false)
+const invalidRoleDescription = ref(false)
+const emptyClosingDate = ref(false)
+const emptyStartDate = ref(false)
 watchEffect(() => {
   const selectedDataValue = selectedData.value
   roleID.value = selectedDataValue.role_id
   startDate.value = selectedDataValue.role_listing_open
   closeDate.value = selectedDataValue.role_listing_close
   roleDescription.value = selectedDataValue.role_description
+
+  if (roleID.value !== undefined) {
+    invalidRoleID.value = false
+  }
+  if (roleDescription.value !== undefined) {
+    invalidRoleDescription.value = false
+  }
 })
+
+const invalidClosingDate = computed(() => {
+  const ans = closeDate.value < startDate.value
+  fixClosingDate(ans)
+  return ans
+})
+
+function fixClosingDate(ans) {
+  if (emptyClosingDate.value && closeDate.value) {
+    emptyClosingDate.value = false
+  }
+  if (emptyStartDate.value && startDate.value) {
+    emptyStartDate.value = false
+  }
+  if (ans) {
+    closeDate.value = ''
+  }
+}
 
 const create = () => {
   const dataToUpdate = {
@@ -100,9 +170,25 @@ const create = () => {
   createRoleListing(dataToUpdate)
     .then((result) => {
       console.log('success' + result)
+      message.value = 'Role Listing Created Successfully'
     })
     .catch((error) => {
       console.log(error)
+      message.value = 'Role Listing Creation Failed'
+      console.log(roleID.value)
+      if (roleID.value === undefined) {
+        invalidRoleID.value = true
+        console.log(invalidRoleID.value)
+      }
+      if (roleDescription.value === undefined) {
+        invalidRoleDescription.value = true
+      }
+      if (closeDate.value === undefined) {
+        emptyClosingDate.value = true
+      }
+      if (startDate.value === undefined) {
+        emptyStartDate.value = true
+      }
     })
 }
 
