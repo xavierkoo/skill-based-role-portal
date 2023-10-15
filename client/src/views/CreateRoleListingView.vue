@@ -69,7 +69,7 @@
           required=""
         />
         <div v-if="invalidClosingDate" class="fs-6 text-danger">
-          Closing date cannot be earlier than start date.
+          Closing date cannot be earlier than start date or today's date.
         </div>
         <div v-if="emptyClosingDate" class="fs-6 text-danger">Closing date cannot be empty.</div>
       </div>
@@ -142,7 +142,8 @@ watchEffect(() => {
 })
 
 const invalidClosingDate = computed(() => {
-  const ans = closeDate.value < startDate.value
+  const ans =
+    closeDate.value < startDate.value || closeDate.value < new Date().toISOString().slice(0, 10)
   fixClosingDate(ans)
   return ans
 })
