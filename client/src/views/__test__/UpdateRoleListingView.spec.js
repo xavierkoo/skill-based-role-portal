@@ -23,20 +23,33 @@ const mockRouter = createRouter({
 
 describe('UpdateRoleListing.vue', () => {
   // Check all elements are rendered
-  it('renders all necessary form elements', () => {
+  it('Check the standard items in the role modification feature.', () => {
     const wrapper = mount(UpdateRoleListing, {
       global: {
         plugins: [mockRouter]
       }
     })
 
-    expect(wrapper.find('#update').exists()).toBe(true)
+    // Check if the input fields exist
     expect(wrapper.find('#roleListingID').exists()).toBe(true)
     expect(wrapper.find('#roleName').exists()).toBe(true)
     expect(wrapper.find('#startDate').exists()).toBe(true)
     expect(wrapper.find('#closeDate').exists()).toBe(true)
     expect(wrapper.find('#textarea').exists()).toBe(true)
+
+    // Check if labels for input fields exist
+    expect(wrapper.find('label[for="roleListingID"]').exists()).toBe(true)
+    expect(wrapper.find('label[for="roleName"]').exists()).toBe(true)
+    expect(wrapper.find('label[for="startDate"]').exists()).toBe(true)
+    expect(wrapper.find('label[for="closeDate"]').exists()).toBe(true)
+    expect(wrapper.find('label[for="textarea"]').exists()).toBe(true)
+
+    // Check if the Update button exists
+    expect(wrapper.find('#update').exists()).toBe(true)
+
+    // Check if the Back button (with its image) exists
     expect(wrapper.find('.back').exists()).toBe(true)
+
     wrapper.unmount()
   })
 
