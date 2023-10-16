@@ -7,14 +7,14 @@ const mockRouter = createRouter({
   history: createMemoryHistory(),
   routes: [
     {
-      path: '/update', // Replace with the actual path
+      path: '/update',
       query: {
         selectedData: JSON.stringify({
           role_name: 'Sample Role Name',
           role_listing_open: '2023-09-22',
           role_listing_close: '2023-09-30',
           role_listing_desc: 'Sample Role Description',
-          role_listing_id: '123', // Replace with the actual role_listing_id
+          role_listing_id: '123',
           role_id: 234567892
         })
       }
@@ -23,7 +23,6 @@ const mockRouter = createRouter({
 })
 
 describe('UpdateRoleListing.vue', () => {
-  // Check all elements are rendered
   it('Check the standard items in the role modification feature.', () => {
     const wrapper = mount(UpdateRoleListing, {
       global: {
@@ -54,7 +53,6 @@ describe('UpdateRoleListing.vue', () => {
     wrapper.unmount()
   })
 
-  //Visualize the workflow for modifying the details of open roles
   it('Visualize the workflow for modifying the details of open roles', async () => {
     const wrapper = mount(UpdateRoleListing, {
       global: {
