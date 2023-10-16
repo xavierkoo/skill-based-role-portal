@@ -37,10 +37,13 @@ describe('UpdateRoleListing.vue', () => {
   it('updates Application Close Date input value', async () => {
     const wrapper = mount(CreateRoleListing)
 
-    const closeDateInput = wrapper.find('#closeDate')
-    await closeDateInput.setValue('2023-09-30')
+    const startDateInput = wrapper.find('#startDate')
+    await startDateInput.setValue('2023-09-22')
 
-    expect(closeDateInput.element.value).toBe('2023-09-30')
+    const closeDateInput = wrapper.find('#closeDate')
+    await closeDateInput.setValue(new Date().toISOString().slice(0, 10))
+
+    expect(closeDateInput.element.value).toBe(new Date().toISOString().slice(0, 10))
   })
 
   //Check if description input change accordingly
