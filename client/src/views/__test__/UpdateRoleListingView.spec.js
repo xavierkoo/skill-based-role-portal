@@ -14,7 +14,8 @@ const mockRouter = createRouter({
           role_listing_open: '2023-09-22',
           role_listing_close: '2023-09-30',
           role_listing_desc: 'Sample Role Description',
-          role_listing_id: '123' // Replace with the actual role_listing_id
+          role_listing_id: '123', // Replace with the actual role_listing_id
+          role_id: 234567892
         })
       }
     }
@@ -53,79 +54,32 @@ describe('UpdateRoleListing.vue', () => {
     wrapper.unmount()
   })
 
-  //role listing id field is disabled
-  it('disables Role Listing ID input field', () => {
+  //Visualize the workflow for modifying the details of open roles
+  it('disables Role Listing ID input field', async () => {
     const wrapper = mount(UpdateRoleListing, {
       global: {
         plugins: [mockRouter]
       }
     })
 
+    //check that rolename and rolelisting ID are disabled
     const roleListingIDInput = wrapper.find('#roleListingID')
     const roleNameInput = wrapper.find('#roleName')
     expect(roleListingIDInput.attributes('disabled')).exist
     expect(roleNameInput.attributes('disabled')).exist
-    wrapper.unmount()
-  })
 
-  //Check if role name input change accordingly
-  it('updates Role Name input value', async () => {
-    const wrapper = mount(UpdateRoleListing, {
-      global: {
-        plugins: [mockRouter]
-      }
-    })
-
-    const roleNameInput = wrapper.find('#roleName')
-    await roleNameInput.setValue('New Role Name')
-
-    expect(roleNameInput.element.value).toBe('New Role Name')
-    wrapper.unmount()
-  })
-
-  //Check if start date input change accordingly
-  it('updates Application Start Date input value', async () => {
-    const wrapper = mount(UpdateRoleListing, {
-      global: {
-        plugins: [mockRouter]
-      }
-    })
-
+    //check that description, start date and close date can be changed
     const startDateInput = wrapper.find('#startDate')
     await startDateInput.setValue('2023-09-22')
-
     expect(startDateInput.element.value).toBe('2023-09-22')
-    wrapper.unmount()
-  })
-
-  //Check if close date input change accordingly
-  it('updates Application Close Date input value', async () => {
-    const wrapper = mount(UpdateRoleListing, {
-      global: {
-        plugins: [mockRouter]
-      }
-    })
 
     const closeDateInput = wrapper.find('#closeDate')
     await closeDateInput.setValue('2023-09-30')
-
     expect(closeDateInput.element.value).toBe('2023-09-30')
-    wrapper.unmount()
-  })
-
-  //Check if description input change accordingly
-  it('updates Role Description textarea value', async () => {
-    const wrapper = mount(UpdateRoleListing, {
-      global: {
-        plugins: [mockRouter]
-      }
-    })
 
     const textarea = wrapper.find('#textarea')
     await textarea.setValue('New Role Description')
-
     expect(textarea.element.value).toBe('New Role Description')
-    wrapper.unmount()
   })
 
   it('displays the "noti" message when showSuccess is true', async () => {
