@@ -122,8 +122,9 @@ const roleID = ref(selectedData.value.role_id)
 const startDate = ref(selectedData.value.role_listing_open)
 const closeDate = ref(selectedData.value.role_listing_close)
 const roleDescription = ref(selectedData.value.role_description)
-const invalidRoleID = ref(false)
-const invalidRoleDescription = ref(false)
+const isSubmitted = ref(false)
+// const invalidRoleID = ref(false)
+// const invalidRoleDescription = ref(false)
 const emptyClosingDate = ref(false)
 const emptyStartDate = ref(false)
 watchEffect(() => {
@@ -132,13 +133,11 @@ watchEffect(() => {
   startDate.value = selectedDataValue.role_listing_open
   closeDate.value = selectedDataValue.role_listing_close
   roleDescription.value = selectedDataValue.role_description
+})
 
-  if (roleID.value !== undefined) {
-    invalidRoleID.value = false
-  }
-  if (roleDescription.value !== undefined) {
-    invalidRoleDescription.value = false
-  }
+const invalidRoleID = computed(() => {
+  const ans = roleID.value === undefined && isSubmitted.value
+  return ans
 })
 
 const invalidClosingDate = computed(() => {
@@ -161,6 +160,7 @@ function fixClosingDate(ans) {
 }
 
 const create = () => {
+  isSubmitted.value = true
   const dataToUpdate = {
     role_id: selectedData.value.role_id,
     role_listing_desc: roleDescription.value,
@@ -179,10 +179,6 @@ const create = () => {
       console.log(roleID.value)
       if (roleID.value === undefined) {
         invalidRoleID.value = true
-        console.log(invalidRoleID.value)
-      }
-      if (roleDescription.value === undefined) {
-        invalidRoleDescription.value = true
       }
       if (closeDate.value === undefined) {
         emptyClosingDate.value = true
