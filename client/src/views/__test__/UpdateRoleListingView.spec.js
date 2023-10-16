@@ -141,7 +141,42 @@ describe('UpdateRoleListing.vue', () => {
     // Assert the specific error messages you expect
     expect(wrapper.text()).toContain("Role Listing Description can't be empty")
     expect(wrapper.text()).toContain(
-      'Role Listing Open must be a date earlier than Role Listing Close'
+      'Role Listing Open date must be a date earlier than Role Listing Close date'
+    )
+
+    // Ensure that the success message is not displayed
+    expect(wrapper.find('.noti').exists()).toBe(false)
+  })
+
+  it("Verify the system's behavior when Open Date, Description, and Deadline Date fields are updated with values that exceed the boundary", async () => {
+    const wrapper = mount(UpdateRoleListing)
+
+    wrapper.vm.selectedData = {
+      role_listing_id: 1,
+      role_id: 2,
+      role_listing_desc: 'Valid Description',
+      role_listing_open: '2023-10-16',
+      role_listing_close: '2023-10-20'
+    }
+
+    // Set invalid values
+    wrapper.vm.role_listing_desc = ''
+    wrapper.vm.role_listing_open = '2023-10-15' // Start date before current date
+    wrapper.vm.role_listing_close = '2023-10-15' // End date earlier than start date
+
+    // Trigger the update function
+    await wrapper.vm.update()
+
+    // Assert that the error message is displayed
+    expect(wrapper.find('.error').exists()).toBe(true)
+
+    console.log(wrapper.text())
+
+    expect(wrapper.text()).toContain(
+      'Role Listing Open date must be a date earlier than Role Listing Close date'
+    )
+    expect(wrapper.text()).toContain(
+      'Role Listing Close date must be a date later than or equal to the Current date'
     )
 
     // Ensure that the success message is not displayed

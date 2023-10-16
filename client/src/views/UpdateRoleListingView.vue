@@ -123,7 +123,14 @@ function update() {
       errors.value.push("Role Listing Description can't be empty")
     }
     if (role_listing_open.value >= role_listing_close.value) {
-      errors.value.push('Role Listing Open must be a date earlier than Role Listing Close')
+      errors.value.push(
+        'Role Listing Open date must be a date earlier than Role Listing Close date'
+      )
+    }
+    if (role_listing_close.value < new Date().toISOString().slice(0, 10)) {
+      errors.value.push(
+        'Role Listing Close date must be a date later than or equal to the Current date'
+      )
     }
     if (errors.value.length > 0) {
       showError.value = true
