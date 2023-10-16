@@ -92,9 +92,11 @@ describe('UpdateRoleListing.vue', () => {
     // Find the input elements and set their values
     const roleListingOpenInput = wrapper.find('#startDate')
     const roleListingCloseInput = wrapper.find('#closeDate')
+    const roleDescriptionInput = wrapper.find('#textarea')
 
     await roleListingOpenInput.setValue('2023-11-01')
     await roleListingCloseInput.setValue('2023-11-15')
+    await roleDescriptionInput.setValue('Update Role Description')
 
     // Trigger the update function
     const updateButton = wrapper.find('#update')
@@ -107,6 +109,11 @@ describe('UpdateRoleListing.vue', () => {
     // Check if the success notification is displayed
     const successNotification = wrapper.find('.noti')
     expect(successNotification.exists()).toBe(true)
+
+    // Check if the fields are updated
+    expect(wrapper.vm.role_listing_open).toBe('2023-11-01')
+    expect(wrapper.vm.role_listing_close).toBe('2023-11-15')
+    expect(wrapper.vm.role_listing_desc).toBe('Update Role Description')
   })
 
   // Check if "error" message is displayed when showError is true
