@@ -116,24 +116,35 @@ describe('UpdateRoleListing.vue', () => {
     expect(wrapper.vm.role_listing_desc).toBe('Update Role Description')
   })
 
-  // Check if "error" message is displayed when showError is true
-  it('displays the "error" message when showError is true', async () => {
-    const wrapper = mount(UpdateRoleListing, {
-      global: {
-        plugins: [mockRouter]
-      }
-    })
+  it('Verify how the system handles a negative scenario when the executive attempts to modify an open role with invalid data.', async () => {
+    const wrapper = mount(UpdateRoleListing)
 
-    // Set showError to true
-    wrapper.vm.showError = true
+    wrapper.vm.selectedData = {
+      role_listing_id: 1,
+      role_id: 2,
+      role_listing_desc: 'Valid Description',
+      role_listing_open: '2023-10-16',
+      role_listing_close: '2023-10-20'
+    }
 
-    // Wait for Vue to update the DOM
-    await wrapper.vm.$nextTick()
+    // Simulate the attempt to modify the open role with invalid or incomplete data.
+    wrapper.vm.role_listing_desc = '' // Set an empty description
+    wrapper.vm.role_listing_open = '2023-10-22' // Set an open date later than the close date
+    wrapper.vm.role_listing_close = '2023-10-20'
 
-    // Check if the "error" message is displayed
-    const errorMessage = wrapper.find('.error')
-    expect(errorMessage.exists()).toBe(true)
+    // Trigger the update function
+    await wrapper.vm.update()
 
-    wrapper.unmount()
+    // Assert that the error message is displayed
+    expect(wrapper.find('.error').exists()).toBe(true)
+
+    // Assert the specific error messages you expect
+    expect(wrapper.text()).toContain("Role Listing Description can't be empty")
+    expect(wrapper.text()).toContain(
+      'Role Listing Open must be a date earlier than Role Listing Close'
+    )
+
+    // Ensure that the success message is not displayed
+    expect(wrapper.find('.noti').exists()).toBe(false)
   })
 })
