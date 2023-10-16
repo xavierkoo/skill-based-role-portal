@@ -110,35 +110,40 @@ const errors = ref([])
 
 function update() {
   errors.value = []
-  const dataToUpdate = {
-    role_listing_id: selectedData.role_listing_id,
-    role_id: selectedData.role_id,
-    role_listing_desc: role_listing_desc.value,
-    role_listing_open: role_listing_open.value,
-    role_listing_close: role_listing_close.value
-  }
+  if (selectedData) {
+    const dataToUpdate = {
+      role_listing_id: selectedData.role_listing_id,
+      role_id: selectedData.role_id,
+      role_listing_desc: role_listing_desc.value,
+      role_listing_open: role_listing_open.value,
+      role_listing_close: role_listing_close.value
+    }
 
-  if (!role_listing_desc.value) {
-    errors.value.push("Role Listing Description can't be empty")
-  }
-  if (role_listing_open.value >= role_listing_close.value) {
-    errors.value.push('Role Listing Open must be a date earlier than Role Listing Close')
-  }
-  if (errors.value.length > 0) {
-    showError.value = true
+    if (!role_listing_desc.value) {
+      errors.value.push("Role Listing Description can't be empty")
+    }
+    if (role_listing_open.value >= role_listing_close.value) {
+      errors.value.push('Role Listing Open must be a date earlier than Role Listing Close')
+    }
+    if (errors.value.length > 0) {
+      showError.value = true
+    } else {
+      updateRoleListing(dataToUpdate)
+        .then((result) => {
+          console.log('success' + result)
+          showError.value = false
+          showSuccess.value = true
+          setTimeout(() => {
+            showSuccess.value = false
+          }, 5000)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
   } else {
-    updateRoleListing(dataToUpdate)
-      .then((result) => {
-        console.log('success' + result)
-        showError.value = false
-        showSuccess.value = true
-        setTimeout(() => {
-          showSuccess.value = false
-        }, 5000)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    // Handle the case where selectedData is null
+    console.error('selectedData is null')
   }
 }
 </script>
