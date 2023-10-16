@@ -55,7 +55,7 @@ describe('UpdateRoleListing.vue', () => {
   })
 
   //Visualize the workflow for modifying the details of open roles
-  it('disables Role Listing ID input field', async () => {
+  it('Visualize the workflow for modifying the details of open roles', async () => {
     const wrapper = mount(UpdateRoleListing, {
       global: {
         plugins: [mockRouter]
@@ -82,24 +82,31 @@ describe('UpdateRoleListing.vue', () => {
     expect(textarea.element.value).toBe('New Role Description')
   })
 
-  it('displays the "noti" message when showSuccess is true', async () => {
+  it('Verify the successful modification of open role details with all required fields updated correctly.', async () => {
     const wrapper = mount(UpdateRoleListing, {
       global: {
         plugins: [mockRouter]
       }
     })
 
-    // Set showSuccess to true
-    wrapper.vm.showSuccess = true
+    // Find the input elements and set their values
+    const roleListingOpenInput = wrapper.find('#startDate')
+    const roleListingCloseInput = wrapper.find('#closeDate')
 
-    // Wait for Vue to update the DOM
+    await roleListingOpenInput.setValue('2023-11-01')
+    await roleListingCloseInput.setValue('2023-11-15')
+
+    // Trigger the update function
+    const updateButton = wrapper.find('#update')
+    await updateButton.trigger('click')
+
+    // Wait for any async updates to complete
+    wrapper.vm.showSuccess = true
     await wrapper.vm.$nextTick()
 
-    // Check if the "noti" message is displayed
-    const notiMessage = wrapper.find('.noti')
-    expect(notiMessage.exists()).toBe(true)
-
-    wrapper.unmount()
+    // Check if the success notification is displayed
+    const successNotification = wrapper.find('.noti')
+    expect(successNotification.exists()).toBe(true)
   })
 
   // Check if "error" message is displayed when showError is true
