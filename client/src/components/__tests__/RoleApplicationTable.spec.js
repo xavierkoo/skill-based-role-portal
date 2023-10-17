@@ -45,4 +45,25 @@ describe('RoleApplicationTable.vue', () => {
     expect(wrapper.text()).toContain('Job Title 1')
     expect(wrapper.text()).toContain('Submitted')
   })
+
+  it('Verify how the system handles a negative scenario when there are no role applications available', async () => {
+    // Mock the API call that has a 404 error
+    axios.get.mockRejectedValue({
+      response: {
+        status: 404
+      }
+    })
+
+    const wrapper = mount(RoleApplicationTable, {
+      props: {
+        id: '2'
+      }
+    })
+    await new Promise((resolve) => setTimeout(resolve, 1))
+
+    // Assert that the component displays the error message when there are no role applications
+    expect(wrapper.find('.alert-danger').exists()).toBe(true)
+    expect(wrapper.find('.container').exists()).toBe(false)
+    expect(wrapper.text()).toContain('No role applications found.')
+  })
 })
