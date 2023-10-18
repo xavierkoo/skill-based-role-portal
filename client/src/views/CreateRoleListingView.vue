@@ -77,9 +77,6 @@
         <label for="textarea">Role Description</label>
         <textarea id="textarea" v-model="roleDescription" class="form-control" rows="5"></textarea>
         <div class="invalid-feedback">Valid last name is required.</div>
-        <div v-if="invalidRoleDescription" class="fs-6 text-danger">
-          Role Description cannot be empty.
-        </div>
       </div>
       <div class="mb-3 text-end">
         <button
@@ -124,7 +121,6 @@ const closeDate = ref(selectedData.value.role_listing_close)
 const roleDescription = ref(selectedData.value.role_description)
 const isSubmitted = ref(false)
 // const invalidRoleID = ref(false)
-// const invalidRoleDescription = ref(false)
 const emptyClosingDate = ref(false)
 const emptyStartDate = ref(false)
 watchEffect(() => {
