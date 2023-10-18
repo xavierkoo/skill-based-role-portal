@@ -11,22 +11,22 @@ export default {
       type: Object,
       required: true,
       default: () => ({
-        role_name: 'TBC',
-        role_listing_desc: 'No description available',
-        role_listing_open: 'TBC',
-        role_listing_close: 'TBC',
-        role_skills: ['TBC'],
-        role_listing_creator: ['TBC', 'TBC'],
-        role_listing_updater: ['TBC', 'TBC'],
-        role_listing_id: 'TBC',
-        role_id: 'TBC'
+        role_name: '',
+        role_listing_desc: '',
+        role_listing_open: '',
+        role_listing_close: '',
+        role_skills: [''],
+        role_listing_creator: ['', ''],
+        role_listing_updater: ['', ''],
+        role_listing_id: '',
+        role_id: ''
       })
     }
   },
 
   setup(props) {
     const user = 'HR'
-    const skillsList = ref(null)
+    const skillsList = ref([])
     const staffSkills = ref([])
     const maxSkillsToShow = 2
     const allRoleSkills = ref([])
@@ -93,11 +93,13 @@ export default {
 
 <template>
   <RoleApplication :role-details="roleDetails" />
-  <div class="roleDetails container-fluid px-5">
+  <div v-if="roleDetails.role_name == ''" id="error_prop">No description available</div>
+  <div v-else class="roleDetails container-fluid px-5">
     <div class="d-sm-flex justify-content-between">
-      <h1 class="my-auto">{{ roleDetails.role_name }}</h1>
+      <h1 id="role_name" class="my-auto">{{ roleDetails.role_name }}</h1>
       <button
         v-if="user == 'HR'"
+        id="update_btn"
         role="link"
         aria-label="Apply to Backend Engineer Intern, Stream Computing - 2024 on company website"
         class="updateBtn w-sm-50 my-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view"
@@ -111,19 +113,19 @@ export default {
 
     <div class="details">
       <div>
-        <span class="fw-bold">Posted On: </span>
+        <span id="posted_on" class="fw-bold">Posted On: </span>
         <span class="check">{{ roleDetails.role_listing_open }}</span>
       </div>
       <div>
         <span class="fw-bold isPosted"
           >{{
-            roleDetails.role_listing_updater[0] == 'TBC' || user == 'Staff'
+            roleDetails.role_listing_updater[0] == '' || user == 'Staff'
               ? 'Posted By: '
               : 'Updated By: '
           }}
         </span>
         <a class="f-underline check isCreated">{{
-          roleDetails.role_listing_updater.fname == 'TBC' || user == 'Staff'
+          roleDetails.role_listing_updater.fname == '' || user == 'Staff'
             ? roleDetails.role_listing_creator[0]
             : roleDetails.role_listing_updater[0]
         }}</a>
@@ -133,7 +135,7 @@ export default {
       <span class="fw-bold">Deadline: </span>
       <span class="check">{{ roleDetails.role_listing_close }}</span>
     </div>
-    <CalculateRoleMatch class="my-2" :role-skills="allRoleSkills" />
+    <CalculateRoleMatch id="CalculateRoleMatch" class="my-2" :role-skills="allRoleSkills" />
     <div class="d-flex align-items-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -164,6 +166,7 @@ export default {
             </div>
             <template v-if="index !== visibleSkills.length - 1 || showMore"> </template>
           </span>
+          <span v-if="visibleSkills.length === 0">No skills required</span>
           <a v-if="showMore" class="showMore f-underline" @click="toggleShowMore">
             + {{ remainingSkills.length }} more
           </a>
@@ -171,6 +174,7 @@ export default {
       </div>
     </div>
     <button
+      id="apply_btn"
       role="link"
       aria-label="Apply to Backend Engineer Intern, Stream Computing - 2024 on company website"
       class="defaultBtn d-flex w-sm-50 my-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view"
