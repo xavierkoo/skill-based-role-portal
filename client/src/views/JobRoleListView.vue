@@ -10,7 +10,6 @@
   <div class="container-fluid mt-5">
     <div v-if="isMounted">
       <div class="row">
-        <!-- Your component content here -->
         <div
           class="col-md-5 col-lg-5 col-xl-4"
           :class="{ 'col-md-12 col-lg-12 col-xl-12': roleDetails.role_name === 'TBC' }"
@@ -23,6 +22,7 @@
 
           <div v-else class="container">
             <!-- Job role list -->
+            <!-- Render for HR_admin -->
             <div v-if="userType == 'HR_admin'">
               <div
                 v-for="(jobRole, key) in jobRoles"
@@ -98,6 +98,7 @@
               </div>
             </div>
 
+            <!-- Render for staff -->
             <div v-if="userType == 'staff'">
               <div
                 v-for="(jobRole, index) in jobRoles"
@@ -343,16 +344,13 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Add your component-specific styles here */
-
 :hover .job-role-item {
   cursor: pointer;
-} /* Remove underline by default */
+}
 .job-role-item .no-underline a {
   text-decoration: none !important;
 }
 
-/* Apply underline only when hovering over the specific <a> tag */
 .job-role-item:hover .no-underline a {
   text-decoration: underline !important;
 }
