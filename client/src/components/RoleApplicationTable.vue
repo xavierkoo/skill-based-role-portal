@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps, onMounted } from 'vue'
+import { ref, defineProps, onMounted, computed } from 'vue'
 import { getRoleApplicationById } from '../service/roleApplication.service'
 
 const props = defineProps({
@@ -8,6 +8,8 @@ const props = defineProps({
 
 const roleApplications = ref([])
 const emptyError = ref(false) // Initialize emptyError as false by default
+const itemsPerPage = 15
+const currentPage = ref(1)
 
 function formatDate(date) {
   const d = new Date(date)
@@ -24,6 +26,30 @@ function formatDate(date) {
   }
 
   return [year, month, day].join('-')
+}
+
+// Computed property to calculate the total number of pages
+const totalPages = computed(() => Math.ceil(roleApplications.value.length / itemsPerPage))
+
+// Computed property to display the role applications for the current page
+const displayedRoleApplications = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  const end = start + itemsPerPage
+  return roleApplications.value.slice(start, end)
+})
+
+// Function to navigate to the previous page
+function previousPage() {
+  if (currentPage.value > 1) {
+    currentPage.value--
+  }
+}
+
+// Function to navigate to the next page
+function nextPage() {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++
+  }
 }
 
 onMounted(async () => {
@@ -61,7 +87,7 @@ onMounted(async () => {
         </thead>
         <tbody>
           <tr
-            v-for="roleApplication in roleApplications"
+            v-for="roleApplication in displayedRoleApplications"
             :key="roleApplication.role_app_id"
             class="py-2"
           >
@@ -73,6 +99,18 @@ onMounted(async () => {
           </tr>
         </tbody>
       </table>
+      <div v-if="totalPages > 1">
+        <nav>
+          <ul class="pagination">
+            <li class="page-item" :class="{ disabled: currentPage === 1 }">
+              <a class="page-link" @click="previousPage">Previous</a>
+            </li>
+            <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+              <a class="page-link" @click="nextPage">Next</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
   </div>
 </template>
