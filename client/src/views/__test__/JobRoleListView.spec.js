@@ -117,7 +117,7 @@ describe('JobRoleList', () => {
     mock.restore()
   })
 
-  it('displays job roles for HR_Admin user type', async () => {
+  it('Verify the successful display of a list of open roles - HR_Admin userType', async () => {
     const mock = new MockAdapter(axios)
     const mockResponse = [
       {
@@ -132,7 +132,6 @@ describe('JobRoleList', () => {
         role_status: 'active',
         role_skills: ['Communication', 'Training', 'Problem Solving']
       }
-      // Add other mock job roles here if needed
     ]
 
     mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, mockResponse)
@@ -226,29 +225,46 @@ describe('JobRoleList', () => {
       ]
     })
 
-    // Mount the component
     const wrapper = mount(JobRoleListView)
     wrapper.vm.isMounted = true
-    // Set the userType variable to 'HR_admin'
+
+    // Set the userType variable to 'HR_admin' & jobRoles to the mock response
     wrapper.vm.userType = 'HR_admin'
+    wrapper.vm.jobRoles = mockResponse
 
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
 
-    // Call setData to update jobRoles ref
-    wrapper.vm.setData(mockResponse)
-
     // Ensure that the data is properly set
     expect(wrapper.vm.jobRoles).toEqual(mockResponse)
-
-    // Wait for the DOM to update after setting the data
-    await wrapper.vm.$nextTick()
-
-    // Now you can make your assertions based on the mock data
-    expect(wrapper.find('#hi').text()).toContain('Talent Attraction')
+    expect(wrapper.find('#rname').text()).toContain('Talent Attraction')
 
     // Restore the mock adapter after the test
     mock.restore()
+  })
+
+  it('displays job roles for HR_Admin user type', async () => {
+    const jobRoles = [
+      {
+        role_listing_id: 1,
+        role_id: 101,
+        role_listing_desc: 'This is a sample job role description.',
+        role_listing_source: 201,
+        role_listing_open: '2023-08-01',
+        role_listing_close: '2023-08-15',
+        role_description: 'Learning Facilitator',
+        role_name: 'Talent Attraction',
+        role_status: 'active',
+        role_skills: ['Communication', 'Training', 'Problem Solving']
+      }
+      // Add other job role objects here...
+    ]
+
+    const wrapper = mount(JobRoleListView, {
+      props: { jobRoles }
+    })
+
+    await wrapper.vm.$nextTick()
   })
 
   it('displays job roles when job roles are provided', async () => {
@@ -277,30 +293,6 @@ describe('JobRoleList', () => {
 
   it('does not display job roles when no job roles are provided', async () => {
     const jobRoles = []
-    const wrapper = mount(JobRoleListView, {
-      props: { jobRoles }
-    })
-
-    await wrapper.vm.$nextTick()
-  })
-
-  it('displays job roles for HR_Admin user type', async () => {
-    const jobRoles = [
-      {
-        role_listing_id: 1,
-        role_id: 101,
-        role_listing_desc: 'This is a sample job role description.',
-        role_listing_source: 201,
-        role_listing_open: '2023-08-01',
-        role_listing_close: '2023-08-15',
-        role_description: 'Learning Facilitator',
-        role_name: 'Talent Attraction',
-        role_status: 'active',
-        role_skills: ['Communication', 'Training', 'Problem Solving']
-      }
-      // Add other job role objects here...
-    ]
-
     const wrapper = mount(JobRoleListView, {
       props: { jobRoles }
     })

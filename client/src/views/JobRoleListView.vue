@@ -40,7 +40,7 @@
                         class="card-title"
                         :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
                       >
-                        <a id="hi" href="#" class="card-link text-normal me-2">{{
+                        <a id="rname" href="#" class="card-link text-normal me-2">{{
                           jobRole.role_name
                         }}</a>
                         <p
