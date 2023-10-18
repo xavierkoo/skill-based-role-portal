@@ -66,4 +66,147 @@ describe('RoleApplicationTable.vue', () => {
     expect(wrapper.find('.container').exists()).toBe(false)
     expect(wrapper.text()).toContain('No role applications found.')
   })
+
+  // Verify if the pagination button appears if the records are more than 15
+
+  it('Verify if the pagination button appears if the records are more than 15', async () => {
+    const applicationMock = {
+      Results: [
+        {
+          role_app_id: 1,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 2,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 3,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 3,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 4,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 5,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 6,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 7,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 8,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 9,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 10,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 11,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 12,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 13,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 14,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        },
+        {
+          role_app_id: 15,
+          role_title: 'Job Title 1',
+          role_application_ts_create: '2023-10-17T10:00:00Z',
+          role_app_status: 'Submitted',
+          role_app_reason: 'No reason'
+        }
+      ]
+    }
+
+    axios.get.mockResolvedValue({
+      data: applicationMock
+    })
+
+    const wrapper = mount(RoleApplicationTable, {
+      props: {
+        id: '1'
+      }
+    })
+
+    await wrapper.vm.$nextTick()
+
+    await new Promise((resolve) => setTimeout(resolve, 1))
+
+    // Assert that the component displays the role applications as expected
+    expect(wrapper.find('.alert-danger').exists()).toBe(false)
+    expect(wrapper.find('.container').exists()).toBe(true)
+    expect(wrapper.find('.table').exists()).toBe(true)
+
+    expect(wrapper.find('.pagination').exists()).toBe(true)
+    expect(wrapper.find('.page-item').exists()).toBe(true)
+  })
 })
