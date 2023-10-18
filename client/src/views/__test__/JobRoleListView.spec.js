@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import JobRoleListView from '../JobRoleListView.vue'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
+import CalculateRoleMatch from '@/components/CalculateRoleMatch.vue'
 
 describe('JobRoleList', () => {
   it('displays "No job roles available." when no roles are present', async () => {
@@ -117,7 +118,7 @@ describe('JobRoleList', () => {
     mock.restore()
   })
 
-  it('displays job roles for HR_Admin user type', async () => {
+  it('Verify the successful display of a list of open roles - HR_Admin userType', async () => {
     const mock = new MockAdapter(axios)
     const mockResponse = [
       {
@@ -132,7 +133,6 @@ describe('JobRoleList', () => {
         role_status: 'active',
         role_skills: ['Communication', 'Training', 'Problem Solving']
       }
-      // Add other mock job roles here if needed
     ]
 
     mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, mockResponse)
@@ -226,33 +226,33 @@ describe('JobRoleList', () => {
       ]
     })
 
-    // Mount the component
     const wrapper = mount(JobRoleListView)
     wrapper.vm.isMounted = true
-    // Set the userType variable to 'HR_admin'
+
+    // Set the userType variable to 'HR_admin' & jobRoles to the mock response
     wrapper.vm.userType = 'HR_admin'
+    wrapper.vm.jobRoles = mockResponse
 
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
 
-    // Call setData to update jobRoles ref
-    wrapper.vm.setData(mockResponse)
-
     // Ensure that the data is properly set
     expect(wrapper.vm.jobRoles).toEqual(mockResponse)
+    expect(wrapper.find('#rname').text()).toContain('Talent Attraction')
+    expect(wrapper.find('#rstatus').text()).toContain('Active')
+    expect(wrapper.find('#rmanage').text()).toContain('Manage')
+    expect(wrapper.find('#rdesc').text()).toContain('This is a sample job role description.')
+    expect(wrapper.find('#rPubDate').text()).toContain('2023-08-01')
 
-    // Wait for the DOM to update after setting the data
-    await wrapper.vm.$nextTick()
-
-    // Now you can make your assertions based on the mock data
-    expect(wrapper.find('#hi').text()).toContain('Talent Attraction')
+    console.log(wrapper.html())
 
     // Restore the mock adapter after the test
     mock.restore()
   })
 
-  it('displays job roles when job roles are provided', async () => {
-    const jobRoles = [
+  it('Verify the successful display of a list of open roles - Staff userType', async () => {
+    const mock = new MockAdapter(axios)
+    const mockResponse = [
       {
         role_listing_id: 1,
         role_id: 101,
@@ -265,46 +265,116 @@ describe('JobRoleList', () => {
         role_status: 'active',
         role_skills: ['Communication', 'Training', 'Problem Solving']
       }
-      // Add other job role objects here...
     ]
 
-    const wrapper = mount(JobRoleListView, {
-      props: { jobRoles }
+    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, mockResponse)
+    mock.onGet('http://localhost:8080/api/v1/allskills/').reply(200, {
+      Results: [
+        {
+          skill_id: 345678790,
+          skill_name: 'Certified Scrum Professional',
+          skill_status: 'active'
+        },
+        {
+          skill_id: 345678866,
+          skill_name: 'Certified Scrum Developer',
+          skill_status: 'active'
+        },
+        {
+          skill_id: 345678890,
+          skill_name: 'Certified Scrum@Scale Practitioner',
+          skill_status: 'active'
+        },
+        {
+          skill_id: 345678912,
+          skill_name: 'Pascal Programming',
+          skill_status: 'inactive'
+        },
+        {
+          skill_id: 345678913,
+          skill_name: 'Python Programming',
+          skill_status: 'active'
+        },
+        {
+          skill_id: 345678914,
+          skill_name: 'Certified Scrum Master',
+          skill_status: 'active'
+        },
+        {
+          skill_id: 345678915,
+          skill_name: 'Certified Scrum Product Owner',
+          skill_status: 'active'
+        },
+        {
+          skill_id: 345678927,
+          skill_name: 'Certified Scrum Coach',
+          skill_status: 'active'
+        },
+        {
+          skill_id: 345678935,
+          skill_name: 'Certified Scrum Trainer',
+          skill_status: 'active'
+        }
+      ]
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+      Results: [
+        {
+          staff_id: 123456789,
+          skill_id: 345678790,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Professional'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678866,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Developer'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678890,
+          ss_status: 'unverified',
+          skill_name: 'Certified Scrum@Scale Practitioner'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678913,
+          ss_status: 'active',
+          skill_name: 'Python Programming'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678927,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Coach'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678935,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Trainer'
+        }
+      ]
     })
 
+    const wrapper = mount(JobRoleListView)
+    wrapper.vm.isMounted = true
+
+    // Set the userType variable to 'HR_admin' & jobRoles to the mock response
+    wrapper.vm.userType = 'staff'
+    wrapper.vm.jobRoles = mockResponse
+
+    // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
-  })
 
-  it('does not display job roles when no job roles are provided', async () => {
-    const jobRoles = []
-    const wrapper = mount(JobRoleListView, {
-      props: { jobRoles }
-    })
+    // Ensure that the data is properly set
+    expect(wrapper.vm.jobRoles).toEqual(mockResponse)
+    expect(wrapper.find('#rname').text()).toContain('Talent Attraction')
+    expect(wrapper.findComponent(CalculateRoleMatch).exists()).toBe(true)
+    expect(wrapper.find('#rdesc').text()).toContain('This is a sample job role description.')
 
-    await wrapper.vm.$nextTick()
-  })
-
-  it('displays job roles for HR_Admin user type', async () => {
-    const jobRoles = [
-      {
-        role_listing_id: 1,
-        role_id: 101,
-        role_listing_desc: 'This is a sample job role description.',
-        role_listing_source: 201,
-        role_listing_open: '2023-08-01',
-        role_listing_close: '2023-08-15',
-        role_description: 'Learning Facilitator',
-        role_name: 'Talent Attraction',
-        role_status: 'active',
-        role_skills: ['Communication', 'Training', 'Problem Solving']
-      }
-      // Add other job role objects here...
-    ]
-
-    const wrapper = mount(JobRoleListView, {
-      props: { jobRoles }
-    })
-
-    await wrapper.vm.$nextTick()
+    // Restore the mock adapter after the test
+    mock.restore()
   })
 })

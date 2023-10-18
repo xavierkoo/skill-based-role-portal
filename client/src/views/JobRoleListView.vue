@@ -10,7 +10,6 @@
   <div class="container-fluid mt-5">
     <div v-if="isMounted">
       <div class="row">
-        <!-- Your component content here -->
         <div
           class="col-md-5 col-lg-5 col-xl-4"
           :class="{ 'col-md-12 col-lg-12 col-xl-12': roleDetails.role_name === 'TBC' }"
@@ -23,6 +22,7 @@
 
           <div v-else class="container">
             <!-- Job role list -->
+            <!-- Render for HR_admin -->
             <div v-if="userType == 'HR_admin'">
               <div
                 v-for="(jobRole, key) in jobRoles"
@@ -40,20 +40,23 @@
                         class="card-title"
                         :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
                       >
-                        <a id="hi" href="#" class="card-link text-normal me-2">{{
+                        <a id="rname" href="#" class="card-link text-normal me-2">{{
                           jobRole.role_name
                         }}</a>
                         <p
                           v-if="calculateDaysUntilOpen(jobRole.role_listing_close) < 0"
+                          id="rstatus"
                           class="badge rounded-pill bg-danger text-white p-2"
                         >
                           Inactive
                         </p>
-                        <p v-else class="badge rounded-pill bg-success text-white p-2">Active</p>
+                        <p v-else id="rstatus" class="badge rounded-pill bg-success text-white p-2">
+                          Active
+                        </p>
                       </h5>
                     </div>
                     <div class="col">
-                      <p class="badge rounded-pill bg-secondary text-white p-2">
+                      <p id="rmanage" class="badge rounded-pill bg-secondary text-white p-2">
                         Manage
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -82,11 +85,11 @@
                       {{ roleSkill }}
                     </div>
                   </div>
-                  <p class="card-text">
+                  <p id="rdesc" class="card-text">
                     {{ truncateText(jobRole.role_listing_desc, 150) }}
                   </p>
                   <div class="row">
-                    <small class="text-muted">
+                    <small id="rPubDate" class="text-muted">
                       Published Date {{ jobRole.role_listing_open }}</small
                     >
                     <small class="text-muted"> Closing Date {{ jobRole.role_listing_close }}</small>
@@ -95,6 +98,7 @@
               </div>
             </div>
 
+            <!-- Render for staff -->
             <div v-if="userType == 'staff'">
               <div
                 v-for="(jobRole, index) in jobRoles"
@@ -112,7 +116,9 @@
                         class="card-title"
                         :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
                       >
-                        <a href="#" class="card-link text-normal">{{ jobRole.role_name }}</a>
+                        <a id="rname" href="#" class="card-link text-normal">{{
+                          jobRole.role_name
+                        }}</a>
                         <CalculateRoleMatch class="ms-2" :role-skills="jobRole.role_skills" />
                       </h5>
                     </div>
@@ -143,7 +149,7 @@
                       {{ roleSkill }}
                     </div>
                   </div>
-                  <p class="card-text">
+                  <p id="rdesc" class="card-text">
                     {{ truncateText(jobRole.role_listing_desc, 150) }}
                   </p>
                   <div class="row">
@@ -271,9 +277,13 @@ const getData = async () => {
   } catch (error) {
     console.error('Error fetching data:', error)
   }
+
+  //
+  // TODO - Adjust the SEED Data to include a wider range of joblistings with different dates
+  //
   // if (userType.value === 'staff') {
   //   jobRoles.value = jobRoles.value.filter((jobRole) => {
-  //     // Convert role_listing_close to a date object
+  //        //Convert role_listing_close to a date object
   //     const closeDate = new Date(jobRole.role_listing_close)
 
   //     // Compare the closeDate with today's date
@@ -334,16 +344,13 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Add your component-specific styles here */
-
 :hover .job-role-item {
   cursor: pointer;
-} /* Remove underline by default */
+}
 .job-role-item .no-underline a {
   text-decoration: none !important;
 }
 
-/* Apply underline only when hovering over the specific <a> tag */
 .job-role-item:hover .no-underline a {
   text-decoration: underline !important;
 }
