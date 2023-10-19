@@ -123,6 +123,7 @@ describe('JobRoleList', () => {
 
     // Set isMounted to true (if needed for your component)
     wrapper.vm.isMounted = true
+    wrapper.vm.userType = 'staff'
 
     // Wait for the next tick of the event loop (e.g., Vue's reactivity)
     await wrapper.vm.$nextTick()
@@ -569,6 +570,76 @@ describe('JobRoleList', () => {
     expect(wrapper.find('.card-body').exists()).toBe(false)
     expect(wrapper.findComponent(CalculateRoleMatch).exists()).toBe(false)
     expect(wrapper.text()).toContain('Loading...')
+
+    // Restore the mock adapter after the test
+    mock.restore()
+  })
+
+  it('Negative Test for Unknown UserType (Unauthorized Access)', async () => {
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/allskills/').reply(200, {
+      Results: [
+        {
+          skill_id: 345678790,
+          skill_name: 'Certified Scrum Professional',
+          skill_status: 'active'
+        },
+        {
+          skill_id: 345678866,
+          skill_name: 'Certified Scrum Developer',
+          skill_status: 'active'
+        },
+        {
+          skill_id: 345678890,
+          skill_name: 'Certified Scrum@Scale Practitioner',
+          skill_status: 'active'
+        },
+        {
+          skill_id: 345678912,
+          skill_name: 'Pascal Programming',
+          skill_status: 'inactive'
+        },
+        {
+          skill_id: 345678913,
+          skill_name: 'Python Programming',
+          skill_status: 'active'
+        },
+        {
+          skill_id: 345678914,
+          skill_name: 'Certified Scrum Master',
+          skill_status: 'active'
+        },
+        {
+          skill_id: 345678915,
+          skill_name: 'Certified Scrum Product Owner',
+          skill_status: 'active'
+        },
+        {
+          skill_id: 345678927,
+          skill_name: 'Certified Scrum Coach',
+          skill_status: 'active'
+        },
+        {
+          skill_id: 345678935,
+          skill_name: 'Certified Scrum Trainer',
+          skill_status: 'active'
+        }
+      ]
+    })
+
+    const wrapper = mount(JobRoleListView)
+
+    // Set the userType variable to ""
+    wrapper.vm.userType = ''
+
+    // Wait for the component to finish rendering after axios call
+    await wrapper.vm.$nextTick()
+
+    // Ensure that the data is properly set
+    expect(wrapper.find('.access-denied-message').exists()).toBe(true)
+    expect(wrapper.text()).toContain('Access Denied')
+    expect(wrapper.text()).toContain('Please log in.')
+    expect(wrapper.find('#login-btn').exists()).toBe(true)
 
     // Restore the mock adapter after the test
     mock.restore()

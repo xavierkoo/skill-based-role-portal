@@ -1,24 +1,25 @@
 <template>
-  <div class="d-flex justify-content-end me-5 mt-3">
-    <label class="me-2 mt-2">Filter by skill:</label>
-    <select id="filter" v-model="selectedSkill" class="form-select" style="max-width: 200px">
-      <option v-for="skill in availableSkills" :key="skill.skill_name" :value="skill.skill_name">
-        {{ skill.skill_name }}
-      </option>
-    </select>
-  </div>
-  <div class="container-fluid mt-5">
-    <div v-if="isMounted">
-      <div class="row">
-        <div
-          class="col-md-5 col-lg-5 col-xl-4"
-          :class="{ 'col-md-12 col-lg-12 col-xl-12': roleDetails.role_name === 'TBC' }"
-          :hidden="shouldHide"
-        >
-          <!-- Conditional rendering for when no job roles are available -->
-          <div v-if="jobRoles?.length === 0">
-            <p class="text-primary text-center">No job roles available.</p>
-          </div>
+  <div v-if="userType == 'staff' || userType == 'HR_admin'">
+    <div class="d-flex justify-content-end me-5 mt-3">
+      <label class="me-2 mt-2">Filter by skill:</label>
+      <select id="filter" v-model="selectedSkill" class="form-select" style="max-width: 200px">
+        <option v-for="skill in availableSkills" :key="skill.skill_name" :value="skill.skill_name">
+          {{ skill.skill_name }}
+        </option>
+      </select>
+    </div>
+    <div class="container-fluid mt-5">
+      <div v-if="isMounted">
+        <div class="row">
+          <div
+            class="col-md-5 col-lg-5 col-xl-4"
+            :class="{ 'col-md-12 col-lg-12 col-xl-12': roleDetails.role_name === 'TBC' }"
+            :hidden="shouldHide"
+          >
+            <!-- Conditional rendering for when no job roles are available -->
+            <div v-if="jobRoles?.length === 0">
+              <p class="text-primary text-center">No job roles available.</p>
+            </div>
 
           <div v-else class="container">
             <!-- Job role list -->
@@ -99,91 +100,106 @@
               </div>
             </div>
 
-            <!-- Render for staff -->
-            <div v-if="userType == 'staff'">
-              <div
-                v-for="(jobRole, index) in jobRoles"
-                :key="index"
-                class="job-role-item mb-4 border-bottom"
-                @click="goToRolePage(jobRole)"
-              >
+              <!-- Render for staff -->
+              <div v-if="userType == 'staff'">
                 <div
-                  class="card-body"
-                  :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
+                  v-for="(jobRole, index) in jobRoles"
+                  :key="index"
+                  class="job-role-item mb-4 border-bottom"
+                  @click="goToRolePage(jobRole)"
                 >
-                  <div class="row">
-                    <div class="col-md-8 col-xl-8 col-xxl-9">
-                      <h5
-                        class="card-title"
-                        :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
-                      >
-                        <a id="rname" href="#" class="card-link text-normal">{{
-                          jobRole.role_name
-                        }}</a>
-                        <CalculateRoleMatch class="ms-2" :role-skills="jobRole.role_skills" />
-                      </h5>
-                    </div>
-                    <div class="col">
-                      <p class="badge rounded-pill bg-primary text-white p-2">
-                        Apply
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          class="bi bi-send"
-                          viewBox="0 0 16 16"
+                  <div
+                    class="card-body"
+                    :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
+                  >
+                    <div class="row">
+                      <div class="col-md-8 col-xl-8 col-xxl-9">
+                        <h5
+                          class="card-title"
+                          :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
                         >
-                          <path
-                            d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"
-                          />
-                        </svg>
-                      </p>
+                          <a id="rname" href="#" class="card-link text-normal">{{
+                            jobRole.role_name
+                          }}</a>
+                          <CalculateRoleMatch class="ms-2" :role-skills="jobRole.role_skills" />
+                        </h5>
+                      </div>
+                      <div class="col">
+                        <p class="badge rounded-pill bg-primary text-white p-2">
+                          Apply
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-send"
+                            viewBox="0 0 16 16"
+                          >
+                            <path
+                              d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"
+                            />
+                          </svg>
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div class="mb-2">
-                    <div
-                      v-for="(roleSkill, index2) in jobRole.role_skills"
-                      :key="index2"
-                      class="badge rounded-pill bg-light text-dark p-2 me-2"
-                    >
-                      {{ roleSkill }}
+                    <div class="mb-2">
+                      <div
+                        v-for="(roleSkill, index2) in jobRole.role_skills"
+                        :key="index2"
+                        class="badge rounded-pill bg-light text-dark p-2 me-2"
+                      >
+                        {{ roleSkill }}
+                      </div>
                     </div>
-                  </div>
-                  <p id="rdesc" class="card-text">
-                    {{ truncateText(jobRole.role_listing_desc, 150) }}
-                  </p>
-                  <div class="row">
-                    <small class="text-muted">
-                      {{ calculateDaysSinceOpen(jobRole.role_listing_open) }}
-                      {{ calculateDaysSinceOpen(jobRole.role_listing_open) > 1 ? 'days' : 'day' }}
-                      ago
-                      {{
-                        calculateDaysUntilOpen(jobRole.role_listing_close) >= 0
-                          ? '| ' + calculateDaysUntilOpen(jobRole.role_listing_close)
-                          : ''
-                      }}
-                      {{
-                        calculateDaysUntilOpen(jobRole.role_listing_close) >= 0
-                          ? calculateDaysUntilOpen(jobRole.role_listing_close) > 1
-                            ? 'days left'
-                            : 'day left'
-                          : ''
-                      }}
-                    </small>
+                    <p id="rdesc" class="card-text">
+                      {{ truncateText(jobRole.role_listing_desc, 150) }}
+                    </p>
+                    <div class="row">
+                      <small class="text-muted">
+                        {{ calculateDaysSinceOpen(jobRole.role_listing_open) }}
+                        {{ calculateDaysSinceOpen(jobRole.role_listing_open) > 1 ? 'days' : 'day' }}
+                        ago
+                        {{
+                          calculateDaysUntilOpen(jobRole.role_listing_close) >= 0
+                            ? '| ' + calculateDaysUntilOpen(jobRole.role_listing_close)
+                            : ''
+                        }}
+                        {{
+                          calculateDaysUntilOpen(jobRole.role_listing_close) >= 0
+                            ? calculateDaysUntilOpen(jobRole.role_listing_close) > 1
+                              ? 'days left'
+                              : 'day left'
+                            : ''
+                        }}
+                      </small>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div :hidden="roleDetails.role_name === 'TBC'" class="col">
-          <button :hidden="!shouldHide" class="btn btn-light mb-4" @click="goBack">Back</button>
-          <RoleDetails :role-details="roleDetails" />
+          <div :hidden="roleDetails.role_name === 'TBC'" class="col">
+            <button :hidden="!shouldHide" class="btn btn-light mb-4" @click="goBack">Back</button>
+            <RoleDetails :role-details="roleDetails" />
+          </div>
         </div>
       </div>
+      <div v-else><i class="fa fa-spinner fa-spin text-center"></i> Loading...</div>
     </div>
-    <div v-else><i class="fa fa-spinner fa-spin text-center"></i> Loading...</div>
+  </div>
+
+  <div v-else>
+    <div class="row justify-content-center align-items-center g-2">
+      <div class="col-md-2" />
+      <div class="col-md-8">
+        <h2 class="access-denied-message text-danger">Access Denied</h2>
+        <hr />
+        <p class="access-denied-message">Please log in.</p>
+        <!-- TODO - Add a link to the login page -->
+        <a id="login-btn" class="btn btn-primary" href="#" role="button">Log in here</a>
+      </div>
+      <div class="col-md-2" />
+    </div>
   </div>
 </template>
 
@@ -345,12 +361,15 @@ onBeforeUnmount(() => {
 // Call the getData function when the component is mounted
 onMounted(() => {
   getAvailableSkills()
-  getUserType()
-  getData()
-  window.addEventListener('resize', updateShouldHide)
-  setTimeout(() => {
-    isMounted.value = true
-  }, 1000)
+  if (getUserType() != 'HR_admin' || getUserType() != 'staff') {
+    userType.value = 'unknown'
+  } else {
+    getData()
+    window.addEventListener('resize', updateShouldHide)
+    setTimeout(() => {
+      isMounted.value = true
+    }, 1000)
+  }
 })
 </script>
 
