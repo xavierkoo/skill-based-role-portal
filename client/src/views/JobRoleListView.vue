@@ -85,7 +85,7 @@
                       <div
                         v-for="(roleSkill, index2) in jobRole.role_skills"
                         :key="index2"
-                        class="badge rounded-pill bg-light text-dark p-2 me-2"
+                        class="skill-badge badge rounded-pill bg-light text-dark p-2 me-2"
                       >
                         {{ roleSkill }}
                       </div>
