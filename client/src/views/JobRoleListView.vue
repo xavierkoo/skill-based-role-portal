@@ -334,6 +334,15 @@ const getUserType = async () => {
     .then((response) => {
       currentUserType.value = response.Results[0].sys_role
       userType.value = currentUserType.value
+      if (userType.value != 'hr' && userType.value != 'staff') {
+        userType.value = 'unknown'
+      } else {
+        getData()
+        window.addEventListener('resize', updateShouldHide)
+        setTimeout(() => {
+          isMounted.value = true
+        }, 1000)
+      }
     })
     .catch((error) => {
       console.error('Error fetching data:', error)
@@ -367,15 +376,7 @@ onBeforeUnmount(() => {
 // Call the getData function when the component is mounted
 onMounted(() => {
   getAvailableSkills()
-  if (getUserType() != 'HR_admin' || getUserType() != 'staff') {
-    userType.value = 'unknown'
-  } else {
-    getData()
-    window.addEventListener('resize', updateShouldHide)
-    setTimeout(() => {
-      isMounted.value = true
-    }, 1000)
-  }
+  getUserType()
 })
 </script>
 
