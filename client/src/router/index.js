@@ -3,11 +3,17 @@ import UpdateRoleListingView from '../views/UpdateRoleListingView.vue'
 import CreateRoleListingView from '../views/CreateRoleListingView.vue'
 import JobListingView from '../views/JobRoleListView.vue'
 import ApplicationStatusView from '../views/ApplicationStatusView.vue'
+import LoginView from '../views/LoginView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
+      name: 'login',
+      component: LoginView
+    },
+    {
+      path: '/rolelisting',
       name: 'JobRoleListing',
       component: JobListingView
     },

@@ -9,6 +9,7 @@ describe('JobRoleList', () => {
   it('displays "No job roles available." when no roles are present', async () => {
     // Create a new instance of the Axios mock adapter
     const mock = new MockAdapter(axios)
+    localStorage.setItem('id', 123456789)
 
     // Mock the GET request and provide an empty array as the response data
     mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, [])
@@ -102,6 +103,21 @@ describe('JobRoleList', () => {
       ]
     })
 
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: [
+        {
+          f_name: 'AH GAO',
+          l_email: 'TAN',
+          email: 'tan_ah_gao@all-in-one.com.sg',
+          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+          sys_role: 'staff',
+          dept: 'FINANCE',
+          staff_id: 123456789,
+          phone: '65-1234-5678'
+        }
+      ]
+    })
+
     // Mount your Vue component
     const wrapper = mount(JobRoleListView)
 
@@ -120,6 +136,7 @@ describe('JobRoleList', () => {
 
   it('Verify the successful display of a list of open roles - HR_Admin userType', async () => {
     const mock = new MockAdapter(axios)
+    localStorage.setItem('id', 123456789)
     const mockResponse = [
       {
         role_listing_id: 1,
@@ -226,17 +243,33 @@ describe('JobRoleList', () => {
       ]
     })
 
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: [
+        {
+          f_name: 'AH GAO',
+          l_email: 'TAN',
+          email: 'tan_ah_gao@all-in-one.com.sg',
+          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+          sys_role: 'staff',
+          dept: 'FINANCE',
+          staff_id: 123456789,
+          phone: '65-1234-5678'
+        }
+      ]
+    })
+
     const wrapper = mount(JobRoleListView)
     wrapper.vm.isMounted = true
 
     // Set the userType variable to 'HR_admin' & jobRoles to the mock response
-    wrapper.vm.userType = 'HR_admin'
+    wrapper.vm.userType = 'hr'
     wrapper.vm.jobRoles = mockResponse
 
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
 
     // Ensure that the data is properly set
+
     expect(wrapper.vm.jobRoles).toEqual(mockResponse)
     expect(wrapper.find('#rname').text()).toContain('Talent Attraction')
     expect(wrapper.find('#rstatus').text()).toContain('Active')
@@ -250,6 +283,7 @@ describe('JobRoleList', () => {
 
   it('Verify the successful display of a list of open roles - Staff userType', async () => {
     const mock = new MockAdapter(axios)
+    localStorage.setItem('id', 123456789)
     const mockResponse = [
       {
         role_listing_id: 1,
@@ -352,6 +386,21 @@ describe('JobRoleList', () => {
           skill_id: 345678935,
           ss_status: 'in-progress',
           skill_name: 'Certified Scrum Trainer'
+        }
+      ]
+    })
+
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: [
+        {
+          f_name: 'AH GAO',
+          l_email: 'TAN',
+          email: 'tan_ah_gao@all-in-one.com.sg',
+          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+          sys_role: 'staff',
+          dept: 'FINANCE',
+          staff_id: 123456789,
+          phone: '65-1234-5678'
         }
       ]
     })
@@ -378,6 +427,7 @@ describe('JobRoleList', () => {
 
   it('Check the standard items in the list of open roles', async () => {
     const mock = new MockAdapter(axios)
+    localStorage.setItem('id', 123456789)
     const mockResponse = [
       {
         role_listing_id: 1,
@@ -480,6 +530,21 @@ describe('JobRoleList', () => {
           skill_id: 345678935,
           ss_status: 'in-progress',
           skill_name: 'Certified Scrum Trainer'
+        }
+      ]
+    })
+
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: [
+        {
+          f_name: 'AH GAO',
+          l_email: 'TAN',
+          email: 'tan_ah_gao@all-in-one.com.sg',
+          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+          sys_role: 'staff',
+          dept: 'FINANCE',
+          staff_id: 123456789,
+          phone: '65-1234-5678'
         }
       ]
     })

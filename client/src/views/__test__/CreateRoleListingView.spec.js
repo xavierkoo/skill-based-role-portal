@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import CreateRoleListing from '../CreateRoleListingView.vue'
 
-describe('UpdateRoleListing.vue', () => {
+describe('CreateRoleListing.vue', () => {
   // Check all elements are rendered
   it('renders all necessary form elements', () => {
     const wrapper = mount(CreateRoleListing)

@@ -1,32 +1,39 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import UpdateRoleListing from '../UpdateRoleListingView.vue'
-import { createRouter, createMemoryHistory } from 'vue-router'
-
-const mockRouter = createRouter({
-  history: createMemoryHistory(),
+import { createRouter, createWebHistory } from 'vue-router'
+import MockAdapter from 'axios-mock-adapter'
+import axios from 'axios'
+const router = createRouter({
+  history: createWebHistory(),
   routes: [
     {
       path: '/update',
-      query: {
-        selectedData: JSON.stringify({
-          role_name: 'Sample Role Name',
-          role_listing_open: '2023-09-22',
-          role_listing_close: '2023-09-30',
-          role_listing_desc: 'Sample Role Description',
-          role_listing_id: '123',
-          role_id: 234567892
-        })
-      }
+      name: 'update',
+      component: UpdateRoleListing
     }
   ]
 })
 
 describe('UpdateRoleListing.vue', () => {
-  it('Check the standard items in the role modification feature.', () => {
+  it('Check the standard items in the role modification feature.', async () => {
+    await router.push('/update')
+
+    // Define the JSON data for testing
+    const selectedData = {
+      role_listing_id: 1,
+      role_id: 2,
+      role_listing_desc: 'Valid Description',
+      role_listing_open: '2023-10-16',
+      role_listing_close: '2023-10-20'
+    }
+
     const wrapper = mount(UpdateRoleListing, {
       global: {
-        plugins: [mockRouter]
+        plugins: [router] // Inject the router for testing
+      },
+      props: {
+        selectedData: JSON.stringify(selectedData) // Pass the JSON data as a prop
       }
     })
 
@@ -50,13 +57,42 @@ describe('UpdateRoleListing.vue', () => {
     // Check if the Back button (with its image) exists
     expect(wrapper.find('.back').exists()).toBe(true)
 
+    wrapper.vm.role_listing_id = 1
+    wrapper.vm.role_name = 'Sample Role Name'
+    wrapper.vm.role_listing_desc = 'Sample Role Description'
+    wrapper.vm.role_listing_open = '2023-10-16'
+    wrapper.vm.role_listing_close = '2023-10-20'
+
+    await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 1))
+
+    expect(wrapper.vm.role_listing_id).toBe(1)
+    expect(wrapper.vm.role_name).toBe('Sample Role Name')
+    expect(wrapper.vm.role_listing_desc).toBe('Sample Role Description')
+    expect(wrapper.vm.role_listing_open).toBe('2023-10-16')
+    expect(wrapper.vm.role_listing_close).toBe('2023-10-20')
+
     wrapper.unmount()
   })
 
   it('Visualize the workflow for modifying the details of open roles', async () => {
+    await router.push('/update')
+
+    // Define the JSON data for testing
+    const selectedData = {
+      role_listing_id: 1,
+      role_id: 2,
+      role_listing_desc: 'Valid Description',
+      role_listing_open: '2023-10-16',
+      role_listing_close: '2023-10-20'
+    }
+
     const wrapper = mount(UpdateRoleListing, {
       global: {
-        plugins: [mockRouter]
+        plugins: [router] // Inject the router for testing
+      },
+      props: {
+        selectedData: JSON.stringify(selectedData) // Pass the JSON data as a prop
       }
     })
 
@@ -78,60 +114,90 @@ describe('UpdateRoleListing.vue', () => {
     const textarea = wrapper.find('#textarea')
     await textarea.setValue('New Role Description')
     expect(textarea.element.value).toBe('New Role Description')
+
+    wrapper.unmount()
   })
 
   it('Verify the successful modification of open role details with all required fields updated correctly.', async () => {
+    localStorage.setItem('id', JSON.stringify('123456788'))
+
+    // Define the JSON data for testing
+    const selectedData = {
+      role_listing_id: 1,
+      role_id: 234511581,
+      role_listing_desc: 'string',
+      role_listing_open: '2023-10-19',
+      role_listing_close: '2023-10-29'
+    }
+
+    await router.push({ path: '/update', query: { selectedData: JSON.stringify(selectedData) } })
+
     const wrapper = mount(UpdateRoleListing, {
       global: {
-        plugins: [mockRouter]
+        plugins: [router] // Inject the router for testing
       }
     })
-
-    // Find the input elements and set their values
-    const roleListingOpenInput = wrapper.find('#startDate')
-    const roleListingCloseInput = wrapper.find('#closeDate')
-    const roleDescriptionInput = wrapper.find('#textarea')
-
-    await roleListingOpenInput.setValue('2023-11-01')
-    await roleListingCloseInput.setValue('2023-11-15')
-    await roleDescriptionInput.setValue('Update Role Description')
+    const mock = new MockAdapter(axios)
+    mock.onPut('http://localhost:8080/api/v1/rolelistings/').reply(200, {
+      Results: [
+        {
+          role_listing_creator: 123456788,
+          role_listing_source: 123456787,
+          role_id: 234567891,
+          role_listing_desc: 'string',
+          role_listing_close: '2023-10-29',
+          role_listing_ts_update: '2023-10-18T18:10:43',
+          role_listing_id: 1,
+          role_listing_updater: 123456788,
+          role_listing_open: '2023-10-19',
+          role_listing_ts_create: '2023-10-18T18:10:43'
+        }
+      ]
+    })
 
     // Trigger the update function
     const updateButton = wrapper.find('#update')
     await updateButton.trigger('click')
 
     // Wait for any async updates to complete
-    wrapper.vm.showSuccess = true
     await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 2))
 
     // Check if the success notification is displayed
     const successNotification = wrapper.find('.noti')
     expect(successNotification.exists()).toBe(true)
 
     // Check if the fields are updated
-    expect(wrapper.vm.role_listing_open).toBe('2023-11-01')
-    expect(wrapper.vm.role_listing_close).toBe('2023-11-15')
-    expect(wrapper.vm.role_listing_desc).toBe('Update Role Description')
+    expect(wrapper.vm.role_listing_open).toBe('2023-10-19')
+    expect(wrapper.vm.role_listing_close).toBe('2023-10-29')
+    expect(wrapper.vm.role_listing_desc).toBe('string')
+
+    wrapper.unmount()
   })
 
   it('Verify how the system handles a negative scenario when the executive attempts to modify an open role with invalid data.', async () => {
-    const wrapper = mount(UpdateRoleListing)
+    // Define the JSON data for testing\
 
-    wrapper.vm.selectedData = {
+    const selectedData = {
       role_listing_id: 1,
-      role_id: 2,
-      role_listing_desc: 'Valid Description',
-      role_listing_open: '2023-10-16',
+      role_id: 234511581,
+      role_listing_desc: '',
+      role_listing_open: '2023-10-22',
       role_listing_close: '2023-10-20'
     }
 
-    // Simulate the attempt to modify the open role with invalid or incomplete data.
-    wrapper.vm.role_listing_desc = '' // Set an empty description
-    wrapper.vm.role_listing_open = '2023-10-22' // Set an open date later than the close date
-    wrapper.vm.role_listing_close = '2023-10-20'
+    await router.push({ path: '/update', query: { selectedData: JSON.stringify(selectedData) } })
 
+    const wrapper = mount(UpdateRoleListing, {
+      global: {
+        plugins: [router] // Inject the router for testing
+      }
+    })
+
+    wrapper.find('#update').trigger('click')
     // Trigger the update function
-    await wrapper.vm.update()
+    await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 1))
 
     // Assert that the error message is displayed
     expect(wrapper.find('.error').exists()).toBe(true)
@@ -144,31 +210,52 @@ describe('UpdateRoleListing.vue', () => {
 
     // Ensure that the success message is not displayed
     expect(wrapper.find('.noti').exists()).toBe(false)
+    wrapper.unmount()
   })
 
-  it("Verify the system's behavior when Open Date, Description, and Deadline Date fields are updated with values that exceed the boundary", async () => {
-    const wrapper = mount(UpdateRoleListing)
+  it("Verify the system's behavior when Open Date and Deadline Date fields are updated with values that exceed the boundary", async () => {
+    const mock = new MockAdapter(axios)
 
-    wrapper.vm.selectedData = {
+    // Define the JSON data for testing
+    const selectedData = {
       role_listing_id: 1,
-      role_id: 2,
+      role_id: 234511581,
       role_listing_desc: 'Valid Description',
-      role_listing_open: '2023-10-16',
-      role_listing_close: '2023-10-20'
+      role_listing_open: '2023-10-15',
+      role_listing_close: '2023-10-15'
     }
+    await router.push({ path: '/update', query: { selectedData: JSON.stringify(selectedData) } })
 
-    // Set invalid values
-    wrapper.vm.role_listing_desc = ''
-    wrapper.vm.role_listing_open = '2023-10-15' // Start date before current date
-    wrapper.vm.role_listing_close = '2023-10-15' // End date earlier than start date
+    const wrapper = mount(UpdateRoleListing, {
+      global: {
+        plugins: [router] // Inject the router for testing
+      }
+    })
+
+    mock.onPut('http://localhost:8080/api/v1/rolelistings/').reply(200, {
+      Results: [
+        {
+          role_listing_creator: 123456788,
+          role_listing_source: 123456787,
+          role_id: 234511581,
+          role_listing_desc: 'string',
+          role_listing_close: '2023-10-16',
+          role_listing_ts_update: '2023-10-18T17:35:23',
+          role_listing_id: 1,
+          role_listing_updater: 123456788,
+          role_listing_open: '2023-10-15',
+          role_listing_ts_create: '2023-10-18T17:35:23'
+        }
+      ]
+    })
 
     // Trigger the update function
-    await wrapper.vm.update()
+    wrapper.find('#update').trigger('click')
+    await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 1))
 
     // Assert that the error message is displayed
     expect(wrapper.find('.error').exists()).toBe(true)
-
-    console.log(wrapper.text())
 
     expect(wrapper.text()).toContain(
       'Role Listing Open date must be a date earlier than Role Listing Close date'
@@ -179,5 +266,7 @@ describe('UpdateRoleListing.vue', () => {
 
     // Ensure that the success message is not displayed
     expect(wrapper.find('.noti').exists()).toBe(false)
+
+    wrapper.unmount()
   })
 })

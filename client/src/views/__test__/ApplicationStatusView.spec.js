@@ -15,6 +15,6 @@ describe('ApplicationStatusView.vue', () => {
     expect(roleApplicationTable.exists()).toBe(true)
 
     // Verify that the RoleApplicationTable component receives the correct ID prop
-    expect(roleApplicationTable.props('id')).toBe('123456789')
+    expect(roleApplicationTable.props('id')).toBe(123456789)
   })
 })
