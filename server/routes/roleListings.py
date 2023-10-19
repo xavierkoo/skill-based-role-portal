@@ -10,6 +10,7 @@ class RoleListing(BaseModel):
     role_listing_open: str 
     role_listing_close: str
 class RoleListing_Update(BaseModel):
+    role_listing_updater: int
     role_listing_id: int
     role_id: int
     role_listing_desc: str
@@ -184,6 +185,7 @@ async def update_role_listing(request: RoleListing_Update, db: Session = Depends
 
     # Get the role listing data from the request body.
     role_listing_data = request.dict()
+    print(role_listing_data)
 
     # Data Validation
     err_msg = []
@@ -219,6 +221,7 @@ async def update_role_listing(request: RoleListing_Update, db: Session = Depends
     else:
         # Create Dictionary for the updated role listing.
         role_listing = {
+            "role_listing_updater": role_listing_data["role_listing_updater"],
             "role_id" : role_listing_data["role_id"],
             "role_listing_desc" : role_listing_data["role_listing_desc"],
             "role_listing_open" : role_listing_data["role_listing_open"],
