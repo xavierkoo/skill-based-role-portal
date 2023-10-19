@@ -123,11 +123,10 @@ describe('JobRoleList', () => {
 
     // Set isMounted to true (if needed for your component)
     wrapper.vm.isMounted = true
-    wrapper.vm.userType = 'staff'
 
     // Wait for the next tick of the event loop (e.g., Vue's reactivity)
     await wrapper.vm.$nextTick()
-
+    await new Promise((resolve) => setTimeout(resolve, 1))
     // Assert that the component displays "No job roles available."
     expect(wrapper.text()).toContain('No job roles available.')
 
@@ -137,7 +136,7 @@ describe('JobRoleList', () => {
 
   it('Verify the successful display of a list of open roles - HR_Admin userType', async () => {
     const mock = new MockAdapter(axios)
-    localStorage.setItem('id', 123456789)
+    localStorage.setItem('id', 123456788)
     const mockResponse = [
       {
         role_listing_id: 1,
@@ -203,7 +202,7 @@ describe('JobRoleList', () => {
         }
       ]
     })
-    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456788').reply(200, {
       Results: [
         {
           staff_id: 123456789,
@@ -244,16 +243,16 @@ describe('JobRoleList', () => {
       ]
     })
 
-    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456788').reply(200, {
       Results: [
         {
           f_name: 'AH GAO',
           l_email: 'TAN',
           email: 'tan_ah_gao@all-in-one.com.sg',
           biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
-          sys_role: 'staff',
+          sys_role: 'hr',
           dept: 'FINANCE',
-          staff_id: 123456789,
+          staff_id: 123456788,
           phone: '65-1234-5678'
         }
       ]
@@ -263,11 +262,11 @@ describe('JobRoleList', () => {
     wrapper.vm.isMounted = true
 
     // Set the userType variable to 'HR_admin' & jobRoles to the mock response
-    wrapper.vm.userType = 'hr'
     wrapper.vm.jobRoles = mockResponse
 
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 1))
 
     // Ensure that the data is properly set
 
@@ -410,11 +409,11 @@ describe('JobRoleList', () => {
     wrapper.vm.isMounted = true
 
     // Set the userType variable to 'HR_admin' & jobRoles to the mock response
-    wrapper.vm.userType = 'staff'
     wrapper.vm.jobRoles = mockResponse
 
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 1))
 
     // Ensure that the data is properly set
     expect(wrapper.vm.jobRoles).toEqual(mockResponse)
@@ -554,11 +553,11 @@ describe('JobRoleList', () => {
     wrapper.vm.isMounted = true
 
     // Set the userType variable to 'HR_admin' & jobRoles to the mock response
-    wrapper.vm.userType = 'staff'
     wrapper.vm.jobRoles = mockResponse
 
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 1))
 
     // Ensure that the data is properly set
     expect(wrapper.vm.jobRoles).toEqual(mockResponse)
@@ -623,6 +622,21 @@ describe('JobRoleList', () => {
           skill_id: 345678935,
           skill_name: 'Certified Scrum Trainer',
           skill_status: 'active'
+        }
+      ]
+    })
+
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: [
+        {
+          f_name: 'AH GAO',
+          l_email: 'TAN',
+          email: 'tan_ah_gao@all-in-one.com.sg',
+          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+          sys_role: 'staff',
+          dept: 'FINANCE',
+          staff_id: 123456789,
+          phone: '65-1234-5678'
         }
       ]
     })

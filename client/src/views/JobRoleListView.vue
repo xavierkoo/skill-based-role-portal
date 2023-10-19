@@ -1,5 +1,5 @@
 <template>
-  <div v-if="userType == 'staff' || userType == 'HR_admin'">
+  <div v-if="userType == 'staff' || userType == 'hr'">
     <div class="d-flex justify-content-end me-5 mt-3">
       <label class="me-2 mt-2">Filter by skill:</label>
       <select id="filter" v-model="selectedSkill" class="form-select" style="max-width: 200px">
@@ -21,84 +21,90 @@
               <p class="text-primary text-center">No job roles available.</p>
             </div>
 
-          <div v-else class="container">
-            <!-- Job role list -->
-            <!-- Render for HR_admin -->
-            <div v-if="userType == 'hr'">
-              <div
-                v-for="(jobRole, key) in jobRoles"
-                :key="key"
-                class="job-role-item mb-4 border-bottom"
-                @click="goToRolePage(jobRole)"
-              >
+            <div v-else class="container">
+              <!-- Job role list -->
+              <!-- Render for HR_admin -->
+              <div v-if="userType == 'hr'">
                 <div
-                  class="card-body"
-                  :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
+                  v-for="(jobRole, key) in jobRoles"
+                  :key="key"
+                  class="job-role-item mb-4 border-bottom"
+                  @click="goToRolePage(jobRole)"
                 >
-                  <div class="row">
-                    <div class="col-md-8 col-xl-8 col-xxl-8">
-                      <h5
-                        class="card-title"
-                        :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
+                  <div
+                    class="card-body"
+                    :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
+                  >
+                    <div class="row">
+                      <div class="col-md-8 col-xl-8 col-xxl-8">
+                        <h5
+                          class="card-title"
+                          :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
+                        >
+                          <a id="rname" href="#" class="card-link text-normal me-2">{{
+                            jobRole.role_name
+                          }}</a>
+                          <p
+                            v-if="calculateDaysUntilOpen(jobRole.role_listing_close) < 0"
+                            id="rstatus"
+                            class="badge rounded-pill bg-danger text-white p-2"
+                          >
+                            Inactive
+                          </p>
+                          <p
+                            v-else
+                            id="rstatus"
+                            class="badge rounded-pill bg-success text-white p-2"
+                          >
+                            Active
+                          </p>
+                          <CalculateRoleMatch class="ms-2" :role-skills="jobRole.role_skills" />
+                        </h5>
+                      </div>
+                      <div class="col">
+                        <p id="rmanage" class="badge rounded-pill bg-secondary text-white p-2">
+                          Manage
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-gear"
+                            viewBox="0 0 16 16"
+                          >
+                            <path
+                              d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
+                            />
+                            <path
+                              d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
+                            />
+                          </svg>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="mb-2">
+                      <div
+                        v-for="(roleSkill, index2) in jobRole.role_skills"
+                        :key="index2"
+                        class="badge rounded-pill bg-light text-dark p-2 me-2"
                       >
-                        <a id="rname" href="#" class="card-link text-normal me-2">{{
-                          jobRole.role_name
-                        }}</a>
-                        <p
-                          v-if="calculateDaysUntilOpen(jobRole.role_listing_close) < 0"
-                          id="rstatus"
-                          class="badge rounded-pill bg-danger text-white p-2"
-                        >
-                          Inactive
-                        </p>
-                        <p v-else id="rstatus" class="badge rounded-pill bg-success text-white p-2">
-                          Active
-                        </p>
-                        <CalculateRoleMatch class="ms-2" :role-skills="jobRole.role_skills" />
-                      </h5>
+                        {{ roleSkill }}
+                      </div>
                     </div>
-                    <div class="col">
-                      <p id="rmanage" class="badge rounded-pill bg-secondary text-white p-2">
-                        Manage
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          class="bi bi-gear"
-                          viewBox="0 0 16 16"
-                        >
-                          <path
-                            d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
-                          />
-                          <path
-                            d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
-                          />
-                        </svg>
-                      </p>
+                    <p id="rdesc" class="card-text">
+                      {{ truncateText(jobRole.role_listing_desc, 150) }}
+                    </p>
+                    <div class="row">
+                      <small id="rPubDate" class="text-muted">
+                        Published Date {{ jobRole.role_listing_open }}</small
+                      >
+                      <small class="text-muted">
+                        Closing Date {{ jobRole.role_listing_close }}</small
+                      >
                     </div>
-                  </div>
-                  <div class="mb-2">
-                    <div
-                      v-for="(roleSkill, index2) in jobRole.role_skills"
-                      :key="index2"
-                      class="badge rounded-pill bg-light text-dark p-2 me-2"
-                    >
-                      {{ roleSkill }}
-                    </div>
-                  </div>
-                  <p id="rdesc" class="card-text">
-                    {{ truncateText(jobRole.role_listing_desc, 150) }}
-                  </p>
-                  <div class="row">
-                    <small id="rPubDate" class="text-muted">
-                      Published Date {{ jobRole.role_listing_open }}</small
-                    >
-                    <small class="text-muted"> Closing Date {{ jobRole.role_listing_close }}</small>
                   </div>
                 </div>
               </div>
-            </div>
 
               <!-- Render for staff -->
               <div v-if="userType == 'staff'">
