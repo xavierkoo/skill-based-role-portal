@@ -46,7 +46,11 @@ export default {
               }
             }
           }
-          percentage.value = (match / roles.length) * 100
+          if (match == 0) {
+            percentage.value = 0
+          } else {
+            percentage.value = ((match / roles.length) * 100).toFixed(2)
+          }
         }
         if (percentage.value < 50) {
           percentageClass.value = 'text-danger'
@@ -72,7 +76,11 @@ export default {
               }
             }
           }
-          percentage.value = (match / props.roleSkills.length) * 100
+          if (match == 0) {
+            percentage.value = 0
+          } else {
+            percentage.value = ((match / props.roleSkills.length) * 100).toFixed(2)
+          }
         }
         if (percentage.value < 50) {
           percentageClass.value = 'text-danger'
@@ -86,7 +94,8 @@ export default {
 
     const fetchStaffSkills = async () => {
       try {
-        const response = await getStaffSkills(123456789)
+        const id = localStorage.getItem('id')
+        const response = await getStaffSkills(id)
         setData(response.Results)
       } catch (error) {
         console.error('Error fetching data:', error)

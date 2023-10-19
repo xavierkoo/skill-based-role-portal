@@ -3,6 +3,7 @@ import { ref, onMounted, watch } from 'vue'
 import RoleApplication from './RoleApplication.vue'
 import CalculateRoleMatch from './CalculateRoleMatch.vue'
 import { getStaffSkills } from '../service/staffskills.service'
+import { getStaffDetails } from '../service/staffDetails.service'
 
 export default {
   components: { RoleApplication, CalculateRoleMatch },
@@ -25,7 +26,8 @@ export default {
   },
 
   setup(props) {
-    const user = 'HR'
+    const user = ref('')
+    const id = localStorage.getItem('id')
     const skillsList = ref([])
     const staffSkills = ref([])
     const maxSkillsToShow = 2
@@ -58,12 +60,21 @@ export default {
 
     const fetchStaffSkills = async () => {
       try {
-        const response = await getStaffSkills(123456789)
+        const response = await getStaffSkills(id)
         setData(response.Results)
       } catch (error) {
-        console.error('Error fetching data:', error)
+        const response = []
+        setData(response)
       }
     }
+
+    getStaffDetails(id)
+      .then((response) => {
+        user.value = response.Results[0].sys_role
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error)
+      })
 
     watch(
       () => props.roleDetails,
@@ -98,10 +109,9 @@ export default {
     <div class="d-sm-flex justify-content-between">
       <h1 id="role_name" class="my-auto">{{ roleDetails.role_name }}</h1>
       <button
-        v-if="user == 'HR'"
+        v-if="user == 'hr'"
         id="update_btn"
         role="link"
-        aria-label="Apply to Backend Engineer Intern, Stream Computing - 2024 on company website"
         class="updateBtn w-sm-50 my-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view"
         @click="
           $router.push({ path: '/update', query: { selectedData: JSON.stringify(roleDetails) } })
@@ -158,8 +168,8 @@ export default {
             <div
               :class="
                 skill !== 'TBC' && staffSkills && staffSkills.includes(skill)
-                  ? 'badge rounded-pill bg-success mx-1'
-                  : 'badge rounded-pill bg-secondary mx-1'
+                  ? 'badge rounded-pill bg-success mx-1 skillColor'
+                  : 'badge rounded-pill bg-secondary mx-1 skillColor'
               "
             >
               {{ skill }}
@@ -176,7 +186,6 @@ export default {
     <button
       id="apply_btn"
       role="link"
-      aria-label="Apply to Backend Engineer Intern, Stream Computing - 2024 on company website"
       class="defaultBtn d-flex w-sm-50 my-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view"
       data-bs-toggle="modal"
       data-bs-target="#applicationModal"

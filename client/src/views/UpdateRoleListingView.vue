@@ -6,7 +6,7 @@
         src="https://cdn-icons-png.flaticon.com/512/93/93634.png"
         alt="Back Button free icon"
         title="Back Button free icon"
-        @click="$router.push('/')"
+        @click="$router.push('/rolelisting')"
       />
       <div class="flex-grow-1"></div>
       <div v-if="showSuccess" class="text-center noti">Role Listing Successfully Updated</div>
@@ -91,11 +91,13 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 let selectedData = null
 
-try {
-  selectedData = JSON.parse(route.query.selectedData)
-} catch (error) {
-  // Handle the JSON parsing error, e.g., log the error or provide a default value
-  console.error('Error parsing JSON data:', error)
+if (route.query.selectedData) {
+  try {
+    selectedData = JSON.parse(route.query.selectedData)
+  } catch (error) {
+    // Handle the JSON parsing error, e.g., log the error or provide a default value
+    console.error('Error parsing JSON data:', error)
+  }
 }
 
 // Define refs for selectedData properties
@@ -107,11 +109,13 @@ const role_listing_id = ref(selectedData?.role_listing_id || '')
 const showSuccess = ref(false)
 const showError = ref(false)
 const errors = ref([])
+const id = JSON.parse(localStorage.getItem('id'))
 
 function update() {
   errors.value = []
   if (selectedData) {
     const dataToUpdate = {
+      role_listing_updater: parseInt(id),
       role_listing_id: selectedData.role_listing_id,
       role_id: selectedData.role_id,
       role_listing_desc: role_listing_desc.value,
@@ -136,8 +140,7 @@ function update() {
       showError.value = true
     } else {
       updateRoleListing(dataToUpdate)
-        .then((result) => {
-          console.log('success' + result)
+        .then(() => {
           showError.value = false
           showSuccess.value = true
           setTimeout(() => {
