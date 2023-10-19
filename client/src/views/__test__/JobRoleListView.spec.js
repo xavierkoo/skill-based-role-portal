@@ -12,7 +12,9 @@ describe('JobRoleList', () => {
     localStorage.setItem('id', 123456789)
 
     // Mock the GET request and provide an empty array as the response data
-    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, [])
+    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, {
+      Results: []
+    })
     mock.onGet('http://localhost:8080/api/v1/allskills/').reply(200, {
       Results: [
         {
@@ -120,13 +122,8 @@ describe('JobRoleList', () => {
 
     // Mount your Vue component
     const wrapper = mount(JobRoleListView)
-
-    // Set isMounted to true (if needed for your component)
-    wrapper.vm.isMounted = true
-
-    // Wait for the next tick of the event loop (e.g., Vue's reactivity)
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1))
+    await new Promise((resolve) => setTimeout(resolve, 1100))
     // Assert that the component displays "No job roles available."
     expect(wrapper.text()).toContain('No job roles available.')
 
@@ -137,22 +134,23 @@ describe('JobRoleList', () => {
   it('Verify the successful display of a list of open roles - HR_Admin userType', async () => {
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', 123456788)
-    const mockResponse = [
-      {
-        role_listing_id: 1,
-        role_id: 101,
-        role_listing_desc: 'This is a sample job role description.',
-        role_listing_source: 201,
-        role_listing_open: '2023-08-01',
-        role_listing_close: '2023-08-15',
-        role_description: 'Learning Facilitator',
-        role_name: 'Talent Attraction',
-        role_status: 'active',
-        role_skills: ['Communication', 'Training', 'Problem Solving']
-      }
-    ]
 
-    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, mockResponse)
+    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, {
+      Results: [
+        {
+          role_listing_id: 1,
+          role_id: 101,
+          role_listing_desc: 'This is a sample job role description.',
+          role_listing_source: 201,
+          role_listing_open: '2023-08-01',
+          role_listing_close: '2023-08-15',
+          role_description: 'Learning Facilitator',
+          role_name: 'Talent Attraction',
+          role_status: 'active',
+          role_skills: ['Communication', 'Training', 'Problem Solving']
+        }
+      ]
+    })
     mock.onGet('http://localhost:8080/api/v1/allskills/').reply(200, {
       Results: [
         {
@@ -259,18 +257,13 @@ describe('JobRoleList', () => {
     })
 
     const wrapper = mount(JobRoleListView)
-    wrapper.vm.isMounted = true
-
-    // Set the userType variable to 'HR_admin' & jobRoles to the mock response
-    wrapper.vm.jobRoles = mockResponse
 
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1))
+    await new Promise((resolve) => setTimeout(resolve, 1100))
 
     // Ensure that the data is properly set
 
-    expect(wrapper.vm.jobRoles).toEqual(mockResponse)
     expect(wrapper.find('#rname').text()).toContain('Talent Attraction')
     expect(wrapper.find('#rstatus').text()).toContain('Active')
     expect(wrapper.find('#rmanage').text()).toContain('Manage')
@@ -299,7 +292,22 @@ describe('JobRoleList', () => {
       }
     ]
 
-    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, mockResponse)
+    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, {
+      Results: [
+        {
+          role_listing_id: 1,
+          role_id: 101,
+          role_listing_desc: 'This is a sample job role description.',
+          role_listing_source: 201,
+          role_listing_open: '2023-08-01',
+          role_listing_close: '2023-08-15',
+          role_description: 'Learning Facilitator',
+          role_name: 'Talent Attraction',
+          role_status: 'active',
+          role_skills: ['Communication', 'Training', 'Problem Solving']
+        }
+      ]
+    })
     mock.onGet('http://localhost:8080/api/v1/allskills/').reply(200, {
       Results: [
         {
@@ -406,17 +414,12 @@ describe('JobRoleList', () => {
     })
 
     const wrapper = mount(JobRoleListView)
-    wrapper.vm.isMounted = true
-
-    // Set the userType variable to 'HR_admin' & jobRoles to the mock response
-    wrapper.vm.jobRoles = mockResponse
 
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1))
+    await new Promise((resolve) => setTimeout(resolve, 1100))
 
     // Ensure that the data is properly set
-    expect(wrapper.vm.jobRoles).toEqual(mockResponse)
     expect(wrapper.find('#rname').text()).toContain('Talent Attraction')
     expect(wrapper.findComponent(CalculateRoleMatch).exists()).toBe(true)
     expect(wrapper.find('#rdesc').text()).toContain('This is a sample job role description.')
@@ -428,22 +431,23 @@ describe('JobRoleList', () => {
   it('Check the standard items in the list of open roles', async () => {
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', 123456789)
-    const mockResponse = [
-      {
-        role_listing_id: 1,
-        role_id: 101,
-        role_listing_desc: 'This is a sample job role description.',
-        role_listing_source: 201,
-        role_listing_open: '2023-08-01',
-        role_listing_close: '2023-08-15',
-        role_description: 'Learning Facilitator',
-        role_name: 'Talent Attraction',
-        role_status: 'active',
-        role_skills: ['Communication', 'Training', 'Problem Solving']
-      }
-    ]
 
-    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, mockResponse)
+    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, {
+      Results: [
+        {
+          role_listing_id: 1,
+          role_id: 101,
+          role_listing_desc: 'This is a sample job role description.',
+          role_listing_source: 201,
+          role_listing_open: '2023-08-01',
+          role_listing_close: '2023-08-15',
+          role_description: 'Learning Facilitator',
+          role_name: 'Talent Attraction',
+          role_status: 'active',
+          role_skills: ['Communication', 'Training', 'Problem Solving']
+        }
+      ]
+    })
     mock.onGet('http://localhost:8080/api/v1/allskills/').reply(200, {
       Results: [
         {
@@ -550,17 +554,13 @@ describe('JobRoleList', () => {
     })
 
     const wrapper = mount(JobRoleListView)
-    wrapper.vm.isMounted = true
-
-    // Set the userType variable to 'HR_admin' & jobRoles to the mock response
-    wrapper.vm.jobRoles = mockResponse
 
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1))
+    await new Promise((resolve) => setTimeout(resolve, 1100))
 
     // Ensure that the data is properly set
-    expect(wrapper.vm.jobRoles).toEqual(mockResponse)
+    // expect(wrapper.vm.jobRoles).toEqual(mockResponse)
     expect(wrapper.find('.card-body').exists()).toBe(true)
     expect(wrapper.findComponent(CalculateRoleMatch).exists()).toBe(true)
 
