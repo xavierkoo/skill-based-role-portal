@@ -15,7 +15,16 @@ class RoleListing_Update(BaseModel):
     role_id: int
     role_listing_desc: str
     role_listing_open: str 
-    role_listing_close: str      
+    role_listing_close: str
+class RoleListing_Create(BaseModel):
+    role_listing_creator:int
+    role_listing_source:int
+    role_listing_updater:int
+    role_id: int
+    role_listing_desc: str
+    role_listing_open: str 
+    role_listing_close: str
+      
 
 router = APIRouter()
 
@@ -91,7 +100,7 @@ async def get_role_listings(db: Session = Depends(get_db)):
 @router.post(
     "/api/v1/rolelistings/", status_code=status.HTTP_201_CREATED, tags=["Role Listing"]
 )
-async def create_role_listing(request: RoleListing, db: Session = Depends(get_db)):
+async def create_role_listing(request: RoleListing_Create, db: Session = Depends(get_db)):
     """
     The function `create_role_listing` creates a new role listing object and saves it to the database,
     while performing data validation on the input.
@@ -108,6 +117,7 @@ async def create_role_listing(request: RoleListing, db: Session = Depends(get_db
 
     # Get the role listing data from the request body.
     role_listing_data = request.dict()
+    print(role_listing_data)
 
     # Data Validation
     err_msg = []
@@ -140,9 +150,9 @@ async def create_role_listing(request: RoleListing, db: Session = Depends(get_db
         # Create a new role listing object.
         role_listing = models.RoleListing(
             role_listing_id=role_listing_id,
-            role_listing_creator=123456788,
-            role_listing_source=123456788,
-            role_listing_updater=123456788,
+            role_listing_creator=role_listing_data["role_listing_creator"],
+            role_listing_source=role_listing_data["role_listing_source"],
+            role_listing_updater=role_listing_data["role_listing_updater"],
             role_id=role_listing_data["role_id"],
             role_listing_desc=role_listing_data["role_listing_desc"],
             role_listing_open=role_listing_data["role_listing_open"],
@@ -154,9 +164,6 @@ async def create_role_listing(request: RoleListing, db: Session = Depends(get_db
         db.commit()
         role_listing = {
             "role_listing_id": role_listing_id,
-            "role_listing_creator": 123456788,
-            "role_listing_source": 123456788,
-            "role_listing_updater": 123456788,
         }
         role_listing.update(role_listing_data)
         db.close()

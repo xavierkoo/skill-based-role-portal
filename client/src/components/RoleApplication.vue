@@ -35,7 +35,7 @@ export default {
       console.log(this.roleListingID)
       const applicationData = {
         role_listing_id: this.roleListingID,
-        staff_id: 123456789,
+        staff_id: localStorage.getItem('id'),
         role_app_reason: this.answer
       }
 

@@ -15,7 +15,7 @@ staff_details_seed = [
     {
         "staff_id": 123456789,
         "f_name": "AH GAO",
-        "l_email": "TAN",
+        "l_name": "TAN",
         "dept": "FINANCE",
         "email": "tan_ah_gao@all-in-one.com.sg",
         "phone": "65-1234-5678",
@@ -25,7 +25,7 @@ staff_details_seed = [
     {
         "staff_id": 123456788,
         "f_name": "VINCENT REX",
-        "l_email": "COLINS",
+        "l_name": "COLINS",
         "dept": "HUMAN RESOURCE AND ADMIN",
         "email": "colins_vincent_rex@all-in-one.com.sg",
         "phone": "65-1234-5679",
@@ -35,7 +35,7 @@ staff_details_seed = [
     {
         "staff_id": 123456787,
         "f_name": "FAUD",
-        "l_email": "NIZAM",
+        "l_name": "NIZAM",
         "dept": "SALES",
         "email": "faud_nizam@all-in-one.com.sg",
         "phone": "60-03-21345678",
@@ -45,7 +45,7 @@ staff_details_seed = [
     {
         "staff_id": 123456786,
         "f_name": "JOHN",
-        "l_email": "DOE",
+        "l_name": "DOE",
         "dept": "IT",
         "email": "John_doe@all-in-one.com.sg",
         "phone": "65-5824-7888",
@@ -53,19 +53,19 @@ staff_details_seed = [
         "sys_role": "inactive",
     },
     {
-        "staff_id": 1,
+        "staff_id": 123111123,
         "f_name": "ROOT",
-        "l_email": "ADMIN",
+        "l_name": "ADMIN",
         "dept": "IT",
         "email": "rootme@all-in-one.com.sg",
         "phone": "65-5824-7888",
         "biz_address": "1 Scotts Rd, #24-10 Shaw Centre, Singapore 228208",
-        "sys_role": "staff",
+        "sys_role": "manager",
     },
     {
         "staff_id": 123456123,
         "f_name": "ROOT",
-        "l_email": "ADMIN SECOND",
+        "l_name": "ADMIN SECOND",
         "dept": "IT",
         "email": "rootme2@all-in-one.com.sg",
         "phone": "65-5824-7888",
@@ -148,7 +148,7 @@ role_details_seed = [
 ]
 staff_reporting_officer_seed = [
     {"staff_id": 123456789, "RO_id": 123456123},
-    {"staff_id": 123456123, "RO_id": 1},
+    {"staff_id": 123456123, "RO_id": 123111123},
 ]
 staff_roles_seed = [
     {

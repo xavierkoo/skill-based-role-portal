@@ -202,7 +202,7 @@
         <hr />
         <p class="access-denied-message">Please log in.</p>
         <!-- TODO - Add a link to the login page -->
-        <a id="login-btn" class="btn btn-primary" href="#" role="button">Log in here</a>
+        <a id="login-btn" to="/" class="nav-link logout defaultBtn">Login</a>
       </div>
       <div class="col-md-2" />
     </div>
