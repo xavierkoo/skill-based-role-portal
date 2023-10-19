@@ -85,7 +85,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { updateRoleListing } from '../service/UpdateRoleListing.service'
+import { updateRoleListing } from '../service/rolelisting.service'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
