@@ -9,3 +9,8 @@ export const fetchRoleListings = async () => {
 export const createRoleListing = async (role) => {
   return await axios.post(`${BASE_URL}`, role)
 }
+
+export const updateRoleListing = async (updatedRoleListing) => {
+  const response = await axios.put(`${BASE_URL}`, updatedRoleListing)
+  return response.data
+}

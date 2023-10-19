@@ -48,6 +48,11 @@ export default defineConfig({
         target: 'http://server_backend:5101', // Update with the correct backend URL
         changeOrigin: true,
         secure: false
+      },
+      '/api/v1/staffdetails/': {
+        target: 'http://server_backend:5101', // Update with the correct backend URL
+        changeOrigin: true,
+        secure: false
       }
       // '^/records/.*': {
       //     // auto appends to the target
