@@ -201,7 +201,7 @@ const create = () => {
 
   createRoleListing(dataToUpdate)
     .then((result) => {
-      // console.log('success' + result)
+      console.log('success' + result)
       message.value = 'Role Listing Created Successfully'
     })
     .catch((error) => {
