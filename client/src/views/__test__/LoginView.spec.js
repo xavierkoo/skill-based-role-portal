@@ -6,7 +6,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 describe('LoginView.vue', () => {
   it('Visualize the workflow for users and ensure that the login page is displayed correctly when initially loaded.', async () => {
-    // Create a router instance to simulate routing
+    // Create a router instance to simulate routings
     const router = createRouter({
       history: createWebHistory(),
       routes: [
