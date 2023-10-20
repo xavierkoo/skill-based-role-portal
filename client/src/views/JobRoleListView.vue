@@ -1,5 +1,5 @@
 <template>
-  <div v-if="userType == 'staff' || userType == 'hr'">
+  <div v-if="userType == 'staff' || userType == 'hr' || userType == 'manager'">
     <div class="d-flex justify-content-end me-5 mt-3">
       <label class="me-2 mt-2">Filter by skill:</label>
       <select id="filter" v-model="selectedSkill" class="form-select" style="max-width: 200px">
@@ -107,7 +107,7 @@
               </div>
 
               <!-- Render for staff -->
-              <div v-if="userType == 'staff'">
+              <div v-if="userType == 'staff' || userType == 'manager'">
                 <div
                   v-for="(jobRole, index) in jobRoles"
                   :key="index"
@@ -334,7 +334,7 @@ const getUserType = async () => {
     .then((response) => {
       currentUserType.value = response.Results[0].sys_role
       userType.value = currentUserType.value
-      if (userType.value != 'hr' && userType.value != 'staff') {
+      if (userType.value != 'hr' && userType.value != 'staff' && userType.value != 'manager') {
         userType.value = 'unknown'
       } else {
         getData()

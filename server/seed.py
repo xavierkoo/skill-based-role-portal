@@ -179,6 +179,8 @@ staff_skills_seed = [
     {"staff_id": 123456789, "skill_id": 345678927, "ss_status": "in-progress"},
     {"staff_id": 123456788, "skill_id": 345678935, "ss_status": "active"},
     {"staff_id": 123456788, "skill_id": 345678927, "ss_status": "active"},
+    {"staff_id": 123456787, "skill_id": 345678935, "ss_status": "active"},
+    {"staff_id": 123456787, "skill_id": 345678927, "ss_status": "active"},
 ]
 role_skills_seed = [
     {"role_id": 234567893, "skill_id": 345678935},

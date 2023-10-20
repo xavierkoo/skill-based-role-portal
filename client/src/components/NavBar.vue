@@ -20,6 +20,11 @@
               >Create Role Listing</router-link
             >
           </li>
+          <li v-if="userType == 'hr' || userType == 'manager'" class="nav-item">
+            <router-link to="/status" class="nav-link active applicants"
+              >View Role Applicants</router-link
+            >
+          </li>
           <li class="nav-item">
             <router-link to="/status" class="nav-link active status"
               >Application Status</router-link
