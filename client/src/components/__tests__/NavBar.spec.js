@@ -51,7 +51,7 @@ describe('NavBar', () => {
     expect(wrapper.text()).toContain('Create Role Listing')
     expect(wrapper.html()).toContain('Application Status')
     expect(wrapper.html()).toContain('View Role Applicants')
-    expect(wrapper.html()).toContain('SBRP')
+    expect(wrapper.find('.talentNav').exists()).toBeTruthy()
     expect(wrapper.html()).toContain('Logout')
   })
 
@@ -96,7 +96,7 @@ describe('NavBar', () => {
     expect(wrapper.text()).not.toContain('Create Role Listing')
     expect(wrapper.html()).toContain('Application Status')
     expect(wrapper.html()).toContain('View Role Applicants')
-    expect(wrapper.html()).toContain('SBRP')
+    expect(wrapper.find('.talentNav').exists()).toBeTruthy()
     expect(wrapper.html()).toContain('Logout')
   })
 
@@ -143,7 +143,7 @@ describe('NavBar', () => {
     // Check if the specified Navbar options are visible
     expect(wrapper.html()).not.toContain('Create Role Listing')
     expect(wrapper.html()).toContain('Application Status')
-    expect(wrapper.html()).toContain('SBRP')
+    expect(wrapper.find('.talentNav').exists()).toBeTruthy()
     expect(wrapper.html()).toContain('Logout')
   })
 
@@ -420,9 +420,9 @@ describe('NavBar', () => {
     await wrapper.vm.$nextTick()
     await new Promise((resolve) => setTimeout(resolve, 1))
 
-    // Check if 'Application Status' and 'SBRP' (Company Name) are visible
+    // Check if 'Application Status' and logo are visible
     expect(wrapper.html()).toContain('Application Status')
-    expect(wrapper.html()).toContain('SBRP')
+    expect(wrapper.find('.talentNav').exists()).toBeTruthy()
   })
 
   it("Verify how the system handles employees trying to access 'Create Application' or 'View Role Applicants' expecting it to be invisible, with no unauthorized access.", async () => {
@@ -511,7 +511,7 @@ describe('NavBar', () => {
     expect(wrapper.html()).toContain('Create Role Listing')
     expect(wrapper.html()).toContain('View Role Applicants')
     expect(wrapper.html()).toContain('Application Status')
-    expect(wrapper.html()).toContain('SBRP')
+    expect(wrapper.find('.talentNav').exists()).toBeTruthy()
     expect(wrapper.html()).toContain('Logout')
   })
 
@@ -558,7 +558,7 @@ describe('NavBar', () => {
     expect(wrapper.html()).not.toContain('Create Role Listing')
     expect(wrapper.html()).not.toContain('View Role Applicants')
     expect(wrapper.html()).toContain('Application Status')
-    expect(wrapper.html()).toContain('SBRP')
+    expect(wrapper.find('.talentNav').exists()).toBeTruthy()
     expect(wrapper.html()).toContain('Logout')
   })
 })
