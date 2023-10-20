@@ -6,7 +6,7 @@ import MockAdapter from 'axios-mock-adapter'
 import CalculateRoleMatch from '@/components/CalculateRoleMatch.vue'
 
 describe('JobRoleList', () => {
-  it('Displays "No job roles available." when no roles are present - Staff userType', async () => {
+  it('Displays "No job roles available." when no roles are present - Staff and Manager userType', async () => {
     // Create a new instance of the Axios mock adapter
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', 123456789)
@@ -128,7 +128,7 @@ describe('JobRoleList', () => {
     mock.restore()
   })
 
-  it('Verify the successful display of a list of open roles - Staff userType', async () => {
+  it('Verify the successful display of a list of open roles - Staff and Manager userType', async () => {
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', 123456789)
     mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, {
@@ -262,7 +262,7 @@ describe('JobRoleList', () => {
     mock.restore()
   })
 
-  it('Check the standard items in the list of open roles - Staff userType', async () => {
+  it('Check the standard items in the list of open roles - Staff and Manager userType', async () => {
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', 123456789)
     mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, {

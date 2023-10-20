@@ -55,7 +55,7 @@ describe('NavBar', () => {
     expect(wrapper.html()).toContain('Logout')
   })
 
-  it("Visualize the workflow for managers and confirm that, when logged in, they can see 'Create Application', 'View Role Applicants', 'Application Status,' 'Company Name,' and 'Logout' options in the Navbar.", async () => {
+  it("Visualize the workflow for managers and confirm that, when logged in, they can see 'View Role Applicants', 'Application Status,' 'Company Name,' and 'Logout' options in the Navbar.", async () => {
     // Simulate a Talent Acquisition Executive being logged in
     localStorage.setItem('id', 123456787)
     //mock the axios call

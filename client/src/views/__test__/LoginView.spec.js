@@ -15,7 +15,7 @@ describe('LoginView.vue', () => {
       ]
     })
 
-    // Mount the LoginView component with the router
+    // Mount the LoginView components with the router
     const wrapper = mount(LoginView, {
       global: {
         plugins: [router]
