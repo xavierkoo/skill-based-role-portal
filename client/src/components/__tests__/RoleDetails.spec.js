@@ -1,11 +1,68 @@
 import { describe, it, expect } from 'vitest'
-
+import MockAdapter from 'axios-mock-adapter'
+import axios from 'axios'
 import { mount } from '@vue/test-utils'
 import RoleDetails from '../RoleDetails.vue'
 
 //test if all the required props appear
 describe('RoleDetails', () => {
   it("Visualize the workflow for viewing the alignment between open roles and the staff member's skill set.", async () => {
+    localStorage.setItem('id', 123456789)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: [
+        {
+          f_name: 'AH GAO',
+          l_email: 'TAN',
+          email: 'tan_ah_gao@all-in-one.com.sg',
+          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+          sys_role: 'staff',
+          dept: 'FINANCE',
+          staff_id: 123456789,
+          phone: '65-1234-5678'
+        }
+      ]
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+      Results: [
+        {
+          staff_id: 123456789,
+          skill_id: 345678790,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Professional'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678866,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Developer'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678890,
+          ss_status: 'unverified',
+          skill_name: 'Certified Scrum@Scale Practitioner'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678913,
+          ss_status: 'active',
+          skill_name: 'Python Programming'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678927,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Coach'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678935,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Trainer'
+        }
+      ]
+    })
     const roleDetails = {
       role_name: 'Head, Talent Attraction',
       role_listing_desc:
@@ -45,6 +102,62 @@ describe('RoleDetails', () => {
   })
 
   it("Verify the successful display of compatibility for the role based on the staff member's skills and the required skills for each role.", async () => {
+    localStorage.setItem('id', 123456788)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456788').reply(200, {
+      Results: [
+        {
+          f_name: 'AH GAO',
+          l_email: 'TAN',
+          email: 'tan_ah_gao@all-in-one.com.sg',
+          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+          sys_role: 'hr',
+          dept: 'FINANCE',
+          staff_id: 123456788,
+          phone: '65-1234-5678'
+        }
+      ]
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456788').reply(200, {
+      Results: [
+        {
+          staff_id: 123456788,
+          skill_id: 345678790,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Professional'
+        },
+        {
+          staff_id: 123456788,
+          skill_id: 345678866,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Developer'
+        },
+        {
+          staff_id: 123456788,
+          skill_id: 345678890,
+          ss_status: 'unverified',
+          skill_name: 'Certified Scrum@Scale Practitioner'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678913,
+          ss_status: 'active',
+          skill_name: 'Python Programming'
+        },
+        {
+          staff_id: 123456788,
+          skill_id: 345678927,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Coach'
+        },
+        {
+          staff_id: 123456788,
+          skill_id: 345678935,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Trainer'
+        }
+      ]
+    })
     const roleDetails = {
       role_name: 'Head, Talent Attraction',
       role_listing_desc:
@@ -66,12 +179,13 @@ describe('RoleDetails', () => {
         roleDetails: roleDetails
       }
     })
-    wrapper.vm.user = 'HR'
+    wrapper.vm.user = 'hr'
     wrapper.vm.staffSkills = ['Pascal Programming']
     await new Promise((resolve) => setTimeout(resolve, 1))
     expect(wrapper.find('#update_btn').exists()).toBe(true)
-    expect(wrapper.find('.bg-success').text()).toContain('Pascal Programming')
-    expect(wrapper.find('.bg-secondary').text()).toContain('Python Programming')
+    const bgSuccessElements = wrapper.findAll('.bg-success')
+    expect(bgSuccessElements.some((el) => el.text() === 'Python Programming')).toBeTruthy()
+    expect(bgSuccessElements.some((el) => el.text() === 'Pascal Programming')).toBeTruthy()
     expect(wrapper.text()).toContain(roleDetails.role_name)
     expect(wrapper.text()).toContain(roleDetails.role_listing_desc)
     expect(wrapper.text()).toContain(roleDetails.role_listing_open)
@@ -80,6 +194,62 @@ describe('RoleDetails', () => {
   })
 
   it('Check the standard items in the compatibility display.', async () => {
+    localStorage.setItem('id', 123456788)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456788').reply(200, {
+      Results: [
+        {
+          f_name: 'AH GAO',
+          l_email: 'TAN',
+          email: 'tan_ah_gao@all-in-one.com.sg',
+          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+          sys_role: 'hr',
+          dept: 'FINANCE',
+          staff_id: 123456789,
+          phone: '65-1234-5678'
+        }
+      ]
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456788').reply(200, {
+      Results: [
+        {
+          staff_id: 123456788,
+          skill_id: 345678790,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Professional'
+        },
+        {
+          staff_id: 123456788,
+          skill_id: 345678866,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Developer'
+        },
+        {
+          staff_id: 123456788,
+          skill_id: 345678890,
+          ss_status: 'unverified',
+          skill_name: 'Certified Scrum@Scale Practitioner'
+        },
+        {
+          staff_id: 123456788,
+          skill_id: 345678913,
+          ss_status: 'active',
+          skill_name: 'Python Programming'
+        },
+        {
+          staff_id: 123456788,
+          skill_id: 345678927,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Coach'
+        },
+        {
+          staff_id: 123456788,
+          skill_id: 345678935,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Trainer'
+        }
+      ]
+    })
     const roleDetails = {
       role_name: 'Head, Talent Attraction',
       role_listing_desc:
@@ -102,7 +272,7 @@ describe('RoleDetails', () => {
       }
     })
     wrapper.vm.staffSkills = ['Pascal Programming']
-    wrapper.vm.user = 'HR'
+    wrapper.vm.user = 'hr'
     await new Promise((resolve) => setTimeout(resolve, 1))
     expect(wrapper.find('#update_btn').exists()).toBe(true)
     expect(wrapper.find('#CalculateRoleMatch').exists()).toBe(true)
@@ -119,6 +289,62 @@ describe('RoleDetails', () => {
   })
 
   it("Verify the system's behavior when the number of skills required ", async () => {
+    localStorage.setItem('id', 123456789)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: [
+        {
+          f_name: 'AH GAO',
+          l_email: 'TAN',
+          email: 'tan_ah_gao@all-in-one.com.sg',
+          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+          sys_role: 'staff',
+          dept: 'FINANCE',
+          staff_id: 123456789,
+          phone: '65-1234-5678'
+        }
+      ]
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+      Results: [
+        {
+          staff_id: 123456789,
+          skill_id: 345678790,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Professional'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678866,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Developer'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678890,
+          ss_status: 'unverified',
+          skill_name: 'Certified Scrum@Scale Practitioner'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678913,
+          ss_status: 'active',
+          skill_name: 'Python Programming'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678927,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Coach'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678935,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Trainer'
+        }
+      ]
+    })
     const roleDetails = {
       role_name: 'Head, Talent Attraction',
       role_listing_desc:
@@ -141,6 +367,62 @@ describe('RoleDetails', () => {
   })
   //test if more skills appear when "show more" button is clicked
   it('displays more skills when "Show More" is clicked', async () => {
+    localStorage.setItem('id', 123456789)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+      Results: [
+        {
+          staff_id: 123456789,
+          skill_id: 345678790,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Professional'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678866,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Developer'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678890,
+          ss_status: 'unverified',
+          skill_name: 'Certified Scrum@Scale Practitioner'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678913,
+          ss_status: 'active',
+          skill_name: 'Python Programming'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678927,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Coach'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678935,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Trainer'
+        }
+      ]
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: [
+        {
+          f_name: 'AH GAO',
+          l_email: 'TAN',
+          email: 'tan_ah_gao@all-in-one.com.sg',
+          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+          sys_role: 'staff',
+          dept: 'FINANCE',
+          staff_id: 123456789,
+          phone: '65-1234-5678'
+        }
+      ]
+    })
     const roleDetails = {
       role_name: 'Head, Talent Attraction',
       role_listing_desc:
@@ -173,6 +455,62 @@ describe('RoleDetails', () => {
 
   //test if show more button appears if number of skills is too long for all to be shown
   it('displays "Show More" link when skills overflow', async () => {
+    localStorage.setItem('id', 123456789)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+      Results: [
+        {
+          staff_id: 123456789,
+          skill_id: 345678790,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Professional'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678866,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Developer'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678890,
+          ss_status: 'unverified',
+          skill_name: 'Certified Scrum@Scale Practitioner'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678913,
+          ss_status: 'active',
+          skill_name: 'Python Programming'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678927,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Coach'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678935,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Trainer'
+        }
+      ]
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: [
+        {
+          f_name: 'AH GAO',
+          l_email: 'TAN',
+          email: 'tan_ah_gao@all-in-one.com.sg',
+          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+          sys_role: 'staff',
+          dept: 'FINANCE',
+          staff_id: 123456789,
+          phone: '65-1234-5678'
+        }
+      ]
+    })
     const roleDetails = {
       role_name: 'Head, Talent Attraction',
       role_listing_desc:
@@ -207,6 +545,62 @@ describe('RoleDetails', () => {
 
   //test if default value appear if fields are missing
   it('Verify how the system handles a negative scenario when the staff member is on the "Role Details" page when the details are passed in incorrectly', async () => {
+    localStorage.setItem('id', 123456789)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+      Results: [
+        {
+          staff_id: 123456789,
+          skill_id: 345678790,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Professional'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678866,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Developer'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678890,
+          ss_status: 'unverified',
+          skill_name: 'Certified Scrum@Scale Practitioner'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678913,
+          ss_status: 'active',
+          skill_name: 'Python Programming'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678927,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Coach'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678935,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Trainer'
+        }
+      ]
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: [
+        {
+          f_name: 'AH GAO',
+          l_email: 'TAN',
+          email: 'tan_ah_gao@all-in-one.com.sg',
+          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+          sys_role: 'staff',
+          dept: 'FINANCE',
+          staff_id: 123456789,
+          phone: '65-1234-5678'
+        }
+      ]
+    })
     const roleDetails = {
       role_name: '',
       role_listing_desc: '',

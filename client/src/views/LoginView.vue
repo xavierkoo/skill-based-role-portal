@@ -61,6 +61,7 @@
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 const $router = useRouter()
+//user details
 const user = ref({
   id: 123456789,
   email: 'tan_ah_gao@all-in-one.com.sg',

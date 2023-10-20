@@ -29,7 +29,7 @@ describe('RoleApplicationTable.vue', () => {
 
     const wrapper = mount(RoleApplicationTable, {
       props: {
-        id: '1'
+        id: 1
       }
     })
 
@@ -56,7 +56,7 @@ describe('RoleApplicationTable.vue', () => {
 
     const wrapper = mount(RoleApplicationTable, {
       props: {
-        id: '2'
+        id: 2
       }
     })
     await new Promise((resolve) => setTimeout(resolve, 1))
@@ -193,7 +193,7 @@ describe('RoleApplicationTable.vue', () => {
 
     const wrapper = mount(RoleApplicationTable, {
       props: {
-        id: '1'
+        id: 1
       }
     })
 

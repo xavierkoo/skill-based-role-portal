@@ -1,7 +1,7 @@
 <template>
   <div
-    class="modal fade"
     id="exampleModal"
+    class="modal fade"
     tabindex="-1"
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
@@ -32,14 +32,23 @@
         src="https://cdn-icons-png.flaticon.com/512/93/93634.png"
         alt="Back Button free icon"
         title="Back Button free icon"
-        @click="$router.push('/')"
+        @click="$router.push('/rolelisting')"
       />
     </div>
     <h1 class="my-3 header">Role Listing Submission</h1>
     <div class="col mx-auto text-start">
       <div class="mb-3">
-        <label for="roleListingID" class="form-label">Role ID</label>
-        <input id="roleListingID" v-model="roleID" type="text" class="form-control role" disabled />
+        <label for="sourceManagerID" class="form-label">Source Manager Name</label>
+        <select id="sourceManagerID" v-model="selectedSourceManagerID" class="form-select">
+          <option v-for="(manager, i) in sourceManagers" :key="i" :value="manager.staff_id">
+            {{ manager.f_name + ' ' + manager.l_name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="roleID" class="form-label">Role ID</label>
+        <input id="roleID" v-model="roleID" type="text" class="form-control role" disabled />
       </div>
 
       <div class="mb-3">
@@ -54,7 +63,14 @@
 
       <div class="mb-3">
         <label for="startDate" class="form-label">Application Start Date</label>
-        <input id="startDate" v-model="startDate" type="date" class="form-control" placeholder="" />
+        <input
+          id="startDate"
+          v-model="startDate"
+          type="date"
+          class="form-control"
+          placeholder=""
+          @change="autoFillCloseDate()"
+        />
         <div v-if="emptyStartDate" class="fs-6 text-danger">Start date cannot be empty.</div>
       </div>
 
@@ -82,9 +98,9 @@
         <button
           id="create"
           class="defaultBtn"
-          @click="create()"
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
+          @click="create()"
         >
           Create
         </button>
@@ -97,15 +113,20 @@
 import { ref, onMounted, computed, watchEffect } from 'vue'
 import { createRoleListing } from '../service/rolelisting.service'
 import { fetchRoleDetails } from '../service/roledetails.service'
+import { getAllStaffDetails } from '../service/staffDetails.service'
 
 const roleDetails = ref([])
 const selectedRole = ref('')
 const message = ref('')
+const currentUserID = ref(parseInt(localStorage.getItem('id')))
 
 const getData = async () => {
   try {
     const response = await fetchRoleDetails()
     roleDetails.value = response.Results
+    const staffs = await getAllStaffDetails()
+    const managers = staffs.Results.filter((staff) => staff.sys_role === 'manager')
+    sourceManagers.value = managers
   } catch (error) {
     console.log(error)
   }
@@ -119,6 +140,8 @@ const roleID = ref(selectedData.value.role_id)
 const startDate = ref(selectedData.value.role_listing_open)
 const closeDate = ref(selectedData.value.role_listing_close)
 const roleDescription = ref(selectedData.value.role_description)
+const sourceManagers = ref([])
+const selectedSourceManagerID = ref()
 const isSubmitted = ref(false)
 // const invalidRoleID = ref(false)
 const emptyClosingDate = ref(false)
@@ -135,6 +158,15 @@ const invalidRoleID = computed(() => {
   const ans = roleID.value === undefined && isSubmitted.value
   return ans
 })
+
+function autoFillCloseDate() {
+  const startDateObj = new Date(startDate.value)
+  startDateObj.setDate(startDateObj.getDate() + 14)
+  const year = startDateObj.getFullYear()
+  const month = String(startDateObj.getMonth() + 1).padStart(2, '0') // Month is zero-based
+  const day = String(startDateObj.getDate()).padStart(2, '0')
+  closeDate.value = `${year}-${month}-${day}`
+}
 
 const invalidClosingDate = computed(() => {
   const ans =
@@ -158,6 +190,9 @@ function fixClosingDate(ans) {
 const create = () => {
   isSubmitted.value = true
   const dataToUpdate = {
+    role_listing_creator: currentUserID.value,
+    role_listing_source: selectedSourceManagerID.value,
+    role_listing_updater: currentUserID.value,
     role_id: selectedData.value.role_id,
     role_listing_desc: roleDescription.value,
     role_listing_open: startDate.value,
@@ -172,7 +207,6 @@ const create = () => {
     .catch((error) => {
       console.log(error)
       message.value = 'Role Listing Creation Failed'
-      console.log(roleID.value)
       if (roleID.value === undefined) {
         invalidRoleID.value = true
       }

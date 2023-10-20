@@ -3,7 +3,7 @@ import { ref, defineProps, onMounted, computed } from 'vue'
 import { getRoleApplicationById } from '../service/roleApplication.service'
 
 const props = defineProps({
-  id: { type: String, default: '0' }
+  id: { type: Number, default: 0 }
 })
 
 const roleApplications = ref([])

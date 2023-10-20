@@ -27,7 +27,7 @@ class StaffDetail(Base):
     __tablename__ = "staff_details"
     staff_id = Column(Integer, primary_key=True)
     f_name = Column(String(50), nullable=False)
-    l_email = Column(String(50), unique=True, nullable=False)
+    l_name = Column(String(50), unique=True, nullable=False)
     dept = Column(String(50), nullable=False)
     email = Column(String(50), nullable=False)
     phone = Column(String(50), nullable=False)

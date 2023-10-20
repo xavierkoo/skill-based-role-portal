@@ -1,5 +1,5 @@
 <template>
-  <div v-if="userType == 'staff' || userType == 'HR_admin'">
+  <div v-if="userType == 'staff' || userType == 'hr' || userType == 'manager'">
     <div class="d-flex justify-content-end me-5 mt-3">
       <label class="me-2 mt-2">Filter by skill:</label>
       <select id="filter" v-model="selectedSkill" class="form-select" style="max-width: 200px">
@@ -24,7 +24,7 @@
             <div v-else class="container">
               <!-- Job role list -->
               <!-- Render for HR_admin -->
-              <div v-if="userType == 'HR_admin'">
+              <div v-if="userType == 'hr'">
                 <div
                   v-for="(jobRole, key) in jobRoles"
                   :key="key"
@@ -58,6 +58,7 @@
                           >
                             Active
                           </p>
+                          <CalculateRoleMatch class="ms-2" :role-skills="jobRole.role_skills" />
                         </h5>
                       </div>
                       <div class="col">
@@ -106,7 +107,7 @@
               </div>
 
               <!-- Render for staff -->
-              <div v-if="userType == 'staff'">
+              <div v-if="userType == 'staff' || userType == 'manager'">
                 <div
                   v-for="(jobRole, index) in jobRoles"
                   :key="index"
@@ -201,7 +202,7 @@
         <hr />
         <p class="access-denied-message">Please log in.</p>
         <!-- TODO - Add a link to the login page -->
-        <a id="login-btn" class="btn btn-primary" href="#" role="button">Log in here</a>
+        <a id="login-btn" to="/" class="nav-link logout defaultBtn">Login</a>
       </div>
       <div class="col-md-2" />
     </div>
@@ -214,6 +215,7 @@ import { fetchRoleListings } from '../service/rolelisting.service'
 import { getAllAvailableSkills } from '../service/staffskills.service'
 import RoleDetails from '../components/RoleDetails.vue'
 import CalculateRoleMatch from '../components/CalculateRoleMatch.vue'
+import getStaffDetails from '../service/staffDetails.service'
 
 const initialRoles = ref([])
 const availableSkills = ref([])
@@ -221,8 +223,10 @@ const selectedSkill = ref('')
 const jobRoles = ref([])
 const userType = ref('')
 // const currentDate = new Date()
+const userID = localStorage.getItem('id')
 const currentDate = new Date('2020-01-16')
 const isMounted = ref(false)
+const currentUserType = ref('')
 
 const roleDetails = ref({
   role_name: 'TBC',
@@ -326,7 +330,23 @@ function truncateText(text, maxLength) {
   }
 }
 const getUserType = async () => {
-  userType.value = 'test'
+  getStaffDetails(userID)
+    .then((response) => {
+      currentUserType.value = response.Results[0].sys_role
+      userType.value = currentUserType.value
+      if (userType.value != 'hr' && userType.value != 'staff' && userType.value != 'manager') {
+        userType.value = 'unknown'
+      } else {
+        getData()
+        window.addEventListener('resize', updateShouldHide)
+        setTimeout(() => {
+          isMounted.value = true
+        }, 1000)
+      }
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error)
+    })
 }
 
 function goBack() {
@@ -356,15 +376,7 @@ onBeforeUnmount(() => {
 // Call the getData function when the component is mounted
 onMounted(() => {
   getAvailableSkills()
-  if (getUserType() != 'HR_admin' || getUserType() != 'staff') {
-    userType.value = 'unknown'
-  } else {
-    getData()
-    window.addEventListener('resize', updateShouldHide)
-    setTimeout(() => {
-      isMounted.value = true
-    }, 1000)
-  }
+  getUserType()
 })
 </script>
 
