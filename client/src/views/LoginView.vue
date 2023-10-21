@@ -1,22 +1,27 @@
 <template>
   <div class="login">
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-8"></div>
-        <div class="col-4">
-          <div class="mb-2">
-            <div class="mt-5 w-75">
-              <div class="display-6 mt-4">
-                <h3 class="fw-bold">Login</h3>
-              </div>
-              <div class="my-2">
-                <form>
-                  <div class="form-group my-3">
-                    <label for="email">Role<span class="text-danger">*</span></label>
+      <div class="row screen">
+        <div class="col-12 col-xl-6 d-flex justify-content-center p-0">
+          <div class="form">
+            <div class="d-flex justify-content-xl-start justify-content-center">
+              <img class="talent my-4" src="../../assets/style/img/TalentSync.png" alt="" />
+            </div>
+            <div class="catchphrase mt-5">
+              <div class="title">Discover The Perfect Role:</div>
+              <div class="followup">Finding the Ideal Fit for Your Talents and Aspirations</div>
+            </div>
+            <div class="mt-4">
+              <form class="">
+                <div class="form-group my-3">
+                  <div class="input-group">
+                    <span id="basic-addon1" class="input-group-text"
+                      ><img class="lock" src="../../assets/style/img/user.png" alt=""
+                    /></span>
                     <select
                       id="dropdown"
                       v-model="user"
-                      class="form-control"
+                      class="form-control input"
                       @change="displayEmailandPassword(user)"
                     >
                       <option v-for="(users, i) of userDetails" :key="i" :value="users">
@@ -24,34 +29,52 @@
                       </option>
                     </select>
                   </div>
-                  <div class="form-group my-3">
-                    <label for="email">Email <span class="text-danger">*</span></label>
-                    <input id="email" v-model="email" type="email" class="form-control" disabled />
+                </div>
+                <div class="form-group my-3">
+                  <div class="input-group">
+                    <span id="basic-addon1" class="input-group-text">@</span>
+                    <input
+                      id="email"
+                      v-model="email"
+                      type="email"
+                      class="form-control input"
+                      disabled
+                    />
                   </div>
-                  <div class="form-group my-3">
-                    <label for="password">Password <span class="text-danger">*</span></label>
+                </div>
+                <div class="form-group my-3">
+                  <div class="input-group">
+                    <span id="basic-addon1" class="input-group-text" style="color: black"
+                      ><img class="lock" src="../../assets/style/img/padlock.png" alt=""
+                    /></span>
                     <input
                       id="password"
                       v-model="password"
                       type="password"
-                      class="form-control"
+                      class="form-control input"
                       disabled
                     />
                   </div>
-                </form>
-              </div>
-              <div class="row mt-4">
-                <div class="col-3" />
-                <div class="col-6">
-                  <button type="submit" class="col-12 defaultBtn" @click="login(user)">
-                    Log In
-                  </button>
                 </div>
-                <div class="col-3" />
+              </form>
+            </div>
+            <div class="row mt-4 my-3">
+              <div class="col-3" />
+              <div class="col-6">
+                <button type="submit" class="col-12 defaultBtn" @click="login(user)">Log In</button>
               </div>
+              <div class="col-3" />
             </div>
           </div>
         </div>
+        <div class="col-6 text-center mt-xxl-3 mt-5 pt-5 d-none d-xl-block">
+          <img
+            class="imageEdu image-fluid"
+            src="https://media.licdn.com/media//AAYQAgSrAAgAAQAAAAAAAEFQ0SVTwDSXRqWvckCS4gYqEA.svg"
+            alt=""
+          />
+        </div>
+        <div class="footer"></div>
       </div>
     </div>
   </div>

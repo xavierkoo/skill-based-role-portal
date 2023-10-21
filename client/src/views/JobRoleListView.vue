@@ -202,7 +202,7 @@
         <hr />
         <p class="access-denied-message">Please log in.</p>
         <!-- TODO - Add a link to the login page -->
-        <a id="login-btn" to="/" class="nav-link logout defaultBtn">Login</a>
+        <a id="login-btn" href="/" class="nav-link logout defaultBtn">Login</a>
       </div>
       <div class="col-md-2" />
     </div>
@@ -345,6 +345,7 @@ const getUserType = async () => {
       }
     })
     .catch((error) => {
+      userType.value = 'unknown'
       console.error('Error fetching data:', error)
     })
 }

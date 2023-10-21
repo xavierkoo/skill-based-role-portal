@@ -10,8 +10,8 @@ html {
     height: 100%;
 }
 
-#app{
-    height:1240px;
+.app{
+    height:100%;
 }
 
 body {
@@ -92,8 +92,92 @@ p {
 }
 
 .login{
-    height:100%;
+    height:100vh;
+    .screen{
+        height:100vh;
+    }
+    .form{
+        @media (min-width: 320px) {
+            width:100%;
+        }
+        @media (min-width: 480px) {
+            width:60%;
+        }
+        
+       
+        .input{
+            @media (min-width: 320px) {
+                height:30px;
+                font-size: 10px;
+            }
+            @media (min-width: 500px) {
+                height:40px;
+                font-size: 15px;
+            }
+            @media (min-width: 750px) {
+                height:50px;
+                font-size: 20px;
+            }
+        }
+    }
+    .catchphrase{
+        color:$primaryBrandColor;
+        .title{
+            @media (min-width: 320px) {
+                font-size: 1.5rem;
+                font-weight: 600;
+            }
+            @media (min-width: 500px) {
+                font-size: 2rem;
+                font-weight: 600;
+            }
+            @media (min-width: 850px) {
+                font-size: 2.3rem;
+                font-weight: 600;
+            }
+        }
+        .followup{
+            @media (min-width: 320px) {
+                font-size: 0.7rem;
+                font-weight: 400;
+            }
+            @media (min-width: 500px) {
+                font-size: 1rem;
+                font-weight: 400;
+            }
+            @media (min-width: 850px) {
+                font-size: 1.8rem;
+                font-weight: 400;
+            }
+        }
+    }
+    .lock{
+        height:17px;
+    }
+    .footer{
+        background-color: $primaryBrandColor;
+    }
+    .imageEdu {
+            height: 80%;
+    }
+    .talent{
+        @media (min-width: 320px) {
+            height:70px;
+        }
+        @media (min-width: 500px) {
+            height:80px;
+        }
+        @media (min-width: 750px) {
+            height:100px;
+        }
+        height:120px;
+    }
 }
+
+.talentNav{
+    height:45px;
+}
+
 
 .updateRoleListing{
     .header{
