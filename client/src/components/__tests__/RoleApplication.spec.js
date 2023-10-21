@@ -26,7 +26,7 @@ describe('RoleApplication.vue', () => {
     expect(roleNameInput.element.value).toBe(roleDetails.role_name)
   })
 
-  it('allows the user to input answer', async () => {
+  it('Verify that the staff applicant can enter and modify the Textarea input', async () => {
     const roleDetails = {
       role_listing_id: '123',
       role_name: 'Software Engineer'
@@ -62,5 +62,23 @@ describe('RoleApplication.vue', () => {
     await wrapper.vm.$nextTick()
 
     expect(wrapper.find('.defaultBtn').exists()).toBe(true)
+  })
+
+  it('Confirm that the staff applicant can successfully submit their application.', async () => {
+    const roleDetails = {
+      role_listing_id: '123',
+      role_name: 'Software Engineer'
+    }
+
+    const wrapper = mount(RoleApplication, {
+      props: { roleDetails }
+    })
+
+    // Simulate submitting the form
+    await wrapper.setData({ submitted: true })
+
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('h3').text()).toBe('Application Successfully Submitted')
   })
 })
