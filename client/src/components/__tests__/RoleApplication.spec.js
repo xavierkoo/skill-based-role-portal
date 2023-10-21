@@ -3,9 +3,8 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import RoleApplication from '../RoleApplication.vue'
 
-//test if all the required props appear
-describe('RoleApplication', () => {
-  it('renders the modal with correct title and role name', async () => {
+describe('RoleApplication.vue', () => {
+  it('Verify that the staff applicant view the application form with correct title and role name', async () => {
     const roleDetails = {
       role_listing_id: '123',
       role_name: 'Software Engineer'
@@ -15,16 +14,18 @@ describe('RoleApplication', () => {
       props: { roleDetails }
     })
 
-    // Ensure that the modal title contains the role_listing_id
-    const modalTitle = wrapper.find('.modal-title')
-    expect(modalTitle.text()).toContain(`Role Listing ID: ${roleDetails.role_listing_id}`)
+    // Check if the modal title and role name exist
+    expect(wrapper.find('.modal-title').exists()).toBe(true)
+    expect(wrapper.find('#roleName').exists()).toBe(true)
 
-    // Ensure that the input field for role name has the correct value
+    // Check if the modal title and role name display the correct values
+    const modalTitle = wrapper.find('.modal-title')
     const roleNameInput = wrapper.find('#roleName')
+
+    expect(modalTitle.text()).toContain(`Role Listing ID: ${roleDetails.role_listing_id}`)
     expect(roleNameInput.element.value).toBe(roleDetails.role_name)
   })
 
-  //test if user can input answer
   it('allows the user to input answer', async () => {
     const roleDetails = {
       role_listing_id: '123',
