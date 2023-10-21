@@ -43,4 +43,24 @@ describe('RoleApplication.vue', () => {
     // Ensure that the value in the textarea has been updated
     expect(roleDescriptionTextarea.element.value).toBe('This is my answer.')
   })
+
+  it('Check if the system disables the button when the staff applicant leaves the mandatory fields empty during the application process', async () => {
+    const roleDetails = {
+      role_listing_id: '123',
+      role_name: 'Software Engineer'
+    }
+
+    const wrapper = mount(RoleApplication, {
+      props: { roleDetails }
+    })
+
+    expect(wrapper.find('.disabledBtn').exists()).toBe(true)
+
+    // Simulate typing an answer
+    await wrapper.setData({ answer: 'This is my answer.' })
+
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('.defaultBtn').exists()).toBe(true)
+  })
 })
