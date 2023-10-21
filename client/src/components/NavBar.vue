@@ -1,7 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <router-link to="/rolelisting" class="navbar-brand company">SBRP</router-link>
+      <router-link to="/rolelisting" class="navbar-brand company"
+        ><img class="talentNav" src="../../assets/style/img/TalentSync.png" alt=""
+      /></router-link>
       <button
         class="navbar-toggler"
         type="button"
