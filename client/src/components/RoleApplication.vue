@@ -59,7 +59,7 @@ export default {
 <template>
   <div
     id="applicationModal"
-    ref="applicationMo"
+    ref="applicationModal"
     class="modal fade"
     tabindex="-1"
     aria-labelledby="application"
@@ -104,7 +104,14 @@ export default {
           </div>
         </div>
         <div class="modal-footer">
-          <button v-if="!submitted" type="button" class="defaultBtn" @click="submit()">
+          <button
+            v-if="!submitted"
+            id="submitBtn"
+            type="button"
+            :disabled="answer.length < 1"
+            :class="answer.length < 1 ? 'disabledBtn' : 'defaultBtn'"
+            @click="submit()"
+          >
             Submit
           </button>
         </div>
