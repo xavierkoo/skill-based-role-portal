@@ -4,6 +4,7 @@ import RoleApplication from './RoleApplication.vue'
 import CalculateRoleMatch from './CalculateRoleMatch.vue'
 import { getStaffSkills } from '../service/staffskills.service'
 import { getStaffDetails } from '../service/staffDetails.service'
+import { getRoleApplicationById } from '../service/roleApplication.service'
 
 export default {
   components: { RoleApplication, CalculateRoleMatch },
@@ -35,6 +36,7 @@ export default {
     const visibleSkills = ref(props.roleDetails.role_skills.slice(0, maxSkillsToShow))
     const remainingSkills = ref(props.roleDetails.role_skills.slice(maxSkillsToShow))
     const showMore = ref(remainingSkills.value.length > 0)
+    const applied = ref(false)
 
     const toggleShowMore = () => {
       if (showMore.value) {
@@ -68,6 +70,21 @@ export default {
       }
     }
 
+    const fetchStaffApplication = async (id) => {
+      try {
+        const applications = await getRoleApplicationById(id)
+        for (let app of applications.data.Results) {
+          if (app.role_listing_id == props.roleDetails.role_listing_id) {
+            applied.value = true
+            break
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching staff application:', 'User does not have any applications')
+        applied.value = false
+      }
+    }
+
     getStaffDetails(id)
       .then((response) => {
         user.value = response.Results[0].sys_role
@@ -84,6 +101,7 @@ export default {
         visibleSkills.value = newRoleDetails.role_skills.slice(0, maxSkillsToShow)
         remainingSkills.value = newRoleDetails.role_skills.slice(maxSkillsToShow)
         showMore.value = remainingSkills.value.length > 0
+        fetchStaffApplication(id)
       }
     )
 
@@ -96,7 +114,8 @@ export default {
       showMore,
       toggleShowMore,
       staffSkills,
-      allRoleSkills
+      allRoleSkills,
+      applied
     }
   }
 }
@@ -188,9 +207,14 @@ export default {
     <button
       id="apply_btn"
       role="link"
-      class="defaultBtn d-flex w-sm-50 my-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view"
+      :class="
+        applied
+          ? 'updateBtn d-flex w-sm-50 my-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view'
+          : 'defaultBtn d-flex w-sm-50 my-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view'
+      "
       data-bs-toggle="modal"
       data-bs-target="#applicationModal"
+      :disabled="applied"
     >
       <div aria-hidden="true" type="link-external" class="artdeco-button__icon" size="small">
         <svg
@@ -208,7 +232,7 @@ export default {
           ></path>
         </svg>
       </div>
-      <span class="artdeco-button__text"> Apply </span>
+      <span id="applyText" class="artdeco-button__text">{{ applied ? 'Applied' : 'Apply' }} </span>
     </button>
     <h2 id="descLabel">About the job</h2>
     <h5 id="responsibilities" class="my-3">Responsibilities</h5>
