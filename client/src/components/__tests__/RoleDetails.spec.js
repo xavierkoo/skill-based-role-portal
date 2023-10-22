@@ -203,7 +203,7 @@ describe('RoleDetails', () => {
     mock.restore()
   })
 
-  it('Verify the successful diplay of more skills when selected role have more than two skills', async () => {
+  it('Verify the successful display of more skills when selected role have more than two skills', async () => {
     localStorage.setItem('id', 123456789)
     const mock = new MockAdapter(axios)
     mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
@@ -285,6 +285,89 @@ describe('RoleDetails', () => {
     // Check if additional skills are displayed
     expect(wrapper.text()).toContain(roleDetails.role_skills[2])
     expect(wrapper.text()).toContain(roleDetails.role_skills[3])
+  })
+
+  it('Checks how the system handles the scenario when role does not have certain information', async () => {
+    localStorage.setItem('id', 123456789)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: [
+        {
+          f_name: 'AH GAO',
+          l_email: 'TAN',
+          email: 'tan_ah_gao@all-in-one.com.sg',
+          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+          sys_role: 'staff',
+          dept: 'FINANCE',
+          staff_id: 123456789,
+          phone: '65-1234-5678'
+        }
+      ]
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+      Results: [
+        {
+          staff_id: 123456789,
+          skill_id: 345678790,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Professional'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678866,
+          ss_status: 'active',
+          skill_name: 'Certified Scrum Developer'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678890,
+          ss_status: 'unverified',
+          skill_name: 'Certified Scrum@Scale Practitioner'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678913,
+          ss_status: 'active',
+          skill_name: 'Python Programming'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678927,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Coach'
+        },
+        {
+          staff_id: 123456789,
+          skill_id: 345678935,
+          ss_status: 'in-progress',
+          skill_name: 'Certified Scrum Trainer'
+        }
+      ]
+    })
+    const roleDetails = {
+      role_name: '',
+      role_listing_desc: '',
+      role_listing_open: '',
+      role_listing_close: '',
+      role_skills: [],
+      role_listing_creator: [],
+      role_listing_updater: []
+    }
+    const wrapper = mount(RoleDetails, {
+      props: {
+        roleDetails: roleDetails
+      }
+    })
+    await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 1))
+
+    expect(wrapper.find('#role_name').text()).toContain('TBC')
+    expect(wrapper.find('#desc').text()).toContain('TBC')
+    expect(wrapper.find('#open').text()).toContain('TBC')
+    expect(wrapper.find('#close').text()).toContain('TBC')
+    expect(wrapper.find('#creatorUpdater').text()).toContain('TBC')
+    expect(wrapper.find('#noSkills').text()).toContain('No skills required')
+    mock.restore()
   })
 
   it("Visualize the workflow for viewing the alignment between open roles and the staff member's skill set", async () => {
