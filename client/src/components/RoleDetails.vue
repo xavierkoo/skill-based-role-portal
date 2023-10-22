@@ -31,7 +31,7 @@ export default {
     const skillsList = ref([])
     const staffSkills = ref([])
     const maxSkillsToShow = 2
-    const allRoleSkills = ref([])
+    const allRoleSkills = ref(props.roleDetails.role_skills)
     const visibleSkills = ref(props.roleDetails.role_skills.slice(0, maxSkillsToShow))
     const remainingSkills = ref(props.roleDetails.role_skills.slice(maxSkillsToShow))
     const showMore = ref(remainingSkills.value.length > 0)
@@ -104,10 +104,11 @@ export default {
 
 <template>
   <RoleApplication :role-details="roleDetails" />
-  <div v-if="roleDetails.role_name == ''" id="error_prop">No description available</div>
-  <div v-else class="roleDetails container-fluid px-5">
+  <div class="roleDetails container-fluid px-5">
     <div class="d-sm-flex justify-content-between">
-      <h1 id="role_name" class="my-auto">{{ roleDetails.role_name }}</h1>
+      <h1 id="role_name" class="my-auto">
+        {{ roleDetails.role_name == '' ? 'TBC' : roleDetails.role_name }}
+      </h1>
       <button
         v-if="user == 'hr'"
         id="update_btn"
@@ -124,26 +125,27 @@ export default {
     <div class="details">
       <div>
         <span id="posted_on" class="fw-bold">Posted On: </span>
-        <span class="check">{{ roleDetails.role_listing_open }}</span>
+        <span id="open" class="check">{{
+          roleDetails.role_listing_open == '' ? 'TBC' : roleDetails.role_listing_open
+        }}</span>
       </div>
       <div>
-        <span class="fw-bold isPosted"
-          >{{
-            roleDetails.role_listing_updater[0] == '' || user == 'Staff'
-              ? 'Posted By: '
-              : 'Updated By: '
-          }}
-        </span>
-        <a class="f-underline check isCreated">{{
-          roleDetails.role_listing_updater.fname == '' || user == 'Staff'
-            ? roleDetails.role_listing_creator[0]
-            : roleDetails.role_listing_updater[0]
+        <span class="fw-bold isPosted">{{ user == 'hr' ? 'Updated By: ' : 'Posted By: ' }} </span>
+        <a id="creatorUpdater" class="f-underline check isCreated">{{
+          roleDetails.role_listing_updater.length == 0 ||
+          roleDetails.role_listing_creator.length == 0
+            ? 'TBC'
+            : user == 'hr'
+            ? roleDetails.role_listing_updater[0]
+            : roleDetails.role_listing_creator[0]
         }}</a>
       </div>
     </div>
     <div>
-      <span class="fw-bold">Deadline: </span>
-      <span class="check">{{ roleDetails.role_listing_close }}</span>
+      <span id="closed_on" class="fw-bold">Deadline: </span>
+      <span id="close" class="check">{{
+        roleDetails.role_listing_close == '' ? 'TBC' : roleDetails.role_listing_close
+      }}</span>
     </div>
     <CalculateRoleMatch id="CalculateRoleMatch" class="my-2" :role-skills="allRoleSkills" />
     <div class="d-flex align-items-center">
@@ -163,7 +165,7 @@ export default {
       </svg>
       <div class="skills-container">
         <div ref="skillsList" class="skills-list">
-          <span class="fw-bold">Skills: </span>
+          <span id="skills" class="fw-bold">Skills: </span>
           <span v-for="(skill, index) in visibleSkills" :key="index">
             <div
               :class="
@@ -176,7 +178,7 @@ export default {
             </div>
             <template v-if="index !== visibleSkills.length - 1 || showMore"> </template>
           </span>
-          <span v-if="visibleSkills.length === 0">No skills required</span>
+          <span v-if="visibleSkills.length === 0" id="noSkills">No skills required</span>
           <a v-if="showMore" class="showMore f-underline" @click="toggleShowMore">
             + {{ remainingSkills.length }} more
           </a>
@@ -208,10 +210,10 @@ export default {
       </div>
       <span class="artdeco-button__text"> Apply </span>
     </button>
-    <h2>About the job</h2>
-    <h5 class="my-3">Responsibilities</h5>
-    <div class="description">
-      {{ roleDetails.role_listing_desc }}
+    <h2 id="descLabel">About the job</h2>
+    <h5 id="responsibilities" class="my-3">Responsibilities</h5>
+    <div id="desc" class="description">
+      {{ roleDetails.role_listing_desc == '' ? 'TBC' : roleDetails.role_listing_desc }}
     </div>
   </div>
 </template>
