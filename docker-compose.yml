@@ -9,6 +9,7 @@ services:
             dockerfile: client.Dockerfile
         ports:
             - "8080:8080"
+        profiles: ["production"]
         depends_on:
             eduhub_db:
                 condition: service_healthy
@@ -26,11 +27,15 @@ services:
             - ./server:/app
         ports:
             - "5101:5101"
-        depends_on:
-            eduhub_db:
-                condition: service_healthy
+        profiles: ["test", "production"]
         networks:
             - eduhub_network
+        environment:
+            - HOSTNAME=server_backend
+        depends_on:
+            test_eduhub_db:
+                condition: service_healthy
+
 
     # The `eduhub_db` section in the Docker Compose file is defining a service for a MySQL database container.
     eduhub_db:
@@ -39,6 +44,7 @@ services:
         restart: always
         ports:
             - "5100:3306"
+        profiles: ["production"]
         networks:
             - eduhub_network
         environment:
@@ -71,6 +77,7 @@ services:
         restart: always
         ports:
             - "8081:80"
+        profiles: ["production"]
         networks:
             - eduhub_network
         environment:
@@ -82,7 +89,58 @@ services:
             eduhub_db:
                 condition: service_healthy
 
-# The `volumes` section in the Docker Compose file is defining a named volume called `mysql_data`.
+    # The `test_eduhub_db` section in the Docker Compose file is defining a service for a testing MySQL database container.
+    test_eduhub_db:
+        container_name: test_eduhub_db
+        image: mysql:8.0
+        restart: always
+        ports:
+            - "5100:3306"
+        profiles: ["test"]
+        networks:
+            - eduhub_network
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        volumes:
+            - ./data:/docker-entrypoint-initdb.d
+            - mysql-data:/var/lib/mysql
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "mysqladmin",
+                    "ping",
+                    "-h",
+                    "localhost",
+                    "-uroot",
+                    "-ppass",
+                ]
+            interval: 5s
+            timeout: 5s
+            retries: 20
+
+    # tests:
+    #     build: 
+    #         context: ./server
+    #         dockerfile: test.Dockerfile
+    #     volumes: 
+    #         - ./server:/app
+    #     profiles: ["test"]
+    #     environment:
+    #         MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    #         MYSQL_DATABASE: ${MYSQL_DATABASE}
+    #         MYSQL_USER: ${MYSQL_USER}
+    #         MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    #     depends_on: 
+    #         test_eduhub_db:
+    #             condition: service_healthy
+    #     networks:
+    #         - eduhub_network
+    
+    # The `volumes` section in the Docker Compose file is defining a named volume called `mysql_data`.
 volumes:
     mysql-data:
 
