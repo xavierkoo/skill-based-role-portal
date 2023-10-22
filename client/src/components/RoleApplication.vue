@@ -22,7 +22,9 @@ export default {
     return {
       answer: '',
       roleListingID: props.roles_listing_id,
-      submitted: false
+      submitted: false,
+      errorMessage: '',
+      applications: []
     }
   },
   watch: {
@@ -33,6 +35,18 @@ export default {
   methods: {
     submit() {
       console.log(this.roleListingID)
+
+      const hasSubmittedApplication = this.applications.some((app) => {
+        return (
+          app.role_listing_id === this.roleListingID && app.staff_id === localStorage.getItem('id')
+        )
+      })
+
+      if (hasSubmittedApplication) {
+        this.errorMessage = 'You have already applied for this role.'
+        return
+      }
+
       const applicationData = {
         role_listing_id: this.roleListingID,
         staff_id: localStorage.getItem('id'),
@@ -42,15 +56,22 @@ export default {
       createRoleApplication(applicationData)
         .then((result) => {
           console.log('success' + result)
+          this.applications.push(applicationData)
+          this.errorMessage = ''
           this.submitted = true
         })
         .catch((error) => {
-          console.log(error)
+          if (error.response.data.detail === 'Role application already exists') {
+            this.errorMessage = 'You have already applied for this role.'
+            return
+          }
+          this.errorMessage = 'An error occurred during application process! Try again later.'
         })
     },
     closeModal() {
       this.submitted = false
       this.answer = ''
+      this.errorMessage = ''
     }
   }
 }
@@ -102,6 +123,7 @@ export default {
           <div v-else>
             <h3>Application Successfully Submitted</h3>
           </div>
+          <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
         </div>
         <div class="modal-footer">
           <button
