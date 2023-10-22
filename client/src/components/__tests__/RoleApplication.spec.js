@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest'
-
 import { mount } from '@vue/test-utils'
 import RoleApplication from '../RoleApplication.vue'
 
@@ -80,5 +79,31 @@ describe('RoleApplication.vue', () => {
     await wrapper.vm.$nextTick()
 
     expect(wrapper.find('h3').text()).toBe('Application Successfully Submitted')
+  })
+
+  it('Confirm that the staff applicant cannot apply the same role twice.', async () => {
+    const roleDetails = {
+      role_listing_id: 123,
+      role_name: 'Software Engineer'
+    }
+
+    const wrapper = mount(RoleApplication, {
+      props: { roleDetails }
+    })
+
+    await wrapper.vm.$nextTick()
+
+    await wrapper.setData({
+      applications: [
+        { role_listing_id: 123, staff_id: '123456788', role_app_reason: 'This is my answer.' }
+      ]
+    })
+
+    localStorage.setItem('id', '123456788')
+    await wrapper.setData({ answer: 'This is my answer.' })
+    await wrapper.setData({ errorMessage: 'You have already applied for this role.' })
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('.alert').text()).toBe('You have already applied for this role.')
   })
 })
