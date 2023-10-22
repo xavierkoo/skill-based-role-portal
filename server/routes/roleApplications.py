@@ -6,10 +6,11 @@ from pydantic import BaseModel
 
 router = APIRouter()
 
+
 class RoleApplication(BaseModel):
     role_listing_id: int
     staff_id: int
-    role_app_reason: str    
+    role_app_reason: str
 
 
 @router.get(
@@ -81,12 +82,14 @@ async def get_role_applications_by_staff_id(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Role applications not found",
         )
-    
+
     # based on the jobID in the role application, get the roleid from role listing and then get the role title from role details
     for roleApplication in roleApplications:
         roleListing = (
             db.query(models.RoleListing)
-            .filter(models.RoleListing.role_listing_id == roleApplication.role_listing_id)
+            .filter(
+                models.RoleListing.role_listing_id == roleApplication.role_listing_id
+            )
             .first()
         )
         roleApplication.role_title = (
@@ -106,24 +109,43 @@ async def get_role_applications_by_staff_id(
     status_code=status.HTTP_201_CREATED,
     tags=["Role Applications"],
 )
-async def create_role_application(request: RoleApplication, db: Session = Depends(get_db)):
+async def create_role_application(
+    request: RoleApplication, db: Session = Depends(get_db)
+):
     """
-    The function `create_role_application` creates a new role application in the database and returns
-    the created role application.
+    The above function creates a new role application if it does not already exist and returns the
+    created role application.
     
-    :param request: The `request` parameter is of type `RoleApplication`, which is a data model
-    representing the role application data. It contains the following attributes:
+    :param request: The `request` parameter is of type `RoleApplication`, which is a Pydantic model
+    representing the data of the role application being created
     :type request: RoleApplication
-    :param db: The `db` parameter is a database session object. It is used to interact with the database
-    and perform database operations such as adding data, committing changes, and querying data. In this
-    code snippet, it is used to add a new role application to the database, commit the changes, and
-    query the
+    :param db: The `db` parameter is of type `Session` and is used to interact with the database. It is
+    obtained using the `get_db` dependency function, which is responsible for creating a new database
+    session and closing it after the request is processed
     :type db: Session
-    :return: the created role application object.
+    :return: the created role application as a response.
     """
-    
+
     roleApplicationData = request.dict()
 
+    # if the role application already exists, raise an exception
+    roleApplication = (
+        db.query(models.RoleApplication)
+        .filter(models.RoleApplication.staff_id == roleApplicationData["staff_id"])
+        .filter(
+            models.RoleApplication.role_listing_id
+            == roleApplicationData["role_listing_id"]
+        )
+        .first()
+    )
+
+    if roleApplication:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Role application already exists",
+        )
+
+    # create a new role application
     roleApplication = models.RoleApplication(
         role_listing_id=roleApplicationData["role_listing_id"],
         staff_id=roleApplicationData["staff_id"],
