@@ -806,6 +806,7 @@ describe('JobRoleList', () => {
 
   it('Negative Test for Unknown UserType (Unauthorized Access)', async () => {
     const mock = new MockAdapter(axios)
+    localStorage.setItem('id', null)
     mock.onGet('http://localhost:8080/api/v1/allskills/').reply(200, {
       Results: [
         {
@@ -855,6 +856,7 @@ describe('JobRoleList', () => {
         }
       ]
     })
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/null').reply(404)
 
     const wrapper = mount(JobRoleListView)
 

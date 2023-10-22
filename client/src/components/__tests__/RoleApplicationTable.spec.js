@@ -1,8 +1,7 @@
 import { beforeEach, describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import RoleApplicationTable from '@/components/RoleApplicationTable.vue' // Adjust the import path
+import RoleApplicationTable from '@/components/RoleApplicationTable.vue'
 import axios from 'axios'
-// import MockAdapter from 'axios-mock-adapter'
 vi.mock('axios')
 
 describe('RoleApplicationTable.vue', () => {

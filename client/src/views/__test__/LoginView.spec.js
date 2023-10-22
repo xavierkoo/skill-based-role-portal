@@ -24,9 +24,13 @@ describe('LoginView.vue', () => {
 
     // Assert that the login form and initial UI elements are displayed
     expect(wrapper.exists()).toBeTruthy()
+    expect(wrapper.text()).toContain('Discover The Perfect Role:')
+    expect(wrapper.text()).toContain('Finding the Ideal Fit for Your Talents and Aspirations')
+    expect(wrapper.find('.talent').exists()).toBeTruthy()
     expect(wrapper.find('.form-control#dropdown').exists()).toBeTruthy()
     expect(wrapper.find('.form-control#email').exists()).toBeTruthy()
     expect(wrapper.find('.form-control#password').exists()).toBeTruthy()
+    expect(wrapper.find('.footer').exists()).toBeTruthy()
     expect(wrapper.find('.navbar').exists()).toBeFalsy()
   })
 
