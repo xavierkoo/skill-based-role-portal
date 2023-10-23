@@ -27,6 +27,107 @@ function truncateText(text, maxLength) {
   }
 }
 
+const roleDetails = ref({
+  role_name: 'TBC',
+  role_listing_desc: 'No description available',
+  role_listing_open: 'TBC',
+  role_listing_close: 'TBC',
+  role_skills: ['TBC'],
+  role_listing_creator: ['TBC', 'TBC'],
+  role_listing_updater: ['TBC', 'TBC'],
+  role_listing_id: 'TBC',
+  role_id: 'TBC',
+  role_applicants: []
+})
+
+function goBack() {
+  roleDetails.value = {
+    role_name: 'TBC',
+    role_listing_desc: 'No description available',
+    role_listing_open: 'TBC',
+    role_listing_close: 'TBC',
+    role_skills: ['TBC'],
+    role_listing_creator: ['TBC', 'TBC'],
+    role_listing_updater: ['TBC', 'TBC'],
+    role_listing_id: 'TBC',
+    role_id: 'TBC',
+    role_applicants: []
+  }
+}
+
+const goToRolePage = (index) => {
+  for (let i = 0; i < index.role_applicants.length; i++) {
+    let applicantSkills = index.role_applicants[i].staff_details.staff_skills
+    let roleSkills = index.role_skills
+    let missing_skills = []
+    let active_skills = []
+    let in_progress_skills = []
+    const date = new Date(index.role_applicants[i].role_application_ts_create)
+    const day = date.getDate().toString().padStart(2, '0') // Add leading zero if necessary
+    const month = (date.getMonth() + 1).toString().padStart(2, '0') // Add leading zero if necessary
+    const year = date.getFullYear()
+    index.role_applicants[i].applied_date = `${day}/${month}/${year}`
+    if (roleSkills.length === 0) {
+      index.role_applicants[i].role_match = 100
+      index.role_applicants[i].missing_skills = []
+      index.role_applicants[i].active_skills = []
+      index.role_applicants[i].in_progress_skills = []
+      continue
+    } else if (applicantSkills === undefined || applicantSkills.length === 0) {
+      index.role_applicants[i].role_match = 0
+      index.role_applicants[i].missing_skills = roleSkills
+      index.role_applicants[i].active_skills = []
+      index.role_applicants[i].in_progress_skills = []
+      continue
+    }
+    let role_match_percentage = 0
+
+    for (let applicantSkill of applicantSkills) {
+      if (
+        roleSkills.indexOf(applicantSkill.skill_name) >= 0 &&
+        applicantSkill.ss_status == 'active'
+      ) {
+        role_match_percentage += 1
+        active_skills.push(applicantSkill.skill_name)
+      } else if (
+        roleSkills.indexOf(applicantSkill.skill_name) >= 0 &&
+        applicantSkill.ss_status == 'in-progress'
+      ) {
+        role_match_percentage += 0.5
+        in_progress_skills.push(applicantSkill.skill_name)
+      }
+    }
+    for (let roleSkill of roleSkills) {
+      if (active_skills.indexOf(roleSkill) < 0 && in_progress_skills.indexOf(roleSkill) < 0) {
+        missing_skills.push(roleSkill)
+      }
+    }
+    index.role_applicants[i].missing_skills = missing_skills
+    index.role_applicants[i].active_skills = active_skills
+    index.role_applicants[i].in_progress_skills = in_progress_skills
+    index.role_applicants[i].role_match = parseInt(
+      (role_match_percentage / roleSkills.length) * 100
+    )
+  }
+  // sort role_applicants by role_match
+  index.role_applicants.sort((a, b) => {
+    return b.role_match - a.role_match
+  })
+
+  roleDetails.value = {
+    role_name: index.role_name,
+    role_listing_desc: index.role_listing_desc,
+    role_listing_open: index.role_listing_open,
+    role_listing_close: index.role_listing_close,
+    role_skills: index.role_skills,
+    role_listing_creator: index.role_listing_creator,
+    role_listing_updater: index.role_listing_updater,
+    role_listing_id: index.role_listing_id,
+    role_id: index.role_id,
+    role_applicants: index.role_applicants
+  }
+}
+
 const isMounted = ref(false)
 onMounted(() => {
   getData()
@@ -52,6 +153,7 @@ onMounted(() => {
               v-for="(jobRole, key) in roleApplicants"
               :key="key"
               class="job-role-item mb-4 shadow-sm p-4 rounded border"
+              @click="goToRolePage(jobRole)"
             >
               <div id="role_card" class="card-body">
                 <div class="row">
@@ -127,9 +229,70 @@ onMounted(() => {
             </div>
           </div>
         </div>
+
+        <div id="applicant_section" :hidden="roleDetails.role_name === 'TBC'" class="col">
+          <button class="btn btn-light mb-4" @click="goBack">Back</button>
+          <div v-if="roleDetails.role_applicants.length === 0">
+            <p class="text-primary text-center">No applicants found.</p>
+          </div>
+          <div v-else>
+            <div v-for="(applicant, index) in roleDetails.role_applicants" :key="index">
+              <div id="applicant_card" class="card mb-4">
+                <div class="card-header d-flex justify-content-between">
+                  <span id="applicant_name" class="fw-bold"
+                    ><b>{{ applicant.staff_details.f_name }}</b></span
+                  >
+                  <span class="fw-bold">{{ applicant.role_match }} match %</span>
+                </div>
+                <div class="card-body">
+                  <div id="applicant_skill_section" class="card-text">
+                    <p id="no_skill_required" class="fw-bold">
+                      {{ roleDetails.role_skills.length == 0 ? 'Skills: Not Required' : '' }}
+                    </p>
+                    <div v-if="roleDetails.role_skills.length > 0">
+                      <p id="active_skills" v-if="applicant.active_skills.length > 0">
+                        Active Skills:
+                        <span v-for="(skill, index2) in applicant.active_skills" :key="index2">
+                          <span class="badge rounded-pill bg-success text-white p-2 me-2">
+                            {{ skill }}
+                          </span>
+                        </span>
+                      </p>
+                      <p id="inprogress_skills" v-if="applicant.in_progress_skills.length > 0">
+                        In-progress Skills:
+                        <span v-for="(skill, index3) in applicant.in_progress_skills" :key="index3">
+                          <span class="badge rounded-pill bg-warning text-white p-2 me-2">
+                            {{ skill }}
+                          </span>
+                        </span>
+                      </p>
+                      <p id="missing_skills" v-if="applicant.missing_skills.length > 0">
+                        Missing Skill:
+                        <span v-for="(skill, index4) in applicant.missing_skills" :key="index4">
+                          <span class="badge rounded-pill bg-secondary text-white p-2 me-2">
+                            {{ skill }}
+                          </span>
+                        </span>
+                      </p>
+                    </div>
+                    <p class="fw-bold">Current Department:</p>
+                    <p id="applicant_dept">{{ applicant.staff_details.dept }}</p>
+                    <p class="fw-bold">Applicant's Reason:</p>
+                    <p id="applicant_reason">{{ applicant.role_app_reason }}</p>
+                    <hr />
+                    <p class="fw-bold">Applicant's Details:</p>
+                    <p id="applicant_email">Email: {{ applicant.staff_details.email }}</p>
+                    <p id="applicant_phone">Phone: {{ applicant.staff_details.phone }}</p>
+                  </div>
+                </div>
+                <div class="card-footer text-muted">Applied on: {{ applicant.applied_date }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div v-else><i class="fa fa-spinner fa-spin text-center"></i> Loading...</div>
+    <div v-else><i id="loading" class="fa fa-spinner fa-spin text-center"></i> Loading...</div>
   </div>
 </template>
 
