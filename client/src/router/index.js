@@ -4,6 +4,7 @@ import CreateRoleListingView from '../views/CreateRoleListingView.vue'
 import JobListingView from '../views/JobRoleListView.vue'
 import ApplicationStatusView from '../views/ApplicationStatusView.vue'
 import LoginView from '../views/LoginView.vue'
+import RoleApplicantView from '../views/RoleApplicantView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -37,6 +38,12 @@ const router = createRouter({
       path: '/status/:id',
       name: 'ApplicationStatusByStaffID',
       component: ApplicationStatusView
+    },
+    {
+      path: '/roleapplicants/',
+      name: 'roleapplicantlisting',
+      component: RoleApplicantView,
+      props: true
     },
 
     // If unknown route, redirect to home

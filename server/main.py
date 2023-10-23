@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from database import init_db
 
-from routes import roleListings, roleDetails, roleApplications, skills, staffdetail
+from routes import roleListings, roleDetails, roleApplications, skills, staffdetail, roleApplicants
 import models
 
 
@@ -26,3 +26,4 @@ app.include_router(roleDetails.router)
 app.include_router(roleApplications.router)
 app.include_router(skills.router)
 app.include_router(staffdetail.router)
+app.include_router(roleApplicants.router)

@@ -53,6 +53,12 @@ export default defineConfig({
         target: 'http://server_backend:5101', // Update with the correct backend URL
         changeOrigin: true,
         secure: false
+      },
+      '/api/v1/roleapplicantslisting/': {
+        // auto appends to the target
+        target: 'http://server_backend:5101', // URL of Container 2
+        changeOrigin: true,
+        secure: false // Insecure, but okay for local development
       }
       // '^/records/.*': {
       //     // auto appends to the target
