@@ -14,6 +14,7 @@ dist-ssr
 .env
 venv
 
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -26,3 +27,4 @@ venv
 *.sw?
 __pycache__/
 .pytest_cache/
+.env

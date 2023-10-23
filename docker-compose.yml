@@ -8,7 +8,7 @@ services:
         restart: always
         ports:
             - "5100:3306"
-        profiles: ["production"]
+        profiles: ["production", "test"]
         networks:
             - eduhub_network
         environment:
@@ -17,8 +17,8 @@ services:
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         volumes:
-            - ./data/eduhub_db:/docker-entrypoint-initdb.d
-            - mysql-data/eduhub_db:/var/lib/mysql
+            - ./data:/docker-entrypoint-initdb.d
+            - mysql-data:/var/lib/mysql
         healthcheck:
             test:
                 [
@@ -99,6 +99,12 @@ services:
         ports:
             - "5101:5101"
         profiles: ["production", "test"]
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_HOST: ${MYSQL_HOST}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         depends_on:
             eduhub_db:
                 condition: service_healthy
@@ -137,10 +143,11 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_HOST: ${MYSQL_HOST}
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         depends_on:
-            test_eduhub_db:
+            eduhub_db:
                 condition: service_healthy
             server_backend:
                 condition: service_started
@@ -150,8 +157,6 @@ services:
 # The `volumes` section in the Docker Compose file is defining a named volume called `mysql_data`.
 volumes:
     mysql-data:
-    eduhub_db:
-    test_eduhub_db:
 
 # The `networks` section in the Docker Compose file is defining a network called `eduhub_network` with the driver set to `bridge`.
 networks:

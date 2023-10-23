@@ -3,15 +3,16 @@ from sqlalchemy.orm import sessionmaker
 import pymysql
 import models
 import time
+import os
 from seed import seed_db
 
 
 db_config = {
-    "host": "eduhub_db",
-    "user": "eduhub_user",
-    "password": "eduhub_password",
+    "host": os.environ["MYSQL_HOST"],
+    "user": os.environ["MYSQL_USER"],
+    "password": os.environ["MYSQL_PASSWORD"],
     "port": 3306,
-    "database": "eduhub_db_mysql",
+    "database": os.environ["MYSQL_DATABASE"],
 }
 
 
