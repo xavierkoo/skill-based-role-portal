@@ -19,7 +19,7 @@ const mockData = [
     role_listing_ts_create: '2023-10-21T05:47:36',
     role_name: 'Agile Coach (SM)',
     role_skills: ['Certified Scrum Trainer'],
-    no_of_applicant: 6,
+    no_of_applicant: 5,
     role_applicants: [
       {
         staff_id: 123456789,
@@ -515,7 +515,7 @@ const mockData = [
     role_listing_ts_update: '2023-10-21T05:47:36',
     role_listing_id: 3,
     role_listing_updater: 123456789,
-    role_listing_open: '2023-10-01',
+    role_listing_open: '2023-9-01',
     role_listing_ts_create: '2023-10-21T05:47:36',
     role_name: 'Head, Talent Attraction',
     role_skills: [],
@@ -760,23 +760,68 @@ const mockData = [
 describe('RoleApplicant.vue', () => {
   // it check if data is loaded
   it('test if data is loaded', async () => {
+    localStorage.setItem('id', 123456788)
     const mock = new MockAdapter(axios)
-
     mock.onGet('http://localhost:8080/api/v1/roleapplicantslisting/123456788').reply(200, {
       Results: mockData
     })
-
     const wrapper = mount(RoleApplicant)
-    wrapper.vm.isMounted = true
-    wrapper.vm.roleApplicants = mockData
+    await new Promise((resolve) => setTimeout(resolve, 1))
     await wrapper.vm.$nextTick()
     expect(wrapper.find('#role_card').exists()).toBe(true)
-
     wrapper.vm.roleApplicants = []
     await wrapper.vm.$nextTick()
     expect(wrapper.find('#role_card').exists()).toBe(false)
     expect(wrapper.find('#no_role').exists()).toBe(true)
-
     mock.restore()
+  })
+  it('test card items are rendered correctly', async () => {
+    localStorage.setItem('id', 123456788)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/roleapplicantslisting/123456788').reply(200, {
+      Results: mockData
+    })
+    const wrapper = mount(RoleApplicant)
+    await new Promise((resolve) => setTimeout(resolve, 1))
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('#rname').exists()).toBe(true)
+    expect(wrapper.find('#rapplicants').exists()).toBe(true)
+    expect(wrapper.find('#rdesc').exists()).toBe(true)
+    expect(wrapper.find('#rpubDate').exists()).toBe(true)
+    expect(wrapper.find('#rclosingDate').exists()).toBe(true)
+    expect(wrapper.find('#rskills').exists()).toBe(true)
+  })
+
+  it('test if status logic is correct', async () => {
+    localStorage.setItem('id', 123456788)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/roleapplicantslisting/123456788').reply(200, {
+      Results: mockData
+    })
+    const wrapper = mount(RoleApplicant)
+    await new Promise((resolve) => setTimeout(resolve, 1))
+    await wrapper.vm.$nextTick()
+
+    for (let role of mockData) {
+      if (
+        new Date(role.role_listing_open) < new Date() &&
+        new Date(role.role_listing_close) > new Date()
+      ) {
+        expect(wrapper.find('#rstatus-active').exists()).toBe(true)
+      } else {
+        expect(wrapper.find('#rstatus-inactive').exists()).toBe(true)
+      }
+    }
+  })
+  it('test if it shows number of applicants correctly', async () => {
+    localStorage.setItem('id', 123456788)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/roleapplicantslisting/123456788').reply(200, {
+      Results: mockData
+    })
+    const wrapper = mount(RoleApplicant)
+    await new Promise((resolve) => setTimeout(resolve, 1))
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('#rapplicants').text()).toBe(mockData[0].no_of_applicant + ' Applied')
   })
 })
