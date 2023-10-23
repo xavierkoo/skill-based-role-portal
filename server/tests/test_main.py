@@ -2,8 +2,6 @@ import pytest
 from main import app
 from fastapi.testclient import TestClient
 
-pytest_plugins = ["docker_compose"]
-
 
 @pytest.fixture()
 def client():
