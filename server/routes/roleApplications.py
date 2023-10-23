@@ -139,7 +139,7 @@ async def create_role_application(
         .first()
     )
 
-    if roleApplication:
+    if roleApplication or len(roleApplicationData) > 3:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Role application already exists",
