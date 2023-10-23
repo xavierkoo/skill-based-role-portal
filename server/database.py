@@ -6,10 +6,10 @@ from seed import seed_db
 
 
 db_config = {
-    "host": "test_eduhub_db",
+    "host": "eduhub_db",
     "user": "eduhub_user",
     "password": "eduhub_password",
-    "port": "3306",
+    "port": 3306,
     "database": "eduhub_db_mysql",
 }
 
