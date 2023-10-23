@@ -4,17 +4,22 @@ from database import get_db
 import models
 from pydantic import BaseModel
 from utils import get_random_id, validate_date
+
+
 class RoleListing(BaseModel):
     role_id: int
     role_listing_desc: str
-    role_listing_open: str 
+    role_listing_open: str
     role_listing_close: str
+
+
 class RoleListing_Update(BaseModel):
     role_listing_id: int
     role_id: int
     role_listing_desc: str
-    role_listing_open: str 
-    role_listing_close: str      
+    role_listing_open: str
+    role_listing_close: str
+
 
 router = APIRouter()
 
@@ -167,7 +172,9 @@ async def create_role_listing(request: RoleListing, db: Session = Depends(get_db
 @router.put(
     "/api/v1/rolelistings/", status_code=status.HTTP_200_OK, tags=["Role Listing"]
 )
-async def update_role_listing(request: RoleListing_Update, db: Session = Depends(get_db)):
+async def update_role_listing(
+    request: RoleListing_Update, db: Session = Depends(get_db)
+):
     """
     The function `update_role_listing` updates an existing role listing object in the database based on
     the data provided in the request body.
@@ -219,15 +226,24 @@ async def update_role_listing(request: RoleListing_Update, db: Session = Depends
     else:
         # Create Dictionary for the updated role listing.
         role_listing = {
-            "role_id" : role_listing_data["role_id"],
-            "role_listing_desc" : role_listing_data["role_listing_desc"],
-            "role_listing_open" : role_listing_data["role_listing_open"],
-            "role_listing_close" : role_listing_data["role_listing_close"]
+            "role_id": role_listing_data["role_id"],
+            "role_listing_desc": role_listing_data["role_listing_desc"],
+            "role_listing_open": role_listing_data["role_listing_open"],
+            "role_listing_close": role_listing_data["role_listing_close"],
         }
         # Save the updated role listing to the database.
-        db.query(models.RoleListing).filter(models.RoleListing.role_listing_id == role_listing_data["role_listing_id"]).update(role_listing)
+        db.query(models.RoleListing).filter(
+            models.RoleListing.role_listing_id == role_listing_data["role_listing_id"]
+        ).update(role_listing)
         db.commit()
         db.close()
 
         # Return the newly updated role listing.
-        return db.query(models.RoleListing).filter(models.RoleListing.role_listing_id == role_listing_data["role_listing_id"]).first()
+        return (
+            db.query(models.RoleListing)
+            .filter(
+                models.RoleListing.role_listing_id
+                == role_listing_data["role_listing_id"]
+            )
+            .first()
+        )

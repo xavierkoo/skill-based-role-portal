@@ -18,7 +18,9 @@ async def get_staff_skills(db: Session = Depends(get_db)):
     :return: The `get_staff_skills` function returns a list of skills the staff has with relevant statuses.
     """
     staff_id = 123456789
-    staffSkills = db.query(models.StaffSkill).filter(models.StaffSkill.staff_id == staff_id).all()
+    staffSkills = (
+        db.query(models.StaffSkill).filter(models.StaffSkill.staff_id == staff_id).all()
+    )
     if not staffSkills:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -26,24 +28,23 @@ async def get_staff_skills(db: Session = Depends(get_db)):
         )
     for skill in staffSkills:
         skill_detail = (
-                db.query(models.SkillDetail)
-                .filter(models.SkillDetail.skill_id == skill.skill_id).
-                first()
-            )
+            db.query(models.SkillDetail)
+            .filter(models.SkillDetail.skill_id == skill.skill_id)
+            .first()
+        )
         skill.skill_name = skill_detail.skill_name
         skill.ss_status = skill.ss_status
     db.close()
 
     return staffSkills
 
+
 @router.get(
     "/api/v1/staffskills/{staff_id}",
     status_code=status.HTTP_200_OK,
     tags=["Skills"],
 )
-async def get_staff_skills_by_staff_id(
-    staff_id: int, db: Session = Depends(get_db)
-):
+async def get_staff_skills_by_staff_id(staff_id: int, db: Session = Depends(get_db)):
     """
     The function `get_staff_skills_by_staff_id` retrieves all skills of a staff member by
     their staff ID.
@@ -59,9 +60,7 @@ async def get_staff_skills_by_staff_id(
     """
 
     staffSkills = (
-        db.query(models.StaffSkill)
-        .filter(models.StaffSkill.staff_id == staff_id)
-        .all()
+        db.query(models.StaffSkill).filter(models.StaffSkill.staff_id == staff_id).all()
     )
     if not staffSkills:
         raise HTTPException(
@@ -71,15 +70,16 @@ async def get_staff_skills_by_staff_id(
 
     for skill in staffSkills:
         skill_detail = (
-                db.query(models.SkillDetail)
-                .filter(models.SkillDetail.skill_id == skill.skill_id)
-                .first()
-            )
+            db.query(models.SkillDetail)
+            .filter(models.SkillDetail.skill_id == skill.skill_id)
+            .first()
+        )
         skill.skill_name = skill_detail.skill_name
         skill.ss_status = skill.ss_status
     db.close()
 
     return {"Results": staffSkills}
+
 
 @router.get("/api/v1/allskills/", status_code=status.HTTP_200_OK, tags=["Skills"])
 async def get_all_skills(db: Session = Depends(get_db)):
@@ -91,10 +91,7 @@ async def get_all_skills(db: Session = Depends(get_db)):
     :type db: db_dependancy
     :return: The `get_all_skills` function returns a list of all skills.
     """
-    allSkills = (
-        db.query(models.SkillDetail)
-        .all()
-    )
+    allSkills = db.query(models.SkillDetail).all()
     if not allSkills:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

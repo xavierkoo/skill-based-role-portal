@@ -115,7 +115,7 @@ async def create_role_application(
     """
     The above function creates a new role application if it does not already exist and returns the
     created role application.
-    
+
     :param request: The `request` parameter is of type `RoleApplication`, which is a Pydantic model
     representing the data of the role application being created
     :type request: RoleApplication
