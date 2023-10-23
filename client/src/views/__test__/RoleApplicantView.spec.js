@@ -756,7 +756,270 @@ const mockData = [
     ]
   }
 ]
-
+const roleDetails = {
+  role_name: 'Learning Facilitator / Trainer',
+  role_listing_desc:
+    'The Learning Facilitator delivers learning products and services in a variety of environments, using multiple learning delivery modes and methods. He/She assesses learning needs and adapts the facilitation approach to reflect desired learning outcomes and learner needs. He is responsible for knowledge and skills transfer by delivering learning content, facilitating group discussions and responding to queries. He drives learner development and commitment to continuous learning by actively providing feedback and learner support. He evaluates curriculum effectiveness and recommends improvement areas by collecting learner feedback as well as analysing learning delivery approaches and materials.He is a strong communicator who builds trusted relationships and creates a cooperative and engaging learning environment. He is adaptable and adept at managing multiple stakeholders. He works in multiple different environments, including different learning venues and client sites, and regularly interacts with digital systems.',
+  role_listing_open: '2023-10-01',
+  role_listing_close: '2023-10-19',
+  role_skills: ['Certified Scrum@Scale Practitioner', 'Pascal Programming', 'Python Programming'],
+  role_listing_creator: 123456788,
+  role_listing_updater: 123456788,
+  role_listing_id: 2,
+  role_id: 234567892,
+  role_applicants: [
+    {
+      staff_id: 123456788,
+      role_listing_id: 2,
+      role_app_reason: '2I want to apply for this role because I am interested in it.',
+      role_app_id: 3,
+      role_app_status: 'applied',
+      role_application_ts_create: '2023-10-23T11:32:07',
+      staff_details: {
+        f_name: 'VINCENT REX',
+        l_name: 'COLINS',
+        email: 'colins_vincent_rex@all-in-one.com.sg',
+        biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+        sys_role: 'hr',
+        dept: 'HUMAN RESOURCE AND ADMIN',
+        staff_id: 123456788,
+        phone: '65-1234-5679',
+        staff_skills: [
+          {
+            staff_id: 123456788,
+            skill_id: 345678790,
+            ss_status: 'active',
+            skill_name: 'Certified Scrum Professional'
+          },
+          {
+            staff_id: 123456788,
+            skill_id: 345678866,
+            ss_status: 'active',
+            skill_name: 'Certified Scrum Developer'
+          },
+          {
+            staff_id: 123456788,
+            skill_id: 345678890,
+            ss_status: 'active',
+            skill_name: 'Certified Scrum@Scale Practitioner'
+          },
+          {
+            staff_id: 123456788,
+            skill_id: 345678912,
+            ss_status: 'active',
+            skill_name: 'Pascal Programming'
+          },
+          {
+            staff_id: 123456788,
+            skill_id: 345678913,
+            ss_status: 'active',
+            skill_name: 'Python Programming'
+          },
+          {
+            staff_id: 123456788,
+            skill_id: 345678927,
+            ss_status: 'active',
+            skill_name: 'Certified Scrum Coach'
+          },
+          {
+            staff_id: 123456788,
+            skill_id: 345678935,
+            ss_status: 'active',
+            skill_name: 'Certified Scrum Trainer'
+          }
+        ]
+      },
+      applied_date: '23/10/2023',
+      missing_skills: [],
+      active_skills: [
+        'Certified Scrum@Scale Practitioner',
+        'Pascal Programming',
+        'Python Programming'
+      ],
+      in_progress_skills: [],
+      role_match: 100
+    },
+    {
+      staff_id: 123456789,
+      role_listing_id: 2,
+      role_app_reason: "2 I want to apply for this role because I don't know what it is.",
+      role_app_id: 1,
+      role_app_status: 'applied',
+      role_application_ts_create: '2023-10-23T11:32:07',
+      staff_details: {
+        f_name: 'AH GAO',
+        l_name: 'TAN',
+        email: 'tan_ah_gao@all-in-one.com.sg',
+        biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+        sys_role: 'staff',
+        dept: 'FINANCE',
+        staff_id: 123456789,
+        phone: '65-1234-5678',
+        staff_skills: [
+          {
+            staff_id: 123456789,
+            skill_id: 345678790,
+            ss_status: 'active',
+            skill_name: 'Certified Scrum Professional'
+          },
+          {
+            staff_id: 123456789,
+            skill_id: 345678866,
+            ss_status: 'active',
+            skill_name: 'Certified Scrum Developer'
+          },
+          {
+            staff_id: 123456789,
+            skill_id: 345678890,
+            ss_status: 'unverified',
+            skill_name: 'Certified Scrum@Scale Practitioner'
+          },
+          {
+            staff_id: 123456789,
+            skill_id: 345678913,
+            ss_status: 'active',
+            skill_name: 'Python Programming'
+          },
+          {
+            staff_id: 123456789,
+            skill_id: 345678927,
+            ss_status: 'in-progress',
+            skill_name: 'Certified Scrum Coach'
+          },
+          {
+            staff_id: 123456789,
+            skill_id: 345678935,
+            ss_status: 'in-progress',
+            skill_name: 'Certified Scrum Trainer'
+          }
+        ]
+      },
+      applied_date: '23/10/2023',
+      missing_skills: ['Certified Scrum@Scale Practitioner', 'Pascal Programming'],
+      active_skills: ['Python Programming'],
+      in_progress_skills: [],
+      role_match: 33
+    },
+    {
+      staff_id: 123456787,
+      role_listing_id: 2,
+      role_app_reason: '2I want to apply for this role because I am interested in it.',
+      role_app_id: 4,
+      role_app_status: 'applied',
+      role_application_ts_create: '2023-10-23T11:32:07',
+      staff_details: {
+        f_name: 'FAUD',
+        l_name: 'NIZAM',
+        email: 'faud_nizam@all-in-one.com.sg',
+        biz_address:
+          'Unit 3A-07, Tower A, The Vertical Business Suite, 8, Jalan Kerinchi, Bangsar South, 59200 Kuala Lumpur, Malaysia',
+        sys_role: 'manager',
+        dept: 'SALES',
+        staff_id: 123456787,
+        phone: '60-03-21345678',
+        staff_skills: [
+          {
+            staff_id: 123456787,
+            skill_id: 345678790,
+            ss_status: 'in-progress',
+            skill_name: 'Certified Scrum Professional'
+          },
+          {
+            staff_id: 123456787,
+            skill_id: 345678866,
+            ss_status: 'in-progress',
+            skill_name: 'Certified Scrum Developer'
+          },
+          {
+            staff_id: 123456787,
+            skill_id: 345678890,
+            ss_status: 'in-progress',
+            skill_name: 'Certified Scrum@Scale Practitioner'
+          },
+          {
+            staff_id: 123456787,
+            skill_id: 345678913,
+            ss_status: 'in-progress',
+            skill_name: 'Python Programming'
+          },
+          {
+            staff_id: 123456787,
+            skill_id: 345678927,
+            ss_status: 'in-progress',
+            skill_name: 'Certified Scrum Coach'
+          },
+          {
+            staff_id: 123456787,
+            skill_id: 345678935,
+            ss_status: 'in-progress',
+            skill_name: 'Certified Scrum Trainer'
+          }
+        ]
+      },
+      applied_date: '23/10/2023',
+      missing_skills: ['Pascal Programming'],
+      active_skills: [],
+      in_progress_skills: ['Certified Scrum@Scale Practitioner', 'Python Programming'],
+      role_match: 33
+    },
+    {
+      staff_id: 123456786,
+      role_listing_id: 2,
+      role_app_reason: '2I want to apply for this role because I am interested in it.',
+      role_app_id: 5,
+      role_app_status: 'applied',
+      role_application_ts_create: '2023-10-23T11:32:07',
+      staff_details: {
+        f_name: 'JOHN',
+        l_name: 'DOE',
+        email: 'John_doe@all-in-one.com.sg',
+        biz_address: '1 Scotts Rd, #24-10 Shaw Centre, Singapore 228208',
+        sys_role: 'inactive',
+        dept: 'IT',
+        staff_id: 123456786,
+        phone: '65-5824-7888',
+        staff_skills: []
+      },
+      applied_date: '23/10/2023',
+      role_match: 0,
+      missing_skills: [
+        'Certified Scrum@Scale Practitioner',
+        'Pascal Programming',
+        'Python Programming'
+      ],
+      active_skills: [],
+      in_progress_skills: []
+    },
+    {
+      staff_id: 123456123,
+      role_listing_id: 2,
+      role_app_reason: '2I want to apply for this role because I am interested in it.',
+      role_app_id: 6,
+      role_app_status: 'applied',
+      role_application_ts_create: '2023-10-23T11:32:07',
+      staff_details: {
+        f_name: 'ROOT',
+        l_name: 'ADMIN SECOND',
+        email: 'rootme2@all-in-one.com.sg',
+        biz_address: '1 Scotts Rd, #24-10 Shaw Centre, Singapore 228208',
+        sys_role: 'hr',
+        dept: 'IT',
+        staff_id: 123456123,
+        phone: '65-5824-7888',
+        staff_skills: []
+      },
+      applied_date: '23/10/2023',
+      role_match: 0,
+      missing_skills: [
+        'Certified Scrum@Scale Practitioner',
+        'Pascal Programming',
+        'Python Programming'
+      ],
+      active_skills: [],
+      in_progress_skills: []
+    }
+  ]
+}
 describe('RoleApplicant.vue', () => {
   // it check if data is loaded
   it('test if data is loaded', async () => {
@@ -766,6 +1029,7 @@ describe('RoleApplicant.vue', () => {
       Results: mockData
     })
     const wrapper = mount(RoleApplicant)
+    expect(wrapper.find('#loading').exists()).toBe(true)
     await new Promise((resolve) => setTimeout(resolve, 1))
     await wrapper.vm.$nextTick()
     expect(wrapper.find('#role_card').exists()).toBe(true)
@@ -823,5 +1087,65 @@ describe('RoleApplicant.vue', () => {
     await new Promise((resolve) => setTimeout(resolve, 1))
     await wrapper.vm.$nextTick()
     expect(wrapper.find('#rapplicants').text()).toBe(mockData[0].no_of_applicant + ' Applied')
+  })
+
+  it('test applicant card items are rendered correctly', async () => {
+    localStorage.setItem('id', 123456788)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/roleapplicantslisting/123456788').reply(200, {
+      Results: mockData
+    })
+    const wrapper = mount(RoleApplicant)
+    await new Promise((resolve) => setTimeout(resolve, 1))
+    expect(wrapper.find('#applicant_section').attributes('hidden'))
+    wrapper.vm.roleDetails = roleDetails
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('#applicant_section').attributes('hidden')).toBe(undefined)
+    expect(wrapper.find('#applicant_card').exists()).toBe(true)
+    expect(wrapper.find('#applicant_name').exists()).toBe(true)
+    expect(wrapper.find('#applicant_email').exists()).toBe(true)
+    expect(wrapper.find('#applicant_dept').exists()).toBe(true)
+    expect(wrapper.find('#applicant_reason').exists()).toBe(true)
+    expect(wrapper.find('#applicant_phone').exists()).toBe(true)
+    expect(wrapper.find('#applicant_skill_section').exists()).toBe(true)
+  })
+
+  it('test if applicant skill section is rendered correctly', async () => {
+    localStorage.setItem('id', 123456788)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/roleapplicantslisting/123456788').reply(200, {
+      Results: mockData
+    })
+    const wrapper = mount(RoleApplicant)
+    await new Promise((resolve) => setTimeout(resolve, 1))
+    wrapper.vm.roleDetails = roleDetails
+
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('#applicant_skill_section').exists()).toBe(true)
+    if (roleDetails.role_skills.length > 0) {
+      for (let applicant of roleDetails.role_applicants) {
+        console.log(applicant.missing_skills)
+        if (applicant.missing_skills.length > 0) {
+          expect(wrapper.find('#missing_skills').exists()).toBe(true)
+          for (let skill of applicant.missing_skills) {
+            expect(wrapper.text()).toContain(skill)
+          }
+        }
+        if (applicant.active_skills.length > 0) {
+          expect(wrapper.find('#active_skills').exists()).toBe(true)
+          for (let skill of applicant.active_skills) {
+            expect(wrapper.text()).toContain(skill)
+          }
+        }
+        if (applicant.in_progress_skills.length > 0) {
+          expect(wrapper.find('#inprogress_skills').exists()).toBe(true)
+          for (let skill of applicant.in_progress_skills) {
+            expect(wrapper.text()).toContain(skill)
+          }
+        }
+      }
+    } else {
+      expect(wrapper.find('#no_skill_required').exists()).toBe(true)
+    }
   })
 })
