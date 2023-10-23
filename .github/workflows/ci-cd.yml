@@ -54,8 +54,12 @@ jobs:
 
     - name: Build and Run Docker Containers
       run: |
-        docker-compose build
-        docker-compose up -d
+        docker compose --profile production build
+        docker compose --profile production up -d
+        
+    - name: Run Integration Tests
+      run: |
+        docker compose run tests pytest /app/tests
 
     - name: Deploy
       run: |
