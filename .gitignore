@@ -11,7 +11,6 @@ node_modules
 dist
 dist-ssr
 *.local
-.env
 venv
 
 
@@ -27,4 +26,3 @@ venv
 *.sw?
 __pycache__/
 .pytest_cache/
-.env
