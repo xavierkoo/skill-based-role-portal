@@ -38,17 +38,11 @@ jobs:
   
       - name: Install Python Dependencies
         run: pip install -r server/requirements.txt
-
-      # - name: Run Backend Tests
-      #   run: pytest
   
       - name: Lint Vue Code
         run: npm run lint --prefix client
-    
-  deploy:
-    runs-on: ubuntu-latest
 
-    steps:
+        steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
@@ -60,6 +54,9 @@ jobs:
     - name: Run Integration Tests
       run: |
         docker compose run tests pytest /app/tests
+    
+  deploy:
+    runs-on: ubuntu-latest
 
     - name: Deploy
       run: |
