@@ -189,11 +189,36 @@ role_skills_seed = [
     {"role_id": 234567892, "skill_id": 345678890},
 ]
 role_applications_seed = [
-    {"role_listing_id": 1, "staff_id": 123456789, "role_app_status": "applied", "role_app_reason": "I want to apply for this role because I am interested in it."},
-    {"role_listing_id": 2, "staff_id": 123456789, "role_app_status": "applied", "role_app_reason": "I want to apply for this role because I don't know what it is."},
-    {"role_listing_id": 3, "staff_id": 123456789, "role_app_status": "applied", "role_app_reason": "I want to apply for this role because I want to learn more about it."},
-    {"role_listing_id": 3, "staff_id": 123456788, "role_app_status": "applied", "role_app_reason": "I want to apply for this role because I want to learn more about it."},
-    {"role_listing_id": 3, "staff_id": 123456787, "role_app_status": "applied", "role_app_reason": "I want to apply for this role because I want to learn more about it."},
+    {
+        "role_listing_id": 1,
+        "staff_id": 123456789,
+        "role_app_status": "applied",
+        "role_app_reason": "I want to apply for this role because I am interested in it.",
+    },
+    {
+        "role_listing_id": 2,
+        "staff_id": 123456789,
+        "role_app_status": "applied",
+        "role_app_reason": "I want to apply for this role because I don't know what it is.",
+    },
+    {
+        "role_listing_id": 3,
+        "staff_id": 123456789,
+        "role_app_status": "applied",
+        "role_app_reason": "I want to apply for this role because I want to learn more about it.",
+    },
+    {
+        "role_listing_id": 3,
+        "staff_id": 123456788,
+        "role_app_status": "applied",
+        "role_app_reason": "I want to apply for this role because I want to learn more about it.",
+    },
+    {
+        "role_listing_id": 3,
+        "staff_id": 123456787,
+        "role_app_status": "applied",
+        "role_app_reason": "I want to apply for this role because I want to learn more about it.",
+    },
 ]
 role_listings_seed = [
     {
