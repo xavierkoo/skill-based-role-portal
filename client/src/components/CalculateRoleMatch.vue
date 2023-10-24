@@ -1,5 +1,5 @@
 <template>
-  <span class="fw-bold badge rounded-pill bg-light text-dark"
+  <span id="check" class="fw-bold badge rounded-pill bg-light text-dark"
     ><span :class="percentageClass">{{ percentage }}</span> % match</span
   >
 </template>
@@ -31,7 +31,7 @@ export default {
     const calPercentage = (roles) => {
       if (roles) {
         if (roles.length === 0) {
-          percentage.value = 100
+          percentage.value = 100.0
         } else if (staffSkills.value.length === 0) {
           percentage.value = 0
         } else {

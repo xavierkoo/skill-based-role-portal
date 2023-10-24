@@ -58,7 +58,11 @@
                           >
                             Active
                           </p>
-                          <CalculateRoleMatch class="ms-2" :role-skills="jobRole.role_skills" />
+                          <CalculateRoleMatch
+                            id="CalculateRoleMatchHR"
+                            class="ms-2"
+                            :role-skills="jobRole.role_skills"
+                          />
                         </h5>
                       </div>
                       <div class="col">
@@ -127,7 +131,11 @@
                           <a id="rname" href="#" class="card-link text-normal">{{
                             jobRole.role_name
                           }}</a>
-                          <CalculateRoleMatch class="ms-2" :role-skills="jobRole.role_skills" />
+                          <CalculateRoleMatch
+                            id="CalculateRoleMatchStaff"
+                            class="ms-2"
+                            :role-skills="jobRole.role_skills"
+                          />
                         </h5>
                       </div>
                       <div class="col">
