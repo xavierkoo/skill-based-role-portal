@@ -1,13 +1,18 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, onBeforeUnmount } from 'vue'
 import { getRoleApplicants } from '../service/roleApplicants.service'
 
 const roleApplicants = ref([])
 const userID = JSON.parse(localStorage.getItem('id')) || 123456788
-
+const errorMsg = ref(null)
 const getData = async () => {
-  const response = await getRoleApplicants(userID)
-  roleApplicants.value = response.data.Results
+  try {
+    const response = await getRoleApplicants(userID)
+    roleApplicants.value = response.data.Results
+  } catch (error) {
+    errorMsg.value = "Couldn't fetch data"
+  }
+  isMounted.value = true
 }
 
 // Function to calculate the days until the listing opens
@@ -53,6 +58,7 @@ function goBack() {
     role_id: 'TBC',
     role_applicants: []
   }
+  updateShouldHide()
 }
 
 const goToRolePage = (index) => {
@@ -126,14 +132,24 @@ const goToRolePage = (index) => {
     role_id: index.role_id,
     role_applicants: index.role_applicants
   }
+  updateShouldHide()
+}
+const shouldHide = ref(window.innerWidth < 992 && roleDetails.value.role_name !== 'TBC')
+
+function updateShouldHide() {
+  shouldHide.value = window.innerWidth < 992 && roleDetails.value.role_name !== 'TBC'
 }
 
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateShouldHide)
+})
 const isMounted = ref(false)
 onMounted(() => {
-  getData()
   setTimeout(() => {
-    isMounted.value = true
+    getData()
   }, 1)
+
+  window.addEventListener('resize', updateShouldHide)
 })
 </script>
 <template>
@@ -141,97 +157,109 @@ onMounted(() => {
     <h1 class="my-3">Role Applicants</h1>
     <div v-if="isMounted">
       <div class="row">
-        <!-- Conditional rendering for when no job roles are available -->
-        <div v-if="roleApplicants?.length === 0">
-          <p id="no_role" class="text-primary text-center">No job applicants found.</p>
-        </div>
+        <div
+          class="col-md-5 col-lg-5 col-xl-4"
+          :class="{ 'col-md-12 col-lg-12 col-xl-12': roleDetails.role_name === 'TBC' }"
+          :hidden="shouldHide"
+        >
+          <!-- Conditional rendering for when no job roles are available -->
+          <div v-if="roleApplicants?.length === 0">
+            <p v-if="errorMsg == null" id="no_role" class="text-primary text-center">
+              No job role found.
+            </p>
+            <p v-else id="data_error" class="text-danger text-center">{{ errorMsg }}</p>
+          </div>
 
-        <div v-else class="container">
-          <!-- Job role list -->
-          <div>
-            <div
-              v-for="(jobRole, key) in roleApplicants"
-              :key="key"
-              class="job-role-item mb-4 shadow-sm p-4 rounded border"
-              @click="goToRolePage(jobRole)"
-            >
-              <div id="role_card" class="card-body">
-                <div class="row">
-                  <div class="col-6 col-sm-7 col-md-8 col-xl-9 col-xxl-10">
-                    <h5 class="card-title">
-                      <a id="rname" href="#" class="card-link text-normal me-2">{{
-                        jobRole.role_name
-                      }}</a>
-                    </h5>
-                  </div>
-                  <div class="col-12 mt-2">
-                    <p
-                      v-if="
-                        calculateDaysUntilOpen(
-                          jobRole.role_listing_close,
-                          jobRole.role_listing_open
-                        )
-                      "
-                      id="rstatus-active"
-                      class="badge rounded-pill bg-success text-white"
-                      style="padding: 10px"
-                    >
-                      Active
-                    </p>
-                    <p
-                      v-else
-                      id="rstatus-inactive"
-                      class="badge rounded-pill bg-danger text-white"
-                      style="padding: 10px"
-                    >
-                      Inactive
-                    </p>
-                    <p id="rapplicants" class="badge rounded-pill bg-dark text-white p-2 ms-2">
-                      {{ jobRole.no_of_applicant }}
-                      Applied
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        class="bi bi-file-earmark-person"
-                        viewBox="0 0 16 16"
+          <div v-else class="container">
+            <!-- Job role list -->
+            <div>
+              <div
+                v-for="(jobRole, key) in roleApplicants"
+                :key="key"
+                class="job-role-item mb-4 shadow-sm p-4 rounded border"
+                :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
+                @click="goToRolePage(jobRole)"
+              >
+                <div id="role_card" class="card-body">
+                  <div class="row">
+                    <div class="col-6 col-sm-7 col-md-8 col-xl-9 col-xxl-10">
+                      <h5
+                        class="card-title"
+                        :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
                       >
-                        <path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                        <path
-                          d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2v9.255S12 12 8 12s-5 1.755-5 1.755V2a1 1 0 0 1 1-1h5.5v2z"
-                        />
-                      </svg>
-                    </p>
+                        <a id="rname" href="#" class="card-link text-normal me-2">{{
+                          jobRole.role_name
+                        }}</a>
+                      </h5>
+                    </div>
+                    <div class="col-12 mt-2">
+                      <p
+                        v-if="
+                          calculateDaysUntilOpen(
+                            jobRole.role_listing_close,
+                            jobRole.role_listing_open
+                          )
+                        "
+                        id="rstatus-active"
+                        class="badge rounded-pill bg-success text-white"
+                        style="padding: 10px"
+                      >
+                        Active
+                      </p>
+                      <p
+                        v-else
+                        id="rstatus-inactive"
+                        class="badge rounded-pill bg-danger text-white"
+                        style="padding: 10px"
+                      >
+                        Inactive
+                      </p>
+                      <p id="rapplicants" class="badge rounded-pill bg-dark text-white p-2 ms-2">
+                        {{ jobRole.no_of_applicant }}
+                        Applied
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="bi bi-file-earmark-person"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                          <path
+                            d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2v9.255S12 12 8 12s-5 1.755-5 1.755V2a1 1 0 0 1 1-1h5.5v2z"
+                          />
+                        </svg>
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div id="rskills" class="mb-2">
-                  <div
-                    v-for="(roleSkill, index2) in jobRole.role_skills"
-                    :key="index2"
-                    class="badge rounded-pill bg-light text-dark p-2 me-2"
-                  >
-                    {{ roleSkill }}
+                  <div id="rskills" class="mb-2">
+                    <div
+                      v-for="(roleSkill, index2) in jobRole.role_skills"
+                      :key="index2"
+                      class="badge rounded-pill bg-light text-dark p-2 me-2"
+                    >
+                      {{ roleSkill }}
+                    </div>
                   </div>
-                </div>
-                <p id="rdesc" class="card-text">
-                  {{ truncateText(jobRole.role_listing_desc, 150) }}
-                </p>
-                <div class="row">
-                  <small id="rpubDate" class="text-muted">
-                    Published Date {{ jobRole.role_listing_open }}</small
-                  >
-                  <small id="rclosingDate" class="text-muted">
-                    Closing Date {{ jobRole.role_listing_close }}</small
-                  >
+                  <p id="rdesc" class="card-text">
+                    {{ truncateText(jobRole.role_listing_desc, 150) }}
+                  </p>
+                  <div class="row">
+                    <small id="rpubDate" class="text-muted">
+                      Published Date {{ jobRole.role_listing_open }}</small
+                    >
+                    <small id="rclosingDate" class="text-muted">
+                      Closing Date {{ jobRole.role_listing_close }}</small
+                    >
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
         <div id="applicant_section" :hidden="roleDetails.role_name === 'TBC'" class="col">
-          <button class="btn btn-light mb-4" @click="goBack">Back</button>
+          <button :hidden="!shouldHide" class="btn btn-dark mb-4" @click="goBack">Back</button>
           <div v-if="roleDetails.role_applicants.length === 0">
             <p class="text-primary text-center">No applicants found.</p>
           </div>
@@ -251,25 +279,25 @@ onMounted(() => {
                     </p>
                     <div v-if="roleDetails.role_skills.length > 0">
                       <p id="active_skills" v-if="applicant.active_skills.length > 0">
-                        Active Skills:
+                        <b>Active Skills:</b>
                         <span v-for="(skill, index2) in applicant.active_skills" :key="index2">
-                          <span class="badge rounded-pill bg-success text-white p-2 me-2">
+                          <span class="badge rounded-pill bg-success text-white p-2 m-1">
                             {{ skill }}
                           </span>
                         </span>
                       </p>
                       <p id="inprogress_skills" v-if="applicant.in_progress_skills.length > 0">
-                        In-progress Skills:
+                        <b>In-progress Skills:</b>
                         <span v-for="(skill, index3) in applicant.in_progress_skills" :key="index3">
-                          <span class="badge rounded-pill bg-warning text-white p-2 me-2">
+                          <span class="badge rounded-pill bg-warning text-white p-2 m-1">
                             {{ skill }}
                           </span>
                         </span>
                       </p>
                       <p id="missing_skills" v-if="applicant.missing_skills.length > 0">
-                        Missing Skill:
+                        <b>Missing Skill:</b>
                         <span v-for="(skill, index4) in applicant.missing_skills" :key="index4">
-                          <span class="badge rounded-pill bg-secondary text-white p-2 me-2">
+                          <span class="badge rounded-pill bg-secondary text-white p-2 m-1">
                             {{ skill }}
                           </span>
                         </span>
@@ -285,7 +313,9 @@ onMounted(() => {
                     <p id="applicant_phone">Phone: {{ applicant.staff_details.phone }}</p>
                   </div>
                 </div>
-                <div class="card-footer text-muted">Applied on: {{ applicant.applied_date }}</div>
+                <div class="card-footer text-muted">
+                  <b>Applied on:</b> {{ applicant.applied_date }}
+                </div>
               </div>
             </div>
           </div>
