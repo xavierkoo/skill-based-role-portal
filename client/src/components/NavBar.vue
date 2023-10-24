@@ -23,7 +23,7 @@
             >
           </li>
           <li v-if="userType == 'hr' || userType == 'manager'" class="nav-item">
-            <router-link to="/status" class="nav-link active applicants"
+            <router-link to="/roleapplicants/" class="nav-link active applicants"
               >View Role Applicants</router-link
             >
           </li>
