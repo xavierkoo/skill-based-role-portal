@@ -1,37 +1,6 @@
 version: "3.8"
 
 services:
-    # This section of the Docker Compose file is defining a service called `client_frontend`.
-    client_frontend:
-        container_name: eduhub_frontend_vue
-        build:
-            context: ./client
-            dockerfile: client.Dockerfile
-        ports:
-            - "8080:8080"
-        depends_on:
-            eduhub_db:
-                condition: service_healthy
-        networks:
-            - eduhub_network
-
-    # The `server_backend` section in the Docker Compose file is defining a service called `server_backend`.
-    server_backend:
-        container_name: eduhub_backend_flask
-        build:
-            context: ./server
-            dockerfile: server.Dockerfile
-        command: sh -c "uvicorn main:app --reload --port=5101 --host=0.0.0.0"
-        volumes:
-            - ./server:/app
-        ports:
-            - "5101:5101"
-        depends_on:
-            eduhub_db:
-                condition: service_healthy
-        networks:
-            - eduhub_network
-
     # The `eduhub_db` section in the Docker Compose file is defining a service for a MySQL database container.
     eduhub_db:
         container_name: eduhub_db_mysql
@@ -39,6 +8,7 @@ services:
         restart: always
         ports:
             - "5100:3306"
+        profiles: ["production", "test"]
         networks:
             - eduhub_network
         environment:
@@ -64,6 +34,40 @@ services:
             timeout: 5s
             retries: 20
 
+    # #* For Testing Purposes
+    # # The `test_eduhub_db` section in the Docker Compose file is defining a service for a MySQL database container.
+    # test_eduhub_db:
+    #     container_name: test_eduhub_db
+    #     image: mysql:8.0
+    #     restart: always
+    #     ports:
+    #         - "5100:3306"
+    #     profiles: ["test"]
+    #     networks:
+    #         - eduhub_network
+    #     environment:
+    #         MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    #         MYSQL_DATABASE: ${MYSQL_DATABASE}
+    #         MYSQL_USER: ${MYSQL_USER}
+    #         MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    #     volumes:
+    #         - ./data/test_eduhub_db:/docker-entrypoint-initdb.d
+    #         - mysql-data/test_eduhub_db:/var/lib/mysql
+    #     healthcheck:
+    #         test:
+    #             [
+    #                 "CMD",
+    #                 "mysqladmin",
+    #                 "ping",
+    #                 "-h",
+    #                 "localhost",
+    #                 "-uroot",
+    #                 "-ppass",
+    #             ]
+    #         interval: 5s
+    #         timeout: 5s
+    #         retries: 20
+
     # The `phpmyadmin` section in the Docker Compose file is defining a service for a phpMyAdmin container.
     phpmyadmin:
         container_name: phpmyadmin
@@ -71,6 +75,7 @@ services:
         restart: always
         ports:
             - "8081:80"
+        profiles: ["production", "test"]
         networks:
             - eduhub_network
         environment:
@@ -81,6 +86,73 @@ services:
         depends_on:
             eduhub_db:
                 condition: service_healthy
+
+    # The `server_backend` section in the Docker Compose file is defining a service called `server_backend`.
+    server_backend:
+        container_name: eduhub_backend_flask
+        build:
+            context: ./server
+            dockerfile: server.Dockerfile
+        command: sh -c "uvicorn main:app --reload --port=5101 --host=0.0.0.0"
+        volumes:
+            - ./server:/app
+        ports:
+            - "5101:5101"
+        profiles: ["production", "test"]
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_HOST: ${MYSQL_HOST}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        depends_on:
+            eduhub_db:
+                condition: service_healthy
+        networks:
+            - eduhub_network
+        healthcheck:
+            test:
+                ["CMD-SHELL", "curl -f http://localhost:5101/health || exit 1"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+
+    # The `client_frontend` section in the Docker Compose file is defining a service called `client_frontend`.
+    client_frontend:
+        container_name: eduhub_frontend_vue
+        build:
+            context: ./client
+            dockerfile: client.Dockerfile
+        ports:
+            - "8080:8080"
+        depends_on:
+            eduhub_db:
+                condition: service_healthy
+        networks:
+            - eduhub_network
+
+    #* For Integration Testing Purposes
+    # The `tests` section in the Docker Compose file is defining a service called `tests`.
+    tests:
+        build:
+            context: ./server
+            dockerfile: test.Dockerfile
+        volumes:
+            - ./server:/app
+        profiles: ["test"]
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_HOST: ${MYSQL_HOST}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        depends_on:
+            eduhub_db:
+                condition: service_healthy
+            server_backend:
+                condition: service_started
+        networks:
+            - eduhub_network
 
 # The `volumes` section in the Docker Compose file is defining a named volume called `mysql_data`.
 volumes:

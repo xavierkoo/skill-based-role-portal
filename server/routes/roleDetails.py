@@ -7,7 +7,9 @@ import models
 router = APIRouter()
 
 
-@router.get("/api/v1/roledetails/", status_code=status.HTTP_200_OK, tags=["Role Detail"])
+@router.get(
+    "/api/v1/roledetails/", status_code=status.HTTP_200_OK, tags=["Role Detail"]
+)
 async def get_role_details(db: Session = Depends(get_db)):
     """
     The `get_role_details` function retrieves role details from a database, while the `get_random_id`
@@ -34,7 +36,7 @@ async def get_role_details(db: Session = Depends(get_db)):
         role.role_name = role.role_name
         role.role_description = role.role_description
         role.role_status = role.role_status
-    
+
     db.close()
 
     return {"Results": roleDetails}

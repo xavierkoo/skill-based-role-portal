@@ -2,63 +2,76 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import pymysql
 import models
+import time
+import os
 from seed import seed_db
 
 
 db_config = {
-    "host": "eduhub_db",
-    "user": "eduhub_user",
-    "password": "eduhub_password",
+    "host": os.environ["MYSQL_HOST"],
+    "user": os.environ["MYSQL_USER"],
+    "password": os.environ["MYSQL_PASSWORD"],
     "port": 3306,
-    "database": "eduhub_db_mysql",
+    "database": os.environ["MYSQL_DATABASE"],
 }
 
 
-def create_database_if_not_exists(db_persist=False):
+def create_database_if_not_exists(db_persist=False, max_retries=3, retry_delay=5):
     """
-    The function `create_database_if_not_exists` creates a database if it does not exist, and optionally
-    persists the database if specified.
+    The function creates a database if it does not already exist, with options for persistence and
+    retrying in case of connection errors.
 
-    :param db_persist: The `db_persist` parameter is a boolean flag that determines whether the database
-    should be persisted or not. If `db_persist` is set to `True`, the database will be created if it
-    doesn't exist and the connection will be established using that database. If `db_persist`, defaults
-    to False (optional)
-    :return: If `db_persist` is `True`, the function will return after executing the `CREATE DATABASE IF
-    NOT EXISTS` and `USE` statements. If `db_persist` is `False`, the function will return after
-    executing the `DROP DATABASE IF EXISTS`, `CREATE DATABASE IF NOT EXISTS`, and `USE` statements.
+    :param db_persist: The `db_persist` parameter determines whether the database should be persisted or
+    not. If `db_persist` is set to `True`, the function will create the database if it doesn't exist and
+    use it. If `db_persist` is set to `False`, the function will drop, defaults to False (optional)
+    :param max_retries: The `max_retries` parameter specifies the maximum number of times the code will
+    attempt to create or use the database before giving up, defaults to 3 (optional)
+    :param retry_delay: The `retry_delay` parameter specifies the number of seconds to wait before
+    retrying the database connection after encountering an error, defaults to 5 (optional)
+    :return: nothing.
     """
 
-    try:
-        connection = pymysql.connect(
-            host=db_config["host"],
-            user=db_config["user"],
-            password=db_config["password"],
-            charset="utf8mb4",
-            cursorclass=pymysql.cursors.DictCursor,
-        )
+    connection = None
 
-        with connection.cursor() as cursor:
-            if db_persist:
-                cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_config['database']}")
-                cursor.execute(f"USE {db_config['database']}")
-                return
+    for _ in range(max_retries):
+        try:
+            connection = pymysql.connect(
+                host=db_config["host"],
+                user=db_config["user"],
+                password=db_config["password"],
+                charset="utf8mb4",
+                cursorclass=pymysql.cursors.DictCursor,
+            )
 
-            else:
-                cursor.execute(f"DROP DATABASE IF EXISTS {db_config['database']}")
-                cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_config['database']}")
-                cursor.execute(f"USE {db_config['database']}")
+            with connection.cursor() as cursor:
+                if db_persist:
+                    cursor.execute(
+                        f"CREATE DATABASE IF NOT EXISTS {db_config['database']}"
+                    )
+                    cursor.execute(f"USE {db_config['database']}")
+                    return
 
-    except pymysql.MySQLError as e:
-        print(f"Error creating or using database: {e}")
-    finally:
-        connection.close()
+                else:
+                    cursor.execute(f"DROP DATABASE IF EXISTS {db_config['database']}")
+                    cursor.execute(
+                        f"CREATE DATABASE IF NOT EXISTS {db_config['database']}"
+                    )
+                    cursor.execute(f"USE {db_config['database']}")
+
+        except pymysql.MySQLError as e:
+            print(f"Error creating or using database: {e}")
+            time.sleep(retry_delay)
+        finally:
+            if connection is not None:
+                connection.close()
+            print("Max connection retries reached. Exiting...")
 
 
 def init_db(db_persist=False):
     """
     The function `init_db` initializes a database by creating a new database if it doesn't exist,
     setting up the engine and session, and optionally returning the engine and session objects.
-    
+
     :param db_persist: The `db_persist` parameter is a boolean flag that determines whether the database
     connection should be persistent or not. If `db_persist` is set to `True`, the function will return
     the engine and session objects without creating or seeding the database. If `db_persist` is set to,

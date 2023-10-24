@@ -4,27 +4,22 @@ from database import get_db
 import models
 from pydantic import BaseModel
 from utils import get_random_id, validate_date
+
+
 class RoleListing(BaseModel):
     role_id: int
     role_listing_desc: str
-    role_listing_open: str 
+    role_listing_open: str
     role_listing_close: str
+
+
 class RoleListing_Update(BaseModel):
-    role_listing_updater: int
     role_listing_id: int
     role_id: int
     role_listing_desc: str
-    role_listing_open: str 
+    role_listing_open: str
     role_listing_close: str
-class RoleListing_Create(BaseModel):
-    role_listing_creator:int
-    role_listing_source:int
-    role_listing_updater:int
-    role_id: int
-    role_listing_desc: str
-    role_listing_open: str 
-    role_listing_close: str
-      
+
 
 router = APIRouter()
 
@@ -100,7 +95,7 @@ async def get_role_listings(db: Session = Depends(get_db)):
 @router.post(
     "/api/v1/rolelistings/", status_code=status.HTTP_201_CREATED, tags=["Role Listing"]
 )
-async def create_role_listing(request: RoleListing_Create, db: Session = Depends(get_db)):
+async def create_role_listing(request: RoleListing, db: Session = Depends(get_db)):
     """
     The function `create_role_listing` creates a new role listing object and saves it to the database,
     while performing data validation on the input.
@@ -117,7 +112,6 @@ async def create_role_listing(request: RoleListing_Create, db: Session = Depends
 
     # Get the role listing data from the request body.
     role_listing_data = request.dict()
-    print(role_listing_data)
 
     # Data Validation
     err_msg = []
@@ -144,15 +138,15 @@ async def create_role_listing(request: RoleListing_Create, db: Session = Depends
         err_msg.append(
             "Enter correct type of date format or Close Date cannot be before Open Date"
         )
-    if len(err_msg) > 0:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=err_msg[0])
+    if (len(err_msg) > 0) or (len(role_listing_data) > 4):
+        raise HTTPException(status_code=status.HTTP_422_NOT_FOUND, detail=err_msg[0])
     else:
         # Create a new role listing object.
         role_listing = models.RoleListing(
             role_listing_id=role_listing_id,
-            role_listing_creator=role_listing_data["role_listing_creator"],
-            role_listing_source=role_listing_data["role_listing_source"],
-            role_listing_updater=role_listing_data["role_listing_updater"],
+            role_listing_creator=123456788,
+            role_listing_source=123456788,
+            role_listing_updater=123456788,
             role_id=role_listing_data["role_id"],
             role_listing_desc=role_listing_data["role_listing_desc"],
             role_listing_open=role_listing_data["role_listing_open"],
@@ -164,6 +158,9 @@ async def create_role_listing(request: RoleListing_Create, db: Session = Depends
         db.commit()
         role_listing = {
             "role_listing_id": role_listing_id,
+            "role_listing_creator": 123456788,
+            "role_listing_source": 123456788,
+            "role_listing_updater": 123456788,
         }
         role_listing.update(role_listing_data)
         db.close()
@@ -175,7 +172,9 @@ async def create_role_listing(request: RoleListing_Create, db: Session = Depends
 @router.put(
     "/api/v1/rolelistings/", status_code=status.HTTP_200_OK, tags=["Role Listing"]
 )
-async def update_role_listing(request: RoleListing_Update, db: Session = Depends(get_db)):
+async def update_role_listing(
+    request: RoleListing_Update, db: Session = Depends(get_db)
+):
     """
     The function `update_role_listing` updates an existing role listing object in the database based on
     the data provided in the request body.
@@ -192,7 +191,6 @@ async def update_role_listing(request: RoleListing_Update, db: Session = Depends
 
     # Get the role listing data from the request body.
     role_listing_data = request.dict()
-    print(role_listing_data)
 
     # Data Validation
     err_msg = []
@@ -223,21 +221,29 @@ async def update_role_listing(request: RoleListing_Update, db: Session = Depends
         err_msg.append(
             "Enter correct type of date format or Close Date cannot be before Open Date"
         )
-    if len(err_msg) > 0:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=err_msg[0])
+    if (len(err_msg) > 0) or (len(role_listing_data) < 5):
+        raise HTTPException(status_code=status.HTTP_422_NOT_FOUND, detail=err_msg[0])
     else:
         # Create Dictionary for the updated role listing.
         role_listing = {
-            "role_listing_updater": role_listing_data["role_listing_updater"],
-            "role_id" : role_listing_data["role_id"],
-            "role_listing_desc" : role_listing_data["role_listing_desc"],
-            "role_listing_open" : role_listing_data["role_listing_open"],
-            "role_listing_close" : role_listing_data["role_listing_close"]
+            "role_id": role_listing_data["role_id"],
+            "role_listing_desc": role_listing_data["role_listing_desc"],
+            "role_listing_open": role_listing_data["role_listing_open"],
+            "role_listing_close": role_listing_data["role_listing_close"],
         }
         # Save the updated role listing to the database.
-        db.query(models.RoleListing).filter(models.RoleListing.role_listing_id == role_listing_data["role_listing_id"]).update(role_listing)
+        db.query(models.RoleListing).filter(
+            models.RoleListing.role_listing_id == role_listing_data["role_listing_id"]
+        ).update(role_listing)
         db.commit()
         db.close()
 
         # Return the newly updated role listing.
-        return db.query(models.RoleListing).filter(models.RoleListing.role_listing_id == role_listing_data["role_listing_id"]).first()
+        return (
+            db.query(models.RoleListing)
+            .filter(
+                models.RoleListing.role_listing_id
+                == role_listing_data["role_listing_id"]
+            )
+            .first()
+        )
