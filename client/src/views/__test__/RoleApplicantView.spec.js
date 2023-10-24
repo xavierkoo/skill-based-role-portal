@@ -1022,7 +1022,7 @@ const roleDetails = {
 }
 describe('RoleApplicant.vue', () => {
   // it check if data is loaded
-  it('test if data is loaded', async () => {
+  it('Verify if there are no roles', async () => {
     localStorage.setItem('id', 123456788)
     const mock = new MockAdapter(axios)
     mock.onGet('http://localhost:8080/api/v1/roleapplicantslisting/123456788').reply(200, {
@@ -1039,7 +1039,7 @@ describe('RoleApplicant.vue', () => {
     expect(wrapper.find('#no_role').exists()).toBe(true)
     mock.restore()
   })
-  it('test card items are rendered correctly', async () => {
+  it('Visualize the workflow for role applicant listing and ensure that the role applicant listings are displayed correctly when initially loaded.', async () => {
     localStorage.setItem('id', 123456788)
     const mock = new MockAdapter(axios)
     mock.onGet('http://localhost:8080/api/v1/roleapplicantslisting/123456788').reply(200, {
@@ -1054,9 +1054,30 @@ describe('RoleApplicant.vue', () => {
     expect(wrapper.find('#rpubDate').exists()).toBe(true)
     expect(wrapper.find('#rclosingDate').exists()).toBe(true)
     expect(wrapper.find('#rskills').exists()).toBe(true)
+    expect(wrapper.find('#applicant_section').attributes('hidden'))
+    wrapper.vm.roleDetails = roleDetails
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('#applicant_section').attributes('hidden')).toBe(undefined)
+    expect(wrapper.find('#applicant_card').exists()).toBe(true)
+    expect(wrapper.find('#applicant_name').exists()).toBe(true)
+    expect(wrapper.find('#applicant_email').exists()).toBe(true)
+    expect(wrapper.find('#applicant_dept').exists()).toBe(true)
+    expect(wrapper.find('#applicant_reason').exists()).toBe(true)
+    expect(wrapper.find('#applicant_phone').exists()).toBe(true)
+    expect(wrapper.find('#applicant_skill_section').exists()).toBe(true)
+  })
+  it('Verify that its able to handle no connection to database', async () => {
+    localStorage.setItem('id', 123456788)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/roleapplicantslisting/123456788').reply(500, {
+      Results: mockData
+    })
+    const wrapper = mount(RoleApplicant)
+    await new Promise((resolve) => setTimeout(resolve, 1))
+    expect(wrapper.find('#data_error').exists()).toBe(true)
   })
 
-  it('test if status logic is correct', async () => {
+  it('Verify each role status ', async () => {
     localStorage.setItem('id', 123456788)
     const mock = new MockAdapter(axios)
     mock.onGet('http://localhost:8080/api/v1/roleapplicantslisting/123456788').reply(200, {
@@ -1089,28 +1110,7 @@ describe('RoleApplicant.vue', () => {
     expect(wrapper.find('#rapplicants').text()).toBe(mockData[0].no_of_applicant + ' Applied')
   })
 
-  it('test applicant card items are rendered correctly', async () => {
-    localStorage.setItem('id', 123456788)
-    const mock = new MockAdapter(axios)
-    mock.onGet('http://localhost:8080/api/v1/roleapplicantslisting/123456788').reply(200, {
-      Results: mockData
-    })
-    const wrapper = mount(RoleApplicant)
-    await new Promise((resolve) => setTimeout(resolve, 1))
-    expect(wrapper.find('#applicant_section').attributes('hidden'))
-    wrapper.vm.roleDetails = roleDetails
-    await wrapper.vm.$nextTick()
-    expect(wrapper.find('#applicant_section').attributes('hidden')).toBe(undefined)
-    expect(wrapper.find('#applicant_card').exists()).toBe(true)
-    expect(wrapper.find('#applicant_name').exists()).toBe(true)
-    expect(wrapper.find('#applicant_email').exists()).toBe(true)
-    expect(wrapper.find('#applicant_dept').exists()).toBe(true)
-    expect(wrapper.find('#applicant_reason').exists()).toBe(true)
-    expect(wrapper.find('#applicant_phone').exists()).toBe(true)
-    expect(wrapper.find('#applicant_skill_section').exists()).toBe(true)
-  })
-
-  it('test if applicant skill section is rendered correctly', async () => {
+  it('Verify applicant skill section is rendered correctly', async () => {
     localStorage.setItem('id', 123456788)
     const mock = new MockAdapter(axios)
     mock.onGet('http://localhost:8080/api/v1/roleapplicantslisting/123456788').reply(200, {
@@ -1124,7 +1124,6 @@ describe('RoleApplicant.vue', () => {
     expect(wrapper.find('#applicant_skill_section').exists()).toBe(true)
     if (roleDetails.role_skills.length > 0) {
       for (let applicant of roleDetails.role_applicants) {
-        console.log(applicant.missing_skills)
         if (applicant.missing_skills.length > 0) {
           expect(wrapper.find('#missing_skills').exists()).toBe(true)
           for (let skill of applicant.missing_skills) {
