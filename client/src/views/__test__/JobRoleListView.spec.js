@@ -363,4 +363,28 @@ describe('JobRoleList', () => {
     expect(wrapper.text()).toContain('% match')
     mock.restore()
   })
+
+  it("Verify that the skill percentage is accurate and based on the staff member's skills and the role requirements in role listing page", async () => {
+    const mock = new MockAdapter(axios)
+    localStorage.setItem('id', 123456789)
+    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, {
+      Results: mockRoleListings
+    })
+    mock.onGet('http://localhost:8080/api/v1/allskills/').reply(200, {
+      Results: allSkillsMock
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+      Results: staffSkillsForStaff
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: staffDetailsForStaff
+    })
+    const wrapper = mount(JobRoleListView)
+    // Wait for the component to finish rendering after axios call
+    await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 1100))
+    expect(wrapper.find('#CalculateRoleMatchStaff').text()).toBe('100.00 % match')
+    expect(wrapper.text()).toContain('% match')
+    mock.restore()
+  })
 })
