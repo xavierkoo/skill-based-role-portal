@@ -2,13 +2,13 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import RoleApplication from '../RoleApplication.vue'
 
+const roleDetails = {
+  role_listing_id: 1,
+  role_name: 'Talent Attraction'
+}
+
 describe('RoleApplication.vue', () => {
   it('Verify that the staff applicant view the application form with correct title and role name', async () => {
-    const roleDetails = {
-      role_listing_id: '123',
-      role_name: 'Software Engineer'
-    }
-
     const wrapper = mount(RoleApplication, {
       props: { roleDetails }
     })
@@ -26,11 +26,6 @@ describe('RoleApplication.vue', () => {
   })
 
   it('Verify that the staff applicant can enter and modify the Textarea input', async () => {
-    const roleDetails = {
-      role_listing_id: '123',
-      role_name: 'Software Engineer'
-    }
-
     const wrapper = mount(RoleApplication, {
       props: { roleDetails }
     })
@@ -64,11 +59,6 @@ describe('RoleApplication.vue', () => {
   })
 
   it('Confirm that the staff applicant can successfully submit their application.', async () => {
-    const roleDetails = {
-      role_listing_id: '123',
-      role_name: 'Software Engineer'
-    }
-
     const wrapper = mount(RoleApplication, {
       props: { roleDetails }
     })
@@ -82,11 +72,6 @@ describe('RoleApplication.vue', () => {
   })
 
   it('Confirm that the staff applicant cannot apply the same role twice.', async () => {
-    const roleDetails = {
-      role_listing_id: 123,
-      role_name: 'Software Engineer'
-    }
-
     const wrapper = mount(RoleApplication, {
       props: { roleDetails }
     })

@@ -15,18 +15,51 @@ const router = createRouter({
   ]
 })
 
+const selectedDataProps = {
+  role_listing_id: 1,
+  role_id: 234511581,
+  role_listing_desc: 'string',
+  role_listing_open: '2023-10-19',
+  role_listing_close: '2023-10-29'
+}
+
+const selectedDataPropsInvalidDate = {
+  role_listing_id: 1,
+  role_id: 234511581,
+  role_listing_desc: 'Valid Description',
+  role_listing_open: '2023-10-15',
+  role_listing_close: '2023-10-15'
+}
+
+const selectedDataPropsInvalidDesc = {
+  role_listing_id: 1,
+  role_id: 234511581,
+  role_listing_desc: '',
+  role_listing_open: '2023-10-15',
+  role_listing_close: '2023-10-15'
+}
+
+const mockPutData = [
+  {
+    role_listing_creator: 123456788,
+    role_listing_source: 123456787,
+    role_id: 234567891,
+    role_listing_desc: 'string',
+    role_listing_close: '2023-10-29',
+    role_listing_ts_update: '2023-10-18T18:10:43',
+    role_listing_id: 1,
+    role_listing_updater: 123456788,
+    role_listing_open: '2023-10-19',
+    role_listing_ts_create: '2023-10-18T18:10:43'
+  }
+]
+
 describe('UpdateRoleListing.vue', () => {
   it('Check the standard items in the role modification feature.', async () => {
     await router.push('/update')
 
     // Define the JSON data for testing
-    const selectedData = {
-      role_listing_id: 1,
-      role_id: 2,
-      role_listing_desc: 'Valid Description',
-      role_listing_open: '2023-10-16',
-      role_listing_close: '2023-10-20'
-    }
+    const selectedData = selectedDataProps
 
     const wrapper = mount(UpdateRoleListing, {
       global: {
@@ -79,13 +112,7 @@ describe('UpdateRoleListing.vue', () => {
     await router.push('/update')
 
     // Define the JSON data for testing
-    const selectedData = {
-      role_listing_id: 1,
-      role_id: 2,
-      role_listing_desc: 'Valid Description',
-      role_listing_open: '2023-10-16',
-      role_listing_close: '2023-10-20'
-    }
+    const selectedData = selectedDataProps
 
     const wrapper = mount(UpdateRoleListing, {
       global: {
@@ -122,13 +149,7 @@ describe('UpdateRoleListing.vue', () => {
     localStorage.setItem('id', JSON.stringify('123456788'))
 
     // Define the JSON data for testing
-    const selectedData = {
-      role_listing_id: 1,
-      role_id: 234511581,
-      role_listing_desc: 'string',
-      role_listing_open: '2023-10-19',
-      role_listing_close: '2023-10-29'
-    }
+    const selectedData = selectedDataProps
 
     await router.push({ path: '/update', query: { selectedData: JSON.stringify(selectedData) } })
 
@@ -139,20 +160,7 @@ describe('UpdateRoleListing.vue', () => {
     })
     const mock = new MockAdapter(axios)
     mock.onPut('http://localhost:8080/api/v1/rolelistings/').reply(200, {
-      Results: [
-        {
-          role_listing_creator: 123456788,
-          role_listing_source: 123456787,
-          role_id: 234567891,
-          role_listing_desc: 'string',
-          role_listing_close: '2023-10-29',
-          role_listing_ts_update: '2023-10-18T18:10:43',
-          role_listing_id: 1,
-          role_listing_updater: 123456788,
-          role_listing_open: '2023-10-19',
-          role_listing_ts_create: '2023-10-18T18:10:43'
-        }
-      ]
+      Results: mockPutData
     })
 
     // Trigger the update function
@@ -176,15 +184,9 @@ describe('UpdateRoleListing.vue', () => {
   })
 
   it('Verify how the system handles a negative scenario when the executive attempts to modify an open role with invalid data.', async () => {
-    // Define the JSON data for testing\
+    // Define the JSON data for testing
 
-    const selectedData = {
-      role_listing_id: 1,
-      role_id: 234511581,
-      role_listing_desc: '',
-      role_listing_open: '2023-10-22',
-      role_listing_close: '2023-10-20'
-    }
+    const selectedData = selectedDataPropsInvalidDesc
 
     await router.push({ path: '/update', query: { selectedData: JSON.stringify(selectedData) } })
 
@@ -217,13 +219,7 @@ describe('UpdateRoleListing.vue', () => {
     const mock = new MockAdapter(axios)
 
     // Define the JSON data for testing
-    const selectedData = {
-      role_listing_id: 1,
-      role_id: 234511581,
-      role_listing_desc: 'Valid Description',
-      role_listing_open: '2023-10-15',
-      role_listing_close: '2023-10-15'
-    }
+    const selectedData = selectedDataPropsInvalidDate
     await router.push({ path: '/update', query: { selectedData: JSON.stringify(selectedData) } })
 
     const wrapper = mount(UpdateRoleListing, {
