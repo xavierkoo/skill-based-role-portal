@@ -5,6 +5,149 @@ import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import CalculateRoleMatch from '@/components/CalculateRoleMatch.vue'
 
+const mockRoleListings = [
+  {
+    role_listing_id: 1,
+    role_id: 101,
+    role_listing_desc: 'This is a sample job role description.',
+    role_listing_source: 201,
+    role_listing_open: '2023-08-01',
+    role_listing_close: '2023-08-15',
+    role_description: 'Learning Facilitator',
+    role_name: 'Talent Attraction',
+    role_status: 'active',
+    role_skills: ['Python Programming']
+  }
+]
+
+const allSkillsMock = [
+  {
+    skill_id: 345678790,
+    skill_name: 'Certified Scrum Professional',
+    skill_status: 'active'
+  },
+  {
+    skill_id: 345678866,
+    skill_name: 'Certified Scrum Developer',
+    skill_status: 'active'
+  },
+  {
+    skill_id: 345678890,
+    skill_name: 'Certified Scrum@Scale Practitioner',
+    skill_status: 'active'
+  },
+  {
+    skill_id: 345678912,
+    skill_name: 'Pascal Programming',
+    skill_status: 'inactive'
+  },
+  {
+    skill_id: 345678913,
+    skill_name: 'Python Programming',
+    skill_status: 'active'
+  },
+  {
+    skill_id: 345678914,
+    skill_name: 'Certified Scrum Master',
+    skill_status: 'active'
+  },
+  {
+    skill_id: 345678915,
+    skill_name: 'Certified Scrum Product Owner',
+    skill_status: 'active'
+  },
+  {
+    skill_id: 345678927,
+    skill_name: 'Certified Scrum Coach',
+    skill_status: 'active'
+  },
+  {
+    skill_id: 345678935,
+    skill_name: 'Certified Scrum Trainer',
+    skill_status: 'active'
+  }
+]
+
+const staffSkillsForStaff = [
+  {
+    staff_id: 123456789,
+    skill_id: 345678790,
+    ss_status: 'active',
+    skill_name: 'Certified Scrum Professional'
+  },
+  {
+    staff_id: 123456789,
+    skill_id: 345678866,
+    ss_status: 'active',
+    skill_name: 'Certified Scrum Developer'
+  },
+  {
+    staff_id: 123456789,
+    skill_id: 345678890,
+    ss_status: 'unverified',
+    skill_name: 'Certified Scrum@Scale Practitioner'
+  },
+  {
+    staff_id: 123456789,
+    skill_id: 345678913,
+    ss_status: 'active',
+    skill_name: 'Python Programming'
+  },
+  {
+    staff_id: 123456789,
+    skill_id: 345678927,
+    ss_status: 'in-progress',
+    skill_name: 'Certified Scrum Coach'
+  },
+  {
+    staff_id: 123456789,
+    skill_id: 345678935,
+    ss_status: 'in-progress',
+    skill_name: 'Certified Scrum Trainer'
+  }
+]
+
+const staffSkillsForHR = [
+  {
+    staff_id: 123456788,
+    skill_id: 345678935,
+    skill_name: 'Certified Scrum Trainer',
+    skill_status: 'active'
+  },
+  {
+    staff_id: 123456788,
+    skill_id: 345678927,
+    skill_name: 'Certified Scrum Coach',
+    skill_status: 'active'
+  }
+]
+
+const staffDetailsForStaff = [
+  {
+    f_name: 'AH GAO',
+    l_email: 'TAN',
+    email: 'tan_ah_gao@all-in-one.com.sg',
+    biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+    sys_role: 'staff',
+    dept: 'FINANCE',
+    staff_id: 123456789,
+    phone: '65-1234-5678'
+  }
+]
+
+const staffDetailsForHR = [
+  {
+    f_name: 'VINCENT REX',
+    l_name: 'COLINS',
+    email: 'colins_vincent_rex@all-in-one.com.sg',
+    biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
+    sys_role: 'hr',
+    dept: 'HUMAN RESOURCE AND ADMIN',
+    staff_id: 123456788,
+    phone: '65-1234-5679'
+  }
+]
+
 describe('JobRoleList', () => {
   it('Displays "No job roles available." when no roles are present - Staff and Manager userType', async () => {
     // Create a new instance of the Axios mock adapter
@@ -15,109 +158,14 @@ describe('JobRoleList', () => {
       Results: []
     })
     mock.onGet('http://localhost:8080/api/v1/allskills/').reply(200, {
-      Results: [
-        {
-          skill_id: 345678790,
-          skill_name: 'Certified Scrum Professional',
-          skill_status: 'active'
-        },
-        {
-          skill_id: 345678866,
-          skill_name: 'Certified Scrum Developer',
-          skill_status: 'active'
-        },
-        {
-          skill_id: 345678890,
-          skill_name: 'Certified Scrum@Scale Practitioner',
-          skill_status: 'active'
-        },
-        {
-          skill_id: 345678912,
-          skill_name: 'Pascal Programming',
-          skill_status: 'inactive'
-        },
-        {
-          skill_id: 345678913,
-          skill_name: 'Python Programming',
-          skill_status: 'active'
-        },
-        {
-          skill_id: 345678914,
-          skill_name: 'Certified Scrum Master',
-          skill_status: 'active'
-        },
-        {
-          skill_id: 345678915,
-          skill_name: 'Certified Scrum Product Owner',
-          skill_status: 'active'
-        },
-        {
-          skill_id: 345678927,
-          skill_name: 'Certified Scrum Coach',
-          skill_status: 'active'
-        },
-        {
-          skill_id: 345678935,
-          skill_name: 'Certified Scrum Trainer',
-          skill_status: 'active'
-        }
-      ]
+      Results: allSkillsMock
     })
     mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
-      Results: [
-        {
-          staff_id: 123456789,
-          skill_id: 345678790,
-          ss_status: 'active',
-          skill_name: 'Certified Scrum Professional'
-        },
-        {
-          staff_id: 123456789,
-          skill_id: 345678866,
-          ss_status: 'active',
-          skill_name: 'Certified Scrum Developer'
-        },
-        {
-          staff_id: 123456789,
-          skill_id: 345678890,
-          ss_status: 'unverified',
-          skill_name: 'Certified Scrum@Scale Practitioner'
-        },
-        {
-          staff_id: 123456789,
-          skill_id: 345678913,
-          ss_status: 'active',
-          skill_name: 'Python Programming'
-        },
-        {
-          staff_id: 123456789,
-          skill_id: 345678927,
-          ss_status: 'in-progress',
-          skill_name: 'Certified Scrum Coach'
-        },
-        {
-          staff_id: 123456789,
-          skill_id: 345678935,
-          ss_status: 'in-progress',
-          skill_name: 'Certified Scrum Trainer'
-        }
-      ]
+      Results: staffSkillsForStaff
     })
     mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
-      Results: [
-        {
-          f_name: 'AH GAO',
-          l_email: 'TAN',
-          email: 'tan_ah_gao@all-in-one.com.sg',
-          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
-          sys_role: 'staff',
-          dept: 'FINANCE',
-          staff_id: 123456789,
-          phone: '65-1234-5678'
-        }
-      ]
+      Results: staffDetailsForStaff
     })
-
     // Mount your Vue component
     const wrapper = mount(JobRoleListView)
     await wrapper.vm.$nextTick()
@@ -127,7 +175,6 @@ describe('JobRoleList', () => {
     // Restore the Axios mock adapter to its original state
     mock.restore()
   })
-
   it('Verify the successful display of a list of open roles - Staff and Manager userType', async () => {
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', 123456789)
@@ -261,7 +308,6 @@ describe('JobRoleList', () => {
     // Restore the mock adapter after the test
     mock.restore()
   })
-
   it('Check the standard items in the list of open roles - Staff and Manager userType', async () => {
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', 123456789)
@@ -388,7 +434,6 @@ describe('JobRoleList', () => {
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
     await new Promise((resolve) => setTimeout(resolve, 1100))
-
     // Ensure that the data is properly set
     expect(wrapper.find('.card-body').exists()).toBe(true)
     expect(wrapper.findComponent(CalculateRoleMatch).exists()).toBe(true)
@@ -400,7 +445,6 @@ describe('JobRoleList', () => {
     // Restore the mock adapter after the test
     mock.restore()
   })
-
   it('Displays "No job roles available." when no roles are present - HR_Admin userType', async () => {
     // Create a new instance of the Axios mock adapter
     const mock = new MockAdapter(axios)
@@ -512,7 +556,6 @@ describe('JobRoleList', () => {
         }
       ]
     })
-
     // Mount your Vue component
     const wrapper = mount(JobRoleListView)
     await wrapper.vm.$nextTick()
@@ -522,7 +565,6 @@ describe('JobRoleList', () => {
     // Restore the Axios mock adapter to its original state
     mock.restore()
   })
-
   it('Verify the successful display of a list of open roles - HR_Admin userType', async () => {
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', 123456788)
@@ -658,7 +700,6 @@ describe('JobRoleList', () => {
     // Restore the mock adapter after the test
     mock.restore()
   })
-
   it('Check the standard items in the list of open roles for - HR_Admin userType', async () => {
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', 123456788)
@@ -786,7 +827,6 @@ describe('JobRoleList', () => {
     await wrapper.vm.$nextTick()
     await new Promise((resolve) => setTimeout(resolve, 1100))
     // Ensure that the data is properly set
-
     expect(wrapper.find('#rname').exists()).toBe(true)
     expect(wrapper.find('.card-body').exists()).toBe(true)
     expect(wrapper.find('.row').exists()).toBe(true)
@@ -803,7 +843,6 @@ describe('JobRoleList', () => {
     expect(wrapper.text()).toContain('Loading...')
     mock.restore()
   })
-
   it('Negative Test for Unknown UserType (Unauthorized Access)', async () => {
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', null)
@@ -857,22 +896,39 @@ describe('JobRoleList', () => {
       ]
     })
     mock.onGet('http://localhost:8080/api/v1/staffdetails/null').reply(404)
-
     const wrapper = mount(JobRoleListView)
-
     // Set the userType variable to ""
     wrapper.vm.userType = ''
-
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
-
     // Ensure that the data is properly set
     expect(wrapper.find('.access-denied-message').exists()).toBe(true)
     expect(wrapper.text()).toContain('Access Denied')
     expect(wrapper.text()).toContain('Please log in.')
     expect(wrapper.find('#login-btn').exists()).toBe(true)
-
     // Restore the mock adapter after the test
+    mock.restore()
+  })
+  it('Ensure the skill percentage is displayed when a staff member logs in and visits the role listing page', async () => {
+    localStorage.setItem('id', 123456789)
+    const mock = new MockAdapter(axios)
+    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, {
+      Results: mockRoleListings
+    })
+    mock.onGet('http://localhost:8080/api/v1/allskills/').reply(200, {
+      Results: allSkillsMock
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+      Results: staffSkillsForStaff
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: staffDetailsForStaff
+    })
+    const wrapper = mount(JobRoleListView)
+    await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 1100))
+    expect(wrapper.find('#CalculateRoleMatchStaff').exists()).toBe(true)
+    expect(wrapper.text()).toContain('% match')
     mock.restore()
   })
 })
