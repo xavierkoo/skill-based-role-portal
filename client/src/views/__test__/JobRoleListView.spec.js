@@ -338,7 +338,7 @@ describe('JobRoleList', () => {
     expect(wrapper.text()).toContain('Access Denied')
     expect(wrapper.text()).toContain('Please log in.')
     expect(wrapper.find('#login-btn').exists()).toBe(true)
-    // Restore the mock adapter after the test
+    // Restore the mock adapter after the tests
     mock.restore()
   })
   it('Ensure the skill percentage is displayed when a staff member logs in and visits the role listing page', async () => {
@@ -408,5 +408,27 @@ describe('JobRoleList', () => {
     await wrapper.vm.$nextTick()
     await new Promise((resolve) => setTimeout(resolve, 1100))
     expect(wrapper.find('#CalculateRoleMatchStaff').text()).toBe('0 % match')
+  })
+
+  it('Verifies how the system handles role skill matching when user have all skills required for role in role listing page', async () => {
+    const mock = new MockAdapter(axios)
+    localStorage.setItem('id', 123456789)
+    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, {
+      Results: mockRoleListings
+    })
+    mock.onGet('http://localhost:8080/api/v1/allskills/').reply(200, {
+      Results: allSkillsMock
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+      Results: staffSkillsForStaff
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: staffDetailsForStaff
+    })
+    const wrapper = mount(JobRoleListView)
+    // Wait for the component to finish rendering after axios call
+    await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 1100))
+    expect(wrapper.find('#CalculateRoleMatchStaff').text()).toBe('100.00 % match')
   })
 })
