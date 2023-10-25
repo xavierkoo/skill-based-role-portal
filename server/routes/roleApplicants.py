@@ -26,6 +26,11 @@ class RoleListing(BaseModel):
 )
 async def get_role_applicants_by_source(role_listing_source: int, db: Session = Depends(get_db)):
     sysRole = db.query(models.StaffDetail).filter(models.StaffDetail.staff_id == role_listing_source).first()
+    if not sysRole:
+         raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Role listing not found",
+        )
     if (sysRole.sys_role == "manager"):
         RoleListing = db.query(models.RoleListing).filter(models.RoleListing.role_listing_source == role_listing_source).all()
     elif (sysRole.sys_role == "hr"):
