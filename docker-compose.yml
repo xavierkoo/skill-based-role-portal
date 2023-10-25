@@ -136,6 +136,7 @@ services:
             dockerfile: test.Dockerfile
         volumes:
             - ./server:/app
+        profiles: ["test"]
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
