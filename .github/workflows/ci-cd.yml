@@ -65,7 +65,7 @@ jobs:
 
             - name: Run Cypress Tests
               run: |
-                  npm run cy:run
+                  npm run cy:run --prefix client
 
             - name: Deploy
               run: |
