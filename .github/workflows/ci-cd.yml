@@ -56,6 +56,9 @@ jobs:
 
     EC2-Deploy:
         runs-on: ubuntu-latest
+        
+        needs: build-and-test
+            
         steps:
           - id: deploy
             uses: bitovi/github-actions-deploy-docker-to-ec2@v0.5.8
