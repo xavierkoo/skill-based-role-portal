@@ -199,3 +199,16 @@ class TestStaffDetail:
         staff_id = "1"
         response = client.get("/api/v1/staffdetails/" + staff_id)
         assert response.status_code == 404
+
+# create a class TestRoleApplicant to test the read operation
+class TestRoleApplicant:
+    def test_get_role_applicant_pos(self, client):
+        role_listing_source = "123456788"
+        response = client.get("/api/v1/roleapplicantslisting/" +  role_listing_source)
+        assert response.status_code == 200
+        assert isinstance(response.json(), dict)
+    
+    def test_get_role_applicant_neg(self, client):
+        role_listing_source = "1"
+        response = client.get("/api/v1/roleapplicantslisting/" +  role_listing_source)
+        assert response.status_code == 404
