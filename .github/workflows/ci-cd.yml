@@ -37,10 +37,6 @@ jobs:
             - name: Lint Vue Code
               run: npm run lint --prefix client
 
-    deploy:
-        runs-on: ubuntu-latest
-
-        steps:
             - name: Checkout Repository
               uses: actions/checkout@v2
 
@@ -58,6 +54,12 @@ jobs:
                   npm install cypress --prefix client
                   npm run cy:run --prefix client
 
+    deploy:
+        runs-on: ubuntu-latest
+
+        needs: build-and-test
+
+        steps:
             - name: Deploy
               run: |
                   # Add your deployment steps here
