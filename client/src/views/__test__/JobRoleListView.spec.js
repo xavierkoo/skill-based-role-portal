@@ -468,4 +468,34 @@ describe('JobRoleList', () => {
 
     expect(wrapper.find('#rname').text()).toContain('Talent Attraction')
   })
+
+  it('Verifies the successful handling of no role for SelectedSkill', async () => {
+    const mock = new MockAdapter(axios)
+    localStorage.setItem('id', 123456789)
+
+    mock.onGet('http://localhost:8080/api/v1/allskills/').reply(200, {
+      Results: allSkillsMock
+    })
+
+    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, {
+      Results: mockRoleListings
+    })
+
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+      Results: staffSkillsForStaff
+    })
+
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: staffDetailsForStaff
+    })
+
+    const wrapper = mount(JobRoleListView)
+
+    wrapper.vm.selectedSkill = 'Python Programming1'
+
+    await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 1100))
+
+    expect(wrapper.find('#role-error').exists()).toBe(true)
+  })
 })
