@@ -9,10 +9,6 @@ const roleDetails = ref([])
 const selectedRole = ref('')
 const message = ref('')
 const currentUserID = ref(parseInt(localStorage.getItem('id')))
-const roleID = ref(selectedData.value.role_id)
-const startDate = ref(selectedData.value.role_listing_open)
-const closeDate = ref(selectedData.value.role_listing_close)
-const roleDescription = ref(selectedData.value.role_description)
 const sourceManagers = ref([])
 const selectedSourceManagerID = ref()
 const isSubmitted = ref(false)
@@ -37,6 +33,11 @@ const getData = async () => {
 const selectedData = computed(() => {
   return roleDetails.value.find((role) => role.role_name === selectedRole.value) || {}
 })
+
+const roleID = ref(selectedData.value.role_id)
+const startDate = ref(selectedData.value.role_listing_open)
+const closeDate = ref(selectedData.value.role_listing_close)
+const roleDescription = ref(selectedData.value.role_description)
 
 // Watch selected data
 watchEffect(() => {
