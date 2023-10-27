@@ -175,6 +175,7 @@ describe('JobRoleList', () => {
     // Restore the Axios mock adapter to its original state
     mock.restore()
   })
+
   it('Verify the successful display of a list of open roles - Staff and Manager userType', async () => {
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', 123456789)
@@ -201,6 +202,7 @@ describe('JobRoleList', () => {
     // Restore the mock adapter after the test
     mock.restore()
   })
+
   it('Check the standard items in the list of open roles - Staff and Manager userType', async () => {
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', 123456789)
@@ -231,6 +233,7 @@ describe('JobRoleList', () => {
     // Restore the mock adapter after the test
     mock.restore()
   })
+
   it('Displays "No job roles available." when no roles are present - HR_Admin userType', async () => {
     // Create a new instance of the Axios mock adapter
     const mock = new MockAdapter(axios)
@@ -257,6 +260,7 @@ describe('JobRoleList', () => {
     // Restore the Axios mock adapter to its original state
     mock.restore()
   })
+
   it('Verify the successful display of a list of open roles - HR_Admin userType', async () => {
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', 123456788)
@@ -285,6 +289,7 @@ describe('JobRoleList', () => {
     // Restore the mock adapter after the test
     mock.restore()
   })
+
   it('Check the standard items in the list of open roles for - HR_Admin userType', async () => {
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', 123456788)
@@ -321,6 +326,7 @@ describe('JobRoleList', () => {
     expect(wrapper.text()).toContain('Loading...')
     mock.restore()
   })
+
   it('Negative Test for Unknown UserType (Unauthorized Access)', async () => {
     const mock = new MockAdapter(axios)
     localStorage.setItem('id', null)
@@ -341,6 +347,7 @@ describe('JobRoleList', () => {
     // Restore the mock adapter after the tests
     mock.restore()
   })
+
   it('Ensure the skill percentage is displayed when a staff member logs in and visits the role listing page', async () => {
     localStorage.setItem('id', 123456789)
     const mock = new MockAdapter(axios)
@@ -430,5 +437,35 @@ describe('JobRoleList', () => {
     await wrapper.vm.$nextTick()
     await new Promise((resolve) => setTimeout(resolve, 1100))
     expect(wrapper.find('#CalculateRoleMatchStaff').text()).toBe('100.00 % match')
+  })
+
+  it('Verifies the successful filtering of open role listings based on selectedSkill', async () => {
+    const mock = new MockAdapter(axios)
+    localStorage.setItem('id', 123456789)
+
+    mock.onGet('http://localhost:8080/api/v1/allskills/').reply(200, {
+      Results: allSkillsMock
+    })
+
+    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, {
+      Results: mockRoleListings
+    })
+
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+      Results: staffSkillsForStaff
+    })
+
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: staffDetailsForStaff
+    })
+
+    const wrapper = mount(JobRoleListView)
+
+    wrapper.vm.selectedSkill = 'Python Programming'
+
+    await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 1100))
+
+    expect(wrapper.find('#rname').text()).toContain('Talent Attraction')
   })
 })
