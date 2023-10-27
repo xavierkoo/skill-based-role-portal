@@ -67,22 +67,22 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
+  <div class="roleAppStatus">
     <div v-if="emptyError" class="alert alert-danger error" role="alert">
       No role applications found.
     </div>
 
-    <div v-else class="container">
+    <div v-else class="container roleBorder">
       <h2>Role Applications</h2>
 
       <table class="table table-hover">
         <thead>
           <tr>
-            <th scope="col">jobID</th>
-            <th scope="col">Job Title</th>
-            <th scope="col">Applied on</th>
-            <th scope="col">Status</th>
-            <th scope="col">Reason</th>
+            <th scope="col" class="tableHeader">Job ID</th>
+            <th scope="col" class="tableHeader">Job Title</th>
+            <th scope="col" class="tableHeader">Applied On</th>
+            <th scope="col" class="tableHeader">Status</th>
+            <th scope="col" class="tableHeader">Reason</th>
           </tr>
         </thead>
         <tbody>

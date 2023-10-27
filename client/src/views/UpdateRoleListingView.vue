@@ -102,7 +102,7 @@ function update() {
         <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
       </ul>
     </div>
-    <h1 class="my-3 header">Update Role Listing</h1>
+    <h1 class="my-3 header p-4">Update Role Listing</h1>
     <div class="col mx-auto text-start">
       <div class="mb-3">
         <label for="roleListingID" class="form-label">Role Listing ID</label>
