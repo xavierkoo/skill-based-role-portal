@@ -12,9 +12,8 @@ const availableSkills = ref([])
 const selectedSkill = ref('')
 const jobRoles = ref([])
 const userType = ref('')
-// const currentDate = new Date()
+const currentDate = new Date()
 const userID = localStorage.getItem('id')
-const currentDate = new Date('2020-01-16')
 const isMounted = ref(false)
 const currentUserType = ref('')
 const roleDetails = ref({
@@ -74,6 +73,15 @@ const getAvailableSkills = async () => {
 // Set the data
 const setData = (data) => {
   jobRoles.value = data
+  if (userType.value === 'staff') {
+    jobRoles.value = jobRoles.value.filter((jobRole) => {
+      //Convert role_listing_close to a date object
+      const closeDate = new Date(jobRole.role_listing_close)
+      const openDate = new Date(jobRole.role_listing_open)
+      // Compare the closeDate with today's date
+      return closeDate >= currentDate && openDate <= currentDate
+    })
+  }
 }
 
 watchEffect(() => {
@@ -97,24 +105,7 @@ const getData = async () => {
   } catch (error) {
     console.error('Error fetching data:', error)
   }
-
-  //
-  // TODO - Adjust the SEED Data to include a wider range of joblistings with different dates
-  //
-  // if (userType.value === 'staff') {
-  //   jobRoles.value = jobRoles.value.filter((jobRole) => {
-  //        //Convert role_listing_close to a date object
-  //     const closeDate = new Date(jobRole.role_listing_close)
-
-  //     // Compare the closeDate with today's date
-  //     return closeDate >= currentDate
-  //   })
-  // }
 }
-//     // Compare the closeDate with today's date
-//     return closeDate >= currentDate
-//   })
-// }
 
 // Truncate the text
 function truncateText(text, maxLength) {
@@ -225,13 +216,11 @@ onMounted(() => {
                 <div
                   v-for="(jobRole, key) in jobRoles"
                   :key="key"
-                  class="job-role-item mb-4 border-bottom"
+                  class="job-role-item mb-4 border-bottom shadow-sm p-4 rounded border"
+                  :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
                   @click="goToRolePage(jobRole)"
                 >
-                  <div
-                    class="card-body"
-                    :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
-                  >
+                  <div class="card-body">
                     <div class="row">
                       <div class="col-md-8 col-xl-8 col-xxl-8">
                         <h5
@@ -242,7 +231,10 @@ onMounted(() => {
                             jobRole.role_name
                           }}</a>
                           <p
-                            v-if="calculateDaysUntilOpen(jobRole.role_listing_close) < 0"
+                            v-if="
+                              calculateDaysSinceOpen(jobRole.role_listing_open) < 0 ||
+                              calculateDaysUntilOpen(jobRole.role_listing_close) < 0
+                            "
                             id="rstatus"
                             class="badge rounded-pill bg-danger text-white p-2"
                           >
@@ -312,13 +304,11 @@ onMounted(() => {
                 <div
                   v-for="(jobRole, index) in jobRoles"
                   :key="index"
-                  class="job-role-item mb-4 border-bottom"
+                  class="job-role-item mb-4 border-bottom shadow-sm p-4 rounded border"
+                  :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
                   @click="goToRolePage(jobRole)"
                 >
-                  <div
-                    class="card-body"
-                    :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
-                  >
+                  <div class="card-body">
                     <div class="row">
                       <div class="col-md-8 col-xl-8 col-xxl-9">
                         <h5
@@ -424,5 +414,8 @@ onMounted(() => {
 
 .job-role-item:hover .no-underline a {
   text-decoration: underline !important;
+}
+.job-role-item:hover {
+  background-color: rgb(247, 247, 247);
 }
 </style>

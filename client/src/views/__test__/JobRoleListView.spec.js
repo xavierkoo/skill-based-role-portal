@@ -12,7 +12,9 @@ const mockRoleListings = [
     role_listing_desc: 'This is a sample job role description.',
     role_listing_source: 201,
     role_listing_open: '2023-08-01',
-    role_listing_close: '2023-08-15',
+    role_listing_close: new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split('T')[0],
     role_description: 'Learning Facilitator',
     role_name: 'Talent Attraction',
     role_status: 'active',
