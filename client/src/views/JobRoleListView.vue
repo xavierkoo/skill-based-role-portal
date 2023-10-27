@@ -1,7 +1,7 @@
 <template>
   <div v-if="userType == 'staff' || userType == 'hr' || userType == 'manager'">
     <div class="d-flex justify-content-end me-5 mt-3">
-      <label class="me-2 mt-2">Filter by skill:</label>
+      <label id="filter-label" class="me-2 mt-2">Filter by skill:</label>
       <select id="filter" v-model="selectedSkill" class="form-select" style="max-width: 200px">
         <option v-for="skill in availableSkills" :key="skill.skill_name" :value="skill.skill_name">
           {{ skill.skill_name }}
