@@ -177,8 +177,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container-fluid mt-2">
-    <h1 class="my-3">Role Applicants</h1>
+  <div class="container-fluid mt-2 roleApplicants">
     <div v-if="isMounted">
       <div class="row">
         <div
@@ -197,6 +196,7 @@ onMounted(() => {
           <div v-else class="container">
             <!-- Job role list -->
             <div>
+              <h2 class="my-3">Role Applicants</h2>
               <div
                 v-for="(jobRole, key) in roleApplicants"
                 :key="key"
@@ -261,7 +261,7 @@ onMounted(() => {
                     <div
                       v-for="(roleSkill, index2) in jobRole.role_skills"
                       :key="index2"
-                      class="badge rounded-pill bg-light text-dark p-2 me-2"
+                      class="badge rounded-pill bg-light text-dark p-2 me-2 skillBadge"
                     >
                       {{ roleSkill }}
                     </div>
@@ -288,6 +288,7 @@ onMounted(() => {
             <p class="text-primary text-center">No applicants found.</p>
           </div>
           <div v-else>
+            <h1 class="my-3">&nbsp;</h1>
             <div v-for="(applicant, index) in roleDetails.role_applicants" :key="index">
               <div id="applicant_card" class="card mb-4">
                 <div class="card-header d-flex justify-content-between">
@@ -296,7 +297,7 @@ onMounted(() => {
                   >
                   <span class="fw-bold">{{ applicant.role_match }} match %</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body cardBody">
                   <div id="applicant_skill_section" class="card-text">
                     <p id="no_skill_required" class="fw-bold">
                       {{ roleDetails.role_skills.length == 0 ? 'Skills: Not Required' : '' }}
@@ -321,7 +322,9 @@ onMounted(() => {
                       <p v-if="applicant.missing_skills.length > 0" id="missing_skills">
                         <b>Missing Skill:</b>
                         <span v-for="(skill, index4) in applicant.missing_skills" :key="index4">
-                          <span class="badge rounded-pill bg-secondary text-white p-2 m-1">
+                          <span
+                            class="badge rounded-pill bg-secondary text-dark p-2 m-1 skillBadge"
+                          >
                             {{ skill }}
                           </span>
                         </span>
@@ -337,7 +340,7 @@ onMounted(() => {
                     <p id="applicant_phone">Phone: {{ applicant.staff_details.phone }}</p>
                   </div>
                 </div>
-                <div class="card-footer text-muted">
+                <div class="card-footer text-muted footer">
                   <b>Applied on:</b> {{ applicant.applied_date }}
                 </div>
               </div>
