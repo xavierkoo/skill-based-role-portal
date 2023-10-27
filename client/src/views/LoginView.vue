@@ -48,7 +48,7 @@ function login(user) {
   <div class="login">
     <div class="container-fluid">
       <div class="row screen">
-        <div class="col-12 col-xl-6 d-flex justify-content-center p-0">
+        <div class="col-12 col-xl-6 d-flex justify-content-center align-items-center p-0">
           <div class="form">
             <div class="d-flex justify-content-xl-start justify-content-center">
               <img class="talent my-4" src="../../assets/style/img/TalentSync.png" alt="" />
