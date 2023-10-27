@@ -367,7 +367,7 @@ p {
 
     @media (min-width: 766px) {
         font-size: calc(0.7em + 0.5vw);
-        width: 75%;
+        width: 100%;
 
         .details {
             display: flex;
@@ -377,6 +377,6 @@ p {
 
     @media (min-width: 2040px) {
         font-size: calc(0.5em + 0.5vw);
-        width: 75%;
+        width: 100%;
     }
 }

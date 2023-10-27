@@ -129,7 +129,7 @@ const getUserType = async () => {
         window.addEventListener('resize', updateShouldHide)
         setTimeout(() => {
           isMounted.value = true
-        }, 1000)
+        }, 1)
       }
     })
     .catch((error) => {
@@ -222,39 +222,41 @@ onMounted(() => {
                 >
                   <div class="card-body">
                     <div class="row">
-                      <div class="col-md-8 col-xl-8 col-xxl-8">
+                      <div class="col-12">
                         <h5
-                          class="card-title"
+                          class="card-title me-2"
                           :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
                         >
                           <a id="rname" href="#" class="card-link text-normal me-2">{{
                             jobRole.role_name
                           }}</a>
-                          <p
-                            v-if="
-                              calculateDaysSinceOpen(jobRole.role_listing_open) < 0 ||
-                              calculateDaysUntilOpen(jobRole.role_listing_close) < 0
-                            "
-                            id="rstatus"
-                            class="badge rounded-pill bg-danger text-white p-2"
-                          >
-                            Inactive
-                          </p>
-                          <p
-                            v-else
-                            id="rstatus"
-                            class="badge rounded-pill bg-success text-white p-2"
-                          >
-                            Active
-                          </p>
                           <CalculateRoleMatch
                             id="CalculateRoleMatchHR"
-                            class="ms-2"
+                            style="padding: 11px"
                             :role-skills="jobRole.role_skills"
                           />
                         </h5>
                       </div>
                       <div class="col">
+                        <p
+                          v-if="
+                            calculateDaysSinceOpen(jobRole.role_listing_open) < 0 ||
+                            calculateDaysUntilOpen(jobRole.role_listing_close) < 0
+                          "
+                          id="rstatus"
+                          class="badge rounded-pill bg-danger text-white me-2 mt-1"
+                          style="padding: 11px"
+                        >
+                          Inactive
+                        </p>
+                        <p
+                          v-else
+                          id="rstatus"
+                          class="badge rounded-pill bg-success text-white me-2 mt-1"
+                          style="padding: 11px"
+                        >
+                          Active
+                        </p>
                         <p id="rmanage" class="badge rounded-pill bg-secondary text-white p-2">
                           Manage
                           <svg
@@ -309,8 +311,8 @@ onMounted(() => {
                   @click="goToRolePage(jobRole)"
                 >
                   <div class="card-body">
-                    <div class="row">
-                      <div class="col-md-8 col-xl-8 col-xxl-9">
+                    <div class="d-sm-flex justify-content-between">
+                      <div>
                         <h5
                           class="card-title"
                           :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
@@ -321,11 +323,12 @@ onMounted(() => {
                           <CalculateRoleMatch
                             id="CalculateRoleMatchStaff"
                             class="ms-2"
+                            style="padding: 11px"
                             :role-skills="jobRole.role_skills"
                           />
                         </h5>
                       </div>
-                      <div class="col">
+                      <div>
                         <p class="badge rounded-pill bg-primary text-white p-2">
                           Apply
                           <svg

@@ -28,7 +28,7 @@ export default {
       if (roles) {
         // Set the percentage value to 100 if there are no roles
         if (roles.length === 0) {
-          percentage.value = 100.0
+          percentage.value = 100
         } else if (staffSkills.value.length === 0) {
           // Set the percentage value to 0 if there are no staff skills
           percentage.value = 0
@@ -49,7 +49,7 @@ export default {
           if (match == 0) {
             percentage.value = 0
           } else {
-            percentage.value = ((match / roles.length) * 100).toFixed(2)
+            percentage.value = ((match / roles.length) * 100).toFixed(0)
           }
         }
         // Set the percentage class
@@ -81,7 +81,7 @@ export default {
           if (match == 0) {
             percentage.value = 0
           } else {
-            percentage.value = ((match / props.roleSkills.length) * 100).toFixed(2)
+            percentage.value = ((match / props.roleSkills.length) * 100).toFixed(0)
           }
         }
         // Set the percentage class

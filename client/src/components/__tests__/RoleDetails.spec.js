@@ -449,7 +449,7 @@ describe('RoleDetails', () => {
     const bgSuccessElements = wrapper.findAll('.bg-success')
     expect(bgSuccessElements.some((el) => el.text() === 'Python Programming')).toBeTruthy()
     expect(bgSuccessElements.some((el) => el.text() === 'Pascal Programming')).toBeTruthy()
-    expect(wrapper.find('#CalculateRoleMatch').text()).toContain('25.00')
+    expect(wrapper.find('#CalculateRoleMatch').text()).toContain('25')
 
     mock.restore()
   })
@@ -476,7 +476,7 @@ describe('RoleDetails', () => {
     const bgSuccessElements = wrapper.findAll('.bg-success')
     expect(bgSuccessElements.some((el) => el.text() === 'Python Programming')).toBeTruthy()
     expect(bgSuccessElements.some((el) => el.text() === 'Pascal Programming')).toBeTruthy()
-    expect(wrapper.find('#CalculateRoleMatch').text()).toContain('25.00')
+    expect(wrapper.find('#CalculateRoleMatch').text()).toContain('25')
     expect(wrapper.html()).toContain('% match')
   })
 
