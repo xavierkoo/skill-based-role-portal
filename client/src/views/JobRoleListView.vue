@@ -1,3 +1,186 @@
+<script setup>
+import { ref, onMounted, onBeforeUnmount, watchEffect } from 'vue'
+import { fetchRoleListings } from '../service/rolelisting.service'
+import { getAllAvailableSkills } from '../service/staffskills.service'
+import RoleDetails from '../components/RoleDetails.vue'
+import CalculateRoleMatch from '../components/CalculateRoleMatch.vue'
+import getStaffDetails from '../service/staffDetails.service'
+
+// Define variables
+const initialRoles = ref([])
+const availableSkills = ref([])
+const selectedSkill = ref('')
+const jobRoles = ref([])
+const userType = ref('')
+// const currentDate = new Date()
+const userID = localStorage.getItem('id')
+const currentDate = new Date('2020-01-16')
+const isMounted = ref(false)
+const currentUserType = ref('')
+const roleDetails = ref({
+  role_name: 'TBC',
+  role_listing_desc: 'No description available',
+  role_listing_open: 'TBC',
+  role_listing_close: 'TBC',
+  role_skills: ['TBC'],
+  role_listing_creator: ['TBC', 'TBC'],
+  role_listing_updater: ['TBC', 'TBC'],
+  role_listing_id: 'TBC',
+  role_id: 'TBC'
+})
+
+// Calculate the number of days until the job listing closes
+const calculateDaysUntilOpen = (closeDate) => {
+  const listingOpenDate = new Date(closeDate)
+  const timeDifference = listingOpenDate - currentDate
+  const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24))
+  return daysDifference
+}
+
+// Calculate the number of days since the job listing opened
+const calculateDaysSinceOpen = (openDate) => {
+  const listingOpenDate = new Date(openDate)
+  const timeDifference = currentDate - listingOpenDate
+  const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24))
+  return daysDifference
+}
+
+// Redirect to the job role page
+const goToRolePage = (index) => {
+  roleDetails.value = {
+    role_name: index.role_name,
+    role_listing_desc: index.role_listing_desc,
+    role_listing_open: index.role_listing_open,
+    role_listing_close: index.role_listing_close,
+    role_skills: index.role_skills,
+    role_listing_creator: index.role_listing_creator,
+    role_listing_updater: index.role_listing_updater,
+    role_listing_id: index.role_listing_id,
+    role_id: index.role_id
+  }
+  updateShouldHide()
+}
+
+// Fetch available skills
+const getAvailableSkills = async () => {
+  try {
+    const response = await getAllAvailableSkills()
+    availableSkills.value = response.Results
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  }
+}
+
+// Set the data
+const setData = (data) => {
+  jobRoles.value = data
+}
+
+watchEffect(() => {
+  // Filter job roles based on selected skill
+  if (selectedSkill.value) {
+    jobRoles.value = initialRoles.value.filter((jobRole) =>
+      jobRole.role_skills.includes(selectedSkill.value)
+    )
+  } else {
+    // If no skill is selected, show all job roles
+    setData(initialRoles.value)
+  }
+})
+
+// Fetch data from the API
+const getData = async () => {
+  try {
+    const response = await fetchRoleListings()
+    setData(response.Results)
+    initialRoles.value = response.Results
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  }
+
+  //
+  // TODO - Adjust the SEED Data to include a wider range of joblistings with different dates
+  //
+  // if (userType.value === 'staff') {
+  //   jobRoles.value = jobRoles.value.filter((jobRole) => {
+  //        //Convert role_listing_close to a date object
+  //     const closeDate = new Date(jobRole.role_listing_close)
+
+  //     // Compare the closeDate with today's date
+  //     return closeDate >= currentDate
+  //   })
+  // }
+}
+//     // Compare the closeDate with today's date
+//     return closeDate >= currentDate
+//   })
+// }
+
+// Truncate the text
+function truncateText(text, maxLength) {
+  if (text.length <= maxLength) {
+    return text
+  } else {
+    return text.substring(0, maxLength) + '...'
+  }
+}
+
+// Get the user type
+const getUserType = async () => {
+  getStaffDetails(userID)
+    .then((response) => {
+      currentUserType.value = response.Results[0].sys_role
+      userType.value = currentUserType.value
+      if (userType.value != 'hr' && userType.value != 'staff' && userType.value != 'manager') {
+        userType.value = 'unknown'
+      } else {
+        getData()
+        window.addEventListener('resize', updateShouldHide)
+        setTimeout(() => {
+          isMounted.value = true
+        }, 1000)
+      }
+    })
+    .catch((error) => {
+      userType.value = 'unknown'
+      console.error('Error fetching data:', error)
+    })
+}
+
+// Go back to the job role list
+function goBack() {
+  roleDetails.value = {
+    role_name: 'TBC',
+    role_listing_desc: 'No description available',
+    role_listing_open: 'TBC',
+    role_listing_close: 'TBC',
+    role_skills: ['TBC'],
+    role_listing_creator: ['TBC', 'TBC'],
+    role_listing_updater: ['TBC', 'TBC'],
+    role_listing_id: 'TBC',
+    role_id: 'TBC'
+  }
+  updateShouldHide()
+}
+
+// Hide the role details when the screen is too small
+const shouldHide = ref(window.innerWidth < 992 && roleDetails.value.role_name !== 'TBC')
+
+// Update the shouldHide variable when the screen is resized
+function updateShouldHide() {
+  shouldHide.value = window.innerWidth < 992 && roleDetails.value.role_name !== 'TBC'
+}
+
+// Add an event listener to the window to update the shouldHide variable when the screen is resized
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateShouldHide)
+})
+onMounted(() => {
+  getAvailableSkills()
+  getUserType()
+})
+</script>
+
 <template>
   <div v-if="userType == 'staff' || userType == 'hr' || userType == 'manager'">
     <div class="d-flex justify-content-end me-5 mt-3">
@@ -19,7 +202,6 @@
             <!-- Conditional rendering for when no job roles are available -->
             <div v-if="jobRoles?.length === 0">
               <!-- check if the selectedSkill has more than 1 value -->
-
               <div v-if="selectedSkill">
                 <p
                   v-if="selectedSkill?.length > 1"
@@ -231,178 +413,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted, onBeforeUnmount, watchEffect } from 'vue'
-import { fetchRoleListings } from '../service/rolelisting.service'
-import { getAllAvailableSkills } from '../service/staffskills.service'
-import RoleDetails from '../components/RoleDetails.vue'
-import CalculateRoleMatch from '../components/CalculateRoleMatch.vue'
-import getStaffDetails from '../service/staffDetails.service'
-
-const initialRoles = ref([])
-const availableSkills = ref([])
-const selectedSkill = ref('')
-const jobRoles = ref([])
-const userType = ref('')
-// const currentDate = new Date()
-const userID = localStorage.getItem('id')
-const currentDate = new Date('2020-01-16')
-const isMounted = ref(false)
-const currentUserType = ref('')
-
-const roleDetails = ref({
-  role_name: 'TBC',
-  role_listing_desc: 'No description available',
-  role_listing_open: 'TBC',
-  role_listing_close: 'TBC',
-  role_skills: ['TBC'],
-  role_listing_creator: ['TBC', 'TBC'],
-  role_listing_updater: ['TBC', 'TBC'],
-  role_listing_id: 'TBC',
-  role_id: 'TBC'
-})
-
-// Function to calculate the days until the listing opens
-const calculateDaysUntilOpen = (closeDate) => {
-  const listingOpenDate = new Date(closeDate)
-  const timeDifference = listingOpenDate - currentDate
-  const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24))
-  return daysDifference
-}
-
-const calculateDaysSinceOpen = (openDate) => {
-  const listingOpenDate = new Date(openDate)
-  const timeDifference = currentDate - listingOpenDate
-  const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24))
-  return daysDifference
-}
-
-const goToRolePage = (index) => {
-  roleDetails.value = {
-    role_name: index.role_name,
-    role_listing_desc: index.role_listing_desc,
-    role_listing_open: index.role_listing_open,
-    role_listing_close: index.role_listing_close,
-    role_skills: index.role_skills,
-    role_listing_creator: index.role_listing_creator,
-    role_listing_updater: index.role_listing_updater,
-    role_listing_id: index.role_listing_id,
-    role_id: index.role_id
-  }
-  updateShouldHide()
-}
-
-const getAvailableSkills = async () => {
-  try {
-    const response = await getAllAvailableSkills()
-    availableSkills.value = response.Results
-  } catch (error) {
-    console.error('Error fetching data:', error)
-  }
-}
-
-const setData = (data) => {
-  jobRoles.value = data
-}
-
-watchEffect(() => {
-  // Filter job roles based on selected skill
-  if (selectedSkill.value) {
-    jobRoles.value = initialRoles.value.filter((jobRole) =>
-      jobRole.role_skills.includes(selectedSkill.value)
-    )
-  } else {
-    // If no skill is selected, show all job roles
-    setData(initialRoles.value)
-  }
-})
-
-const getData = async () => {
-  try {
-    const response = await fetchRoleListings()
-    setData(response.Results)
-    initialRoles.value = response.Results
-  } catch (error) {
-    console.error('Error fetching data:', error)
-  }
-
-  //
-  // TODO - Adjust the SEED Data to include a wider range of joblistings with different dates
-  //
-  // if (userType.value === 'staff') {
-  //   jobRoles.value = jobRoles.value.filter((jobRole) => {
-  //        //Convert role_listing_close to a date object
-  //     const closeDate = new Date(jobRole.role_listing_close)
-
-  //     // Compare the closeDate with today's date
-  //     return closeDate >= currentDate
-  //   })
-  // }
-}
-//     // Compare the closeDate with today's date
-//     return closeDate >= currentDate
-//   })
-// }
-
-function truncateText(text, maxLength) {
-  if (text.length <= maxLength) {
-    return text
-  } else {
-    return text.substring(0, maxLength) + '...'
-  }
-}
-const getUserType = async () => {
-  getStaffDetails(userID)
-    .then((response) => {
-      currentUserType.value = response.Results[0].sys_role
-      userType.value = currentUserType.value
-      if (userType.value != 'hr' && userType.value != 'staff' && userType.value != 'manager') {
-        userType.value = 'unknown'
-      } else {
-        getData()
-        window.addEventListener('resize', updateShouldHide)
-        setTimeout(() => {
-          isMounted.value = true
-        }, 1000)
-      }
-    })
-    .catch((error) => {
-      userType.value = 'unknown'
-      console.error('Error fetching data:', error)
-    })
-}
-
-function goBack() {
-  roleDetails.value = {
-    role_name: 'TBC',
-    role_listing_desc: 'No description available',
-    role_listing_open: 'TBC',
-    role_listing_close: 'TBC',
-    role_skills: ['TBC'],
-    role_listing_creator: ['TBC', 'TBC'],
-    role_listing_updater: ['TBC', 'TBC'],
-    role_listing_id: 'TBC',
-    role_id: 'TBC'
-  }
-  updateShouldHide()
-}
-
-const shouldHide = ref(window.innerWidth < 992 && roleDetails.value.role_name !== 'TBC')
-
-function updateShouldHide() {
-  shouldHide.value = window.innerWidth < 992 && roleDetails.value.role_name !== 'TBC'
-}
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateShouldHide)
-})
-// Call the getData function when the component is mounted
-onMounted(() => {
-  getAvailableSkills()
-  getUserType()
-})
-</script>
 
 <style scoped>
 :hover .job-role-item {
