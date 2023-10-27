@@ -61,7 +61,7 @@ p {
 }
 .defaultBtn:hover {
   background-color: #161693;
-  color: #ffffff;
+  color: var(--light, #ffffff);
 }
 
 .disabledBtn {
@@ -100,12 +100,12 @@ p {
 }
 .updateBtn:hover {
   background-color: rgb(35, 78, 170);
-  color: #ffffff;
+  color: var(--light, #ffffff);
 }
 
 .login {
   height: 100vh;
-  background-color: #ffffff;
+  background-color: var(--light, #ffffff);
 }
 .login .screen {
   height: 100vh;
@@ -210,13 +210,13 @@ p {
 }
 
 .updateRoleListing {
-  background-color: #ffffff;
+  background-color: var(--light, #ffffff);
   padding: 10px 30px;
   border-radius: 16px;
 }
 .updateRoleListing .header {
   background-color: rgb(89, 106, 141);
-  color: #ffffff;
+  color: var(--light, #ffffff);
   font-size: 30px;
 }
 .updateRoleListing .searchResults {
@@ -225,7 +225,7 @@ p {
   overflow-y: auto;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #fff;
+  background-color: var(--light, #ffffff);
   z-index: 1000;
 }
 .updateRoleListing .result {
@@ -293,10 +293,32 @@ p {
 .roleAppStatus .roleBorder {
   padding: 10px 30px;
   border-radius: 16px;
-  background-color: #ffffff;
+  background-color: var(--light, #ffffff);
 }
 .roleAppStatus .tableHeader {
   font-size: 20px;
+}
+
+.roleApplicants .bg-warning {
+  background-color: #c37d16 !important;
+}
+.roleApplicants .bg-danger {
+  background-color: rgba(203, 17, 45, 0.662745098) !important;
+}
+.roleApplicants .bg-success {
+  background-color: #41987b !important;
+}
+.roleApplicants .job-role-item {
+  background-color: var(--light, #ffffff);
+}
+.roleApplicants .skillBadge {
+  background-color: #c4c9ce !important;
+}
+.roleApplicants .footer {
+  background-color: var(--light, #ffffff) !important;
+}
+.roleApplicants .cardBody {
+  background-color: var(--light, #ffffff);
 }
 
 @media (min-width: 320px) {
