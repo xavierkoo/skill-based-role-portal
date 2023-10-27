@@ -1,8 +1,3 @@
-<template>
-  <span id="check" class="fw-bold badge rounded-pill bg-light text-dark"
-    ><span :class="percentageClass">{{ percentage }}</span> % match</span
-  >
-</template>
 <script>
 import { onMounted, ref, watch } from 'vue'
 import { getStaffSkills } from '../service/staffskills.service'
@@ -28,13 +23,17 @@ export default {
       calPercentage()
     }
 
+    // Calculate the percentage match
     const calPercentage = (roles) => {
       if (roles) {
+        // Set the percentage value to 100 if there are no roles
         if (roles.length === 0) {
           percentage.value = 100.0
         } else if (staffSkills.value.length === 0) {
+          // Set the percentage value to 0 if there are no staff skills
           percentage.value = 0
         } else {
+          // Count the number of matches
           let match = 0
           for (let i = 0; i < roles.length; i++) {
             for (let j = 0; j < staffSkills.value.length; j++) {
@@ -46,12 +45,14 @@ export default {
               }
             }
           }
+          // Set the percentage value
           if (match == 0) {
             percentage.value = 0
           } else {
             percentage.value = ((match / roles.length) * 100).toFixed(2)
           }
         }
+        // Set the percentage class
         if (percentage.value < 50) {
           percentageClass.value = 'text-danger'
         } else if (percentage.value < 80) {
@@ -60,6 +61,7 @@ export default {
           percentageClass.value = 'text-success'
         }
       } else {
+        // Set the percentage value to 100 if there are no roles
         if (props.roleSkills.length === 0) {
           percentage.value = 100
         } else if (staffSkills.value.length === 0) {
@@ -82,6 +84,7 @@ export default {
             percentage.value = ((match / props.roleSkills.length) * 100).toFixed(2)
           }
         }
+        // Set the percentage class
         if (percentage.value < 50) {
           percentageClass.value = 'text-danger'
         } else if (percentage.value < 80) {
@@ -92,6 +95,7 @@ export default {
       }
     }
 
+    // Fetch the staff skills
     const fetchStaffSkills = async () => {
       try {
         const id = localStorage.getItem('id')
@@ -102,6 +106,7 @@ export default {
       }
     }
 
+    // Fetch the staff skills on mounted
     onMounted(() => {
       fetchStaffSkills()
     })
@@ -125,3 +130,9 @@ export default {
   }
 }
 </script>
+
+<template>
+  <span id="check" class="fw-bold badge rounded-pill bg-light text-dark"
+    ><span :class="percentageClass">{{ percentage }}</span> % match</span
+  >
+</template>
