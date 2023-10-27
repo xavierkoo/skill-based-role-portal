@@ -529,4 +529,29 @@ describe('JobRoleList', () => {
     expect(wrapper.find('#role-error').exists()).toBe(true)
     expect(wrapper.find('#role-error').text()).toContain('Please select only 1 skill to filter.')
   })
+
+  it('Check the standard items for the filter dropdown box', async () => {
+    const mock = new MockAdapter(axios)
+    localStorage.setItem('id', 123456789)
+    mock.onGet('http://localhost:8080/api/v1/rolelistings/').reply(200, {
+      Results: mockRoleListings
+    })
+    mock.onGet('http://localhost:8080/api/v1/allskills/').reply(200, {
+      Results: allSkillsMock
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+      Results: staffSkillsForStaff
+    })
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: staffDetailsForStaff
+    })
+    const wrapper = mount(JobRoleListView)
+    // Wait for the component to finish rendering after axios call
+    await wrapper.vm.$nextTick()
+    await new Promise((resolve) => setTimeout(resolve, 1100))
+    // Ensure that the data is properly set
+    expect(wrapper.find('#filter').exists()).toBe(true)
+    expect(wrapper.find('#filter-label').text()).toContain('Filter by skill:')
+    mock.restore()
+  })
 })
