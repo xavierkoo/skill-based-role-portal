@@ -18,7 +18,22 @@
           >
             <!-- Conditional rendering for when no job roles are available -->
             <div v-if="jobRoles?.length === 0">
-              <p class="text-primary text-center">No job roles available.</p>
+              <!-- check if the selectedSkill has more than 1 value -->
+
+              <div v-if="selectedSkill">
+                <p
+                  v-if="selectedSkill?.length > 1"
+                  id="role-error"
+                  class="text-primary text-center"
+                >
+                  Please select only 1 skill to filter.
+                </p>
+                <p v-else id="role-error" class="text-primary text-center">
+                  No job roles available for {{ selectedSkill }}.
+                </p>
+              </div>
+
+              <p v-else id="role-error" class="text-primary text-center">No job roles available.</p>
             </div>
 
             <div v-else class="container">
