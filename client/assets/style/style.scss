@@ -8,10 +8,12 @@
 html {
     font-size: $font-base-rem;
     height: 100%;
+    background-color: #F4F2EE;
 }
 
-.app {
+#app {
     height: 100%;
+    background-color: #F4F2EE;
 }
 
 body {
@@ -112,6 +114,7 @@ p {
 
 .login {
     height: 100vh;
+    background-color: #ffffff;
 
     .screen {
         height: 100vh;
@@ -218,6 +221,9 @@ p {
 
 
 .updateRoleListing {
+    background-color: #ffffff;
+    padding:10px 30px;
+    border-radius: 16px;
     .header {
         background-color: rgb(89, 106, 141);
         color: #ffffff;
@@ -301,6 +307,19 @@ p {
             width: 45px;
         }
     }
+}
+
+.roleAppStatus{
+    .roleBorder{
+        padding:10px 30px;
+        border-radius: 16px;
+        background-color: #ffffff;
+    }
+    
+    .tableHeader{
+        font-size: 20px;
+    }
+
 }
 
 .roleDetails {
