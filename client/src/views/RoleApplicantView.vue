@@ -2,36 +2,10 @@
 import { onMounted, ref, onBeforeUnmount } from 'vue'
 import { getRoleApplicants } from '../service/roleApplicants.service'
 
+// Define the variables
 const roleApplicants = ref([])
 const userID = JSON.parse(localStorage.getItem('id')) || 123456788
 const errorMsg = ref(null)
-const getData = async () => {
-  try {
-    const response = await getRoleApplicants(userID)
-    roleApplicants.value = response.data.Results
-  } catch (error) {
-    errorMsg.value = "Couldn't fetch data"
-  }
-  isMounted.value = true
-}
-
-// Function to calculate the days until the listing opens
-const calculateDaysUntilOpen = (closeDate, openDate) => {
-  if (new Date(openDate) < new Date() && new Date(closeDate) > new Date()) {
-    return true
-  } else {
-    return false
-  }
-}
-
-function truncateText(text, maxLength) {
-  if (text.length <= maxLength) {
-    return text
-  } else {
-    return text.substring(0, maxLength) + '...'
-  }
-}
-
 const roleDetails = ref({
   role_name: 'TBC',
   role_listing_desc: 'No description available',
@@ -44,7 +18,38 @@ const roleDetails = ref({
   role_id: 'TBC',
   role_applicants: []
 })
+const shouldHide = ref(window.innerWidth < 992 && roleDetails.value.role_name !== 'TBC')
 
+// Get the role applicants
+const getData = async () => {
+  try {
+    const response = await getRoleApplicants(userID)
+    roleApplicants.value = response.data.Results
+  } catch (error) {
+    errorMsg.value = "Couldn't fetch data"
+  }
+  isMounted.value = true
+}
+
+// Calculate the days until the role listing is open
+const calculateDaysUntilOpen = (closeDate, openDate) => {
+  if (new Date(openDate) < new Date() && new Date(closeDate) > new Date()) {
+    return true
+  } else {
+    return false
+  }
+}
+
+// Truncate the text
+function truncateText(text, maxLength) {
+  if (text.length <= maxLength) {
+    return text
+  } else {
+    return text.substring(0, maxLength) + '...'
+  }
+}
+
+// Go back to the role listing page
 function goBack() {
   roleDetails.value = {
     role_name: 'TBC',
@@ -58,34 +63,45 @@ function goBack() {
     role_id: 'TBC',
     role_applicants: []
   }
-  updateShouldHide()
+  updateShouldHide() // Update the shouldHide variable
 }
 
+// Go to the role page
 const goToRolePage = (index) => {
+  // Calculate the role match percentage for the applicants
   for (let i = 0; i < index.role_applicants.length; i++) {
+    // Get the applicant skills and role skills
     let applicantSkills = index.role_applicants[i].staff_details.staff_skills
     let roleSkills = index.role_skills
     let missing_skills = []
     let active_skills = []
     let in_progress_skills = []
+
+    // Format the date
     const date = new Date(index.role_applicants[i].role_application_ts_create)
     const day = date.getDate().toString().padStart(2, '0') // Add leading zero if necessary
     const month = (date.getMonth() + 1).toString().padStart(2, '0') // Add leading zero if necessary
     const year = date.getFullYear()
     index.role_applicants[i].applied_date = `${day}/${month}/${year}`
+
+    // If there are no role skills required, set the role match percentage to 100%
     if (roleSkills.length === 0) {
       index.role_applicants[i].role_match = 100
       index.role_applicants[i].missing_skills = []
       index.role_applicants[i].active_skills = []
       index.role_applicants[i].in_progress_skills = []
       continue
-    } else if (applicantSkills === undefined || applicantSkills.length === 0) {
+    }
+    // If there applicant have no skills, set the role match percentage to 0%
+    else if (applicantSkills === undefined || applicantSkills.length === 0) {
       index.role_applicants[i].role_match = 0
       index.role_applicants[i].missing_skills = roleSkills
       index.role_applicants[i].active_skills = []
       index.role_applicants[i].in_progress_skills = []
       continue
     }
+
+    // Calculate the role match percentage
     let role_match_percentage = 0
 
     for (let applicantSkill of applicantSkills) {
@@ -103,11 +119,15 @@ const goToRolePage = (index) => {
         in_progress_skills.push(applicantSkill.skill_name)
       }
     }
+
+    // Get the missing skills
     for (let roleSkill of roleSkills) {
       if (active_skills.indexOf(roleSkill) < 0 && in_progress_skills.indexOf(roleSkill) < 0) {
         missing_skills.push(roleSkill)
       }
     }
+
+    // Set the role match percentage and missing skills
     index.role_applicants[i].missing_skills = missing_skills
     index.role_applicants[i].active_skills = active_skills
     index.role_applicants[i].in_progress_skills = in_progress_skills
@@ -115,11 +135,12 @@ const goToRolePage = (index) => {
       (role_match_percentage / roleSkills.length) * 100
     )
   }
-  // sort role_applicants by role_match
+  // Sort the applicants by role match percentage
   index.role_applicants.sort((a, b) => {
     return b.role_match - a.role_match
   })
 
+  // Set the role details
   roleDetails.value = {
     role_name: index.role_name,
     role_listing_desc: index.role_listing_desc,
@@ -132,14 +153,16 @@ const goToRolePage = (index) => {
     role_id: index.role_id,
     role_applicants: index.role_applicants
   }
+
   updateShouldHide()
 }
-const shouldHide = ref(window.innerWidth < 992 && roleDetails.value.role_name !== 'TBC')
 
+// Update the shouldHide variable
 function updateShouldHide() {
   shouldHide.value = window.innerWidth < 992 && roleDetails.value.role_name !== 'TBC'
 }
 
+// Update the shouldHide variable when the window is resized
 onBeforeUnmount(() => {
   window.removeEventListener('resize', updateShouldHide)
 })
@@ -152,6 +175,7 @@ onMounted(() => {
   window.addEventListener('resize', updateShouldHide)
 })
 </script>
+
 <template>
   <div class="container-fluid mt-2">
     <h1 class="my-3">Role Applicants</h1>
@@ -278,7 +302,7 @@ onMounted(() => {
                       {{ roleDetails.role_skills.length == 0 ? 'Skills: Not Required' : '' }}
                     </p>
                     <div v-if="roleDetails.role_skills.length > 0">
-                      <p id="active_skills" v-if="applicant.active_skills.length > 0">
+                      <p v-if="applicant.active_skills.length > 0" id="active_skills">
                         <b>Active Skills:</b>
                         <span v-for="(skill, index2) in applicant.active_skills" :key="index2">
                           <span class="badge rounded-pill bg-success text-white p-2 m-1">
@@ -286,7 +310,7 @@ onMounted(() => {
                           </span>
                         </span>
                       </p>
-                      <p id="inprogress_skills" v-if="applicant.in_progress_skills.length > 0">
+                      <p v-if="applicant.in_progress_skills.length > 0" id="inprogress_skills">
                         <b>In-progress Skills:</b>
                         <span v-for="(skill, index3) in applicant.in_progress_skills" :key="index3">
                           <span class="badge rounded-pill bg-warning text-white p-2 m-1">
@@ -294,7 +318,7 @@ onMounted(() => {
                           </span>
                         </span>
                       </p>
-                      <p id="missing_skills" v-if="applicant.missing_skills.length > 0">
+                      <p v-if="applicant.missing_skills.length > 0" id="missing_skills">
                         <b>Missing Skill:</b>
                         <span v-for="(skill, index4) in applicant.missing_skills" :key="index4">
                           <span class="badge rounded-pill bg-secondary text-white p-2 m-1">

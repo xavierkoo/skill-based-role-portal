@@ -1,3 +1,49 @@
+<script setup>
+import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+const $router = useRouter()
+
+// Dummy Data
+const user = ref({
+  id: 123456789,
+  email: 'tan_ah_gao@all-in-one.com.sg',
+  password: 'Ax93sdfsen@ssdf'
+})
+const userDetails = ref({
+  Employee: {
+    id: 123456789,
+    email: 'tan_ah_gao@all-in-one.com.sg',
+    password: 'Ax93sdfsen@ssdf'
+  },
+  HR: {
+    id: 123456788,
+    email: 'colins_vincent_rex@all-in-one.com.sg',
+    password: 'ssdE#wfwafsaw^sdf'
+  },
+  'Source Manager': {
+    id: 123456787,
+    email: 'faud_nizam@all-in-one.com.sg',
+    password: 'sasdasd33rgQ@!da'
+  }
+})
+
+// Initialises the email and password to the first user
+const email = ref('tan_ah_gao@all-in-one.com.sg')
+const password = ref('Ax93sdfsen@ssdf')
+
+// Swaps the email and password to the selected user
+function displayEmailandPassword(user) {
+  email.value = user.email
+  password.value = user.password
+}
+
+// Logs in the user and stores the user id in local storage
+function login(user) {
+  localStorage.setItem('id', user.id)
+  $router.push('/rolelisting')
+}
+</script>
+
 <template>
   <div class="login">
     <div class="container-fluid">
@@ -79,44 +125,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
-const $router = useRouter()
-//user details
-const user = ref({
-  id: 123456789,
-  email: 'tan_ah_gao@all-in-one.com.sg',
-  password: 'Ax93sdfsen@ssdf'
-})
-const email = ref('tan_ah_gao@all-in-one.com.sg')
-const password = ref('Ax93sdfsen@ssdf')
-const userDetails = ref({
-  Employee: {
-    id: 123456789,
-    email: 'tan_ah_gao@all-in-one.com.sg',
-    password: 'Ax93sdfsen@ssdf'
-  },
-  HR: {
-    id: 123456788,
-    email: 'colins_vincent_rex@all-in-one.com.sg',
-    password: 'ssdE#wfwafsaw^sdf'
-  },
-  'Source Manager': {
-    id: 123456787,
-    email: 'faud_nizam@all-in-one.com.sg',
-    password: 'sasdasd33rgQ@!da'
-  }
-})
-
-function displayEmailandPassword(user) {
-  email.value = user.email
-  password.value = user.password
-}
-
-function login(user) {
-  localStorage.setItem('id', user.id)
-  $router.push('/rolelisting')
-}
-</script>

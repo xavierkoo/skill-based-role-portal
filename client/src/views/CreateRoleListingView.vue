@@ -1,3 +1,128 @@
+<script setup>
+import { ref, onMounted, computed, watchEffect } from 'vue'
+import { createRoleListing } from '../service/rolelisting.service'
+import { fetchRoleDetails } from '../service/roledetails.service'
+import { getAllStaffDetails } from '../service/staffDetails.service'
+
+// Define variables
+const roleDetails = ref([])
+const selectedRole = ref('')
+const message = ref('')
+const currentUserID = ref(parseInt(localStorage.getItem('id')))
+const roleID = ref(selectedData.value.role_id)
+const startDate = ref(selectedData.value.role_listing_open)
+const closeDate = ref(selectedData.value.role_listing_close)
+const roleDescription = ref(selectedData.value.role_description)
+const sourceManagers = ref([])
+const selectedSourceManagerID = ref()
+const isSubmitted = ref(false)
+// const invalidRoleID = ref(false)
+const emptyClosingDate = ref(false)
+const emptyStartDate = ref(false)
+
+// Get data from API
+const getData = async () => {
+  try {
+    const response = await fetchRoleDetails()
+    roleDetails.value = response.Results
+    const staffs = await getAllStaffDetails()
+    const managers = staffs.Results.filter((staff) => staff.sys_role === 'manager')
+    sourceManagers.value = managers
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+// Get selected data
+const selectedData = computed(() => {
+  return roleDetails.value.find((role) => role.role_name === selectedRole.value) || {}
+})
+
+// Watch selected data
+watchEffect(() => {
+  const selectedDataValue = selectedData.value
+  roleID.value = selectedDataValue.role_id
+  startDate.value = selectedDataValue.role_listing_open
+  closeDate.value = selectedDataValue.role_listing_close
+  roleDescription.value = selectedDataValue.role_description
+})
+
+// Validation for empty role name
+const invalidRoleID = computed(() => {
+  const ans = roleID.value === undefined && isSubmitted.value
+  return ans
+})
+
+// Auto fill close date
+function autoFillCloseDate() {
+  const startDateObj = new Date(startDate.value)
+  startDateObj.setDate(startDateObj.getDate() + 14)
+  const year = startDateObj.getFullYear()
+  const month = String(startDateObj.getMonth() + 1).padStart(2, '0') // Month is zero-based
+  const day = String(startDateObj.getDate()).padStart(2, '0')
+  closeDate.value = `${year}-${month}-${day}`
+}
+
+// Validation for empty closing date
+const invalidClosingDate = computed(() => {
+  const ans =
+    closeDate.value < startDate.value || closeDate.value < new Date().toISOString().slice(0, 10)
+  fixClosingDate(ans)
+  return ans
+})
+
+// Validation for empty closing date
+function fixClosingDate(ans) {
+  if (emptyClosingDate.value && closeDate.value) {
+    emptyClosingDate.value = false
+  }
+  if (emptyStartDate.value && startDate.value) {
+    emptyStartDate.value = false
+  }
+  if (ans) {
+    closeDate.value = ''
+  }
+}
+
+// Create role listing
+const create = () => {
+  isSubmitted.value = true
+  const dataToUpdate = {
+    role_listing_creator: currentUserID.value,
+    role_listing_source: selectedSourceManagerID.value,
+    role_listing_updater: currentUserID.value,
+    role_id: selectedData.value.role_id,
+    role_listing_desc: roleDescription.value,
+    role_listing_open: startDate.value,
+    role_listing_close: closeDate.value
+  }
+
+  createRoleListing(dataToUpdate)
+    .then((result) => {
+      console.log('success' + result)
+      message.value = 'Role Listing Created Successfully'
+    })
+    .catch((error) => {
+      console.log(error)
+      message.value = 'Role Listing Creation Failed'
+      if (roleID.value === undefined) {
+        invalidRoleID.value = true
+      }
+      if (closeDate.value === undefined) {
+        emptyClosingDate.value = true
+      }
+      if (startDate.value === undefined) {
+        emptyStartDate.value = true
+      }
+    })
+}
+
+// On mounted, get data
+onMounted(() => {
+  getData()
+})
+</script>
+
 <template>
   <div
     id="exampleModal"
@@ -108,118 +233,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted, computed, watchEffect } from 'vue'
-import { createRoleListing } from '../service/rolelisting.service'
-import { fetchRoleDetails } from '../service/roledetails.service'
-import { getAllStaffDetails } from '../service/staffDetails.service'
-
-const roleDetails = ref([])
-const selectedRole = ref('')
-const message = ref('')
-const currentUserID = ref(parseInt(localStorage.getItem('id')))
-
-const getData = async () => {
-  try {
-    const response = await fetchRoleDetails()
-    roleDetails.value = response.Results
-    const staffs = await getAllStaffDetails()
-    const managers = staffs.Results.filter((staff) => staff.sys_role === 'manager')
-    sourceManagers.value = managers
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-const selectedData = computed(() => {
-  return roleDetails.value.find((role) => role.role_name === selectedRole.value) || {}
-})
-
-const roleID = ref(selectedData.value.role_id)
-const startDate = ref(selectedData.value.role_listing_open)
-const closeDate = ref(selectedData.value.role_listing_close)
-const roleDescription = ref(selectedData.value.role_description)
-const sourceManagers = ref([])
-const selectedSourceManagerID = ref()
-const isSubmitted = ref(false)
-// const invalidRoleID = ref(false)
-const emptyClosingDate = ref(false)
-const emptyStartDate = ref(false)
-watchEffect(() => {
-  const selectedDataValue = selectedData.value
-  roleID.value = selectedDataValue.role_id
-  startDate.value = selectedDataValue.role_listing_open
-  closeDate.value = selectedDataValue.role_listing_close
-  roleDescription.value = selectedDataValue.role_description
-})
-
-const invalidRoleID = computed(() => {
-  const ans = roleID.value === undefined && isSubmitted.value
-  return ans
-})
-
-function autoFillCloseDate() {
-  const startDateObj = new Date(startDate.value)
-  startDateObj.setDate(startDateObj.getDate() + 14)
-  const year = startDateObj.getFullYear()
-  const month = String(startDateObj.getMonth() + 1).padStart(2, '0') // Month is zero-based
-  const day = String(startDateObj.getDate()).padStart(2, '0')
-  closeDate.value = `${year}-${month}-${day}`
-}
-
-const invalidClosingDate = computed(() => {
-  const ans =
-    closeDate.value < startDate.value || closeDate.value < new Date().toISOString().slice(0, 10)
-  fixClosingDate(ans)
-  return ans
-})
-
-function fixClosingDate(ans) {
-  if (emptyClosingDate.value && closeDate.value) {
-    emptyClosingDate.value = false
-  }
-  if (emptyStartDate.value && startDate.value) {
-    emptyStartDate.value = false
-  }
-  if (ans) {
-    closeDate.value = ''
-  }
-}
-
-const create = () => {
-  isSubmitted.value = true
-  const dataToUpdate = {
-    role_listing_creator: currentUserID.value,
-    role_listing_source: selectedSourceManagerID.value,
-    role_listing_updater: currentUserID.value,
-    role_id: selectedData.value.role_id,
-    role_listing_desc: roleDescription.value,
-    role_listing_open: startDate.value,
-    role_listing_close: closeDate.value
-  }
-
-  createRoleListing(dataToUpdate)
-    .then((result) => {
-      console.log('success' + result)
-      message.value = 'Role Listing Created Successfully'
-    })
-    .catch((error) => {
-      console.log(error)
-      message.value = 'Role Listing Creation Failed'
-      if (roleID.value === undefined) {
-        invalidRoleID.value = true
-      }
-      if (closeDate.value === undefined) {
-        emptyClosingDate.value = true
-      }
-      if (startDate.value === undefined) {
-        emptyStartDate.value = true
-      }
-    })
-}
-
-onMounted(() => {
-  getData()
-})
-</script>

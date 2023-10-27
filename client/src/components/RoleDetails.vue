@@ -38,6 +38,7 @@ export default {
     const showMore = ref(remainingSkills.value.length > 0)
     const applied = ref(false)
 
+    // Toggle show more skills
     const toggleShowMore = () => {
       if (showMore.value) {
         visibleSkills.value = props.roleDetails.role_skills
@@ -52,6 +53,7 @@ export default {
       }
     })
 
+    // Set the staff skills
     const setData = (data) => {
       for (const skills of data) {
         if (skills.ss_status === 'active') {
@@ -60,6 +62,7 @@ export default {
       }
     }
 
+    // Fetch the staff skills
     const fetchStaffSkills = async () => {
       try {
         const response = await getStaffSkills(id)
@@ -70,6 +73,7 @@ export default {
       }
     }
 
+    // Fetch the staff application
     const fetchStaffApplication = async (id) => {
       try {
         const applications = await getRoleApplicationById(id)
@@ -85,6 +89,7 @@ export default {
       }
     }
 
+    // Get the user type
     getStaffDetails(id)
       .then((response) => {
         user.value = response.Results[0].sys_role

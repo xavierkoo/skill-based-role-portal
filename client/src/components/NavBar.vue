@@ -1,3 +1,28 @@
+<script setup>
+import { ref } from 'vue'
+import getStaffDetails from '../service/staffDetails.service'
+
+// Define variables
+const id = localStorage.getItem('id')
+const userType = ref('')
+
+// Get the user type
+if (id) {
+  getStaffDetails(id)
+    .then((res) => {
+      userType.value = res.Results[0].sys_role
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
+
+// Reset the local storage
+function reset() {
+  localStorage.clear()
+}
+</script>
+
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
@@ -40,23 +65,3 @@
     </div>
   </nav>
 </template>
-
-<script setup>
-import { ref } from 'vue'
-import getStaffDetails from '../service/staffDetails.service'
-const id = localStorage.getItem('id')
-const userType = ref('')
-if (id) {
-  getStaffDetails(id)
-    .then((res) => {
-      userType.value = res.Results[0].sys_role
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-}
-
-function reset() {
-  localStorage.clear()
-}
-</script>
