@@ -62,6 +62,18 @@ p {
   color: #ffffff;
 }
 
+.disabledBtn {
+  border-radius: 16px;
+  padding: 8px 16px;
+  background-color: #3f3f3f;
+  color: var(--dark, #1d1d1f);
+  border: none;
+}
+.disabledBtn:hover {
+  background-color: #3f3f3f;
+  color: var(--dark, #1d1d1f);
+}
+
 .noti {
   border: none;
   border-radius: 16px;
@@ -195,10 +207,9 @@ p {
 }
 
 .updateRoleListing .header {
-  background-color: rgb(35, 78, 170);
+  background-color: rgb(89, 106, 141);
   color: #ffffff;
-  padding: 8px;
-  border-radius: 8px;
+  font-size: 30px;
 }
 .updateRoleListing .searchResults {
   position: absolute;
@@ -264,6 +275,10 @@ p {
   .updateRoleListing {
     font-size: calc(0.5em + 0.5vw);
     width: 75%;
+  }
+  .updateRoleListing .back {
+    height: 45px;
+    width: 45px;
   }
 }
 

@@ -99,8 +99,7 @@ const create = () => {
   }
 
   createRoleListing(dataToUpdate)
-    .then((result) => {
-      console.log('success' + result)
+    .then(() => {
       message.value = 'Role Listing Created Successfully'
     })
     .catch((error) => {
@@ -161,7 +160,7 @@ onMounted(() => {
         @click="$router.push('/rolelisting')"
       />
     </div>
-    <h1 class="my-3 header">Role Listing Submission</h1>
+    <h1 class="my-3 header p-4">Role Listing Submission</h1>
     <div class="col mx-auto text-start">
       <div class="mb-3">
         <label for="sourceManagerID" class="form-label">Source Manager Name</label>
