@@ -67,49 +67,50 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
+  <div class="roleAppStatus">
     <div v-if="emptyError" class="alert alert-danger error" role="alert">
       No role applications found.
     </div>
 
     <div v-else class="container">
-      <h2>Role Applications</h2>
-
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">jobID</th>
-            <th scope="col">Job Title</th>
-            <th scope="col">Applied on</th>
-            <th scope="col">Status</th>
-            <th scope="col">Reason</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="roleApplication in displayedRoleApplications"
-            :key="roleApplication.role_app_id"
-            class="py-2"
-          >
-            <th scope="row">{{ roleApplication.role_app_id }}</th>
-            <td>{{ roleApplication.role_title }}</td>
-            <td>{{ formatDate(roleApplication.role_application_ts_create) }}</td>
-            <td>{{ roleApplication.role_app_status }}</td>
-            <td>{{ roleApplication.role_app_reason }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div v-if="totalPages > 1">
-        <nav>
-          <ul class="pagination">
-            <li class="page-item" :class="{ disabled: currentPage === 1 }">
-              <a class="page-link" @click="previousPage">Previous</a>
-            </li>
-            <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-              <a class="page-link" @click="nextPage">Next</a>
-            </li>
-          </ul>
-        </nav>
+      <h2 class="my-3">Role Applications</h2>
+      <div class="roleBorder">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col" class="tableHeader">Job ID</th>
+              <th scope="col" class="tableHeader">Job Title</th>
+              <th scope="col" class="tableHeader">Applied On</th>
+              <th scope="col" class="tableHeader">Status</th>
+              <th scope="col" class="tableHeader">Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="roleApplication in displayedRoleApplications"
+              :key="roleApplication.role_app_id"
+              class="py-2"
+            >
+              <th scope="row">{{ roleApplication.role_app_id }}</th>
+              <td>{{ roleApplication.role_title }}</td>
+              <td>{{ formatDate(roleApplication.role_application_ts_create) }}</td>
+              <td>{{ roleApplication.role_app_status }}</td>
+              <td>{{ roleApplication.role_app_reason }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div v-if="totalPages > 1">
+          <nav>
+            <ul class="pagination">
+              <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                <a class="page-link" @click="previousPage">Previous</a>
+              </li>
+              <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+                <a class="page-link" @click="nextPage">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </div>
   </div>
