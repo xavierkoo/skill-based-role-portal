@@ -76,6 +76,7 @@ export default {
     // Fetch the staff application
     const fetchStaffApplication = async (id) => {
       try {
+        applied.value = false
         const applications = await getRoleApplicationById(id)
         for (let app of applications.data.Results) {
           if (app.role_listing_id == props.roleDetails.role_listing_id) {
@@ -152,7 +153,7 @@ export default {
           role="link"
           :class="
             applied
-              ? 'updateBtn d-flex w-sm-50 mb-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view'
+              ? 'disabledBtn d-flex w-sm-50 mb-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view'
               : 'defaultBtn d-flex w-sm-50 mb-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view'
           "
           data-bs-toggle="modal"

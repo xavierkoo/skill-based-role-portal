@@ -245,8 +245,28 @@ role_listings_seed = [
         "role_id": 234567891,
         "role_listing_desc": "The Head, Talent Attraction is responsible for strategic workforce planning to support the organisation's growth strategies through establishing talent sourcing strategies, determining the philosophy for the selection and securing of candidates and overseeing the onboarding and integration of new hires into the organisation. He/She develops various approaches to meet workforce requirements and designs employer branding strategies. He oversees the selection processes and collaborates with business stakeholders for the hiring of key leadership roles. As a department head, he is responsible for setting the direction and articulating goals and objectives for the team, and driving the integration of Skills Frameworks across the organisation's talent attraction plans. The Head, Talent Attraction is an influential and inspiring leader who adopts a broad perspective in the decisions he makes. He is articulate and displays a genuine passion for motivating and developing his team.",
         "role_listing_open": "2023-10-01",
-        "role_listing_close": "2023-10-31",
+        "role_listing_close": "2023-12-16",
+    },{
+        "role_listing_id": 4,
+        "role_listing_creator": 123456788,
+        "role_listing_source": 123456788,
+        "role_listing_updater": 123456788,
+        "role_id": 234567893,
+        "role_listing_desc": "The Agile Coach (SM) coaches teams in the conduct of Agile practices and the implementation of Agile methodologies and practices in the organisation and acts as an effective Scrum Master in Agile Scrum teams.",
+        "role_listing_open": "2023-10-21",
+        "role_listing_close": "2024-01-31",
     },
+    {
+        "role_listing_id": 5,
+        "role_listing_creator": 123456788,
+        "role_listing_source": 123456788,
+        "role_listing_updater": 123456788,
+        "role_id": 234567892,
+        "role_listing_desc": "The Learning Facilitator delivers learning products and services in a variety of environments, using multiple learning delivery modes and methods. He/She assesses learning needs and adapts the facilitation approach to reflect desired learning outcomes and learner needs. He is responsible for knowledge and skills transfer by delivering learning content, facilitating group discussions and responding to queries. He drives learner development and commitment to continuous learning by actively providing feedback and learner support. He evaluates curriculum effectiveness and recommends improvement areas by collecting learner feedback as well as analysing learning delivery approaches and materials.He is a strong communicator who builds trusted relationships and creates a cooperative and engaging learning environment. He is adaptable and adept at managing multiple stakeholders. He works in multiple different environments, including different learning venues and client sites, and regularly interacts with digital systems.",
+        "role_listing_open": "2023-10-11",
+        "role_listing_close": "2024-01-31",
+    },
+    
 ]
 
 
