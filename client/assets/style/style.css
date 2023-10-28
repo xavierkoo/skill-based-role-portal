@@ -5,10 +5,12 @@
 html {
   font-size: 16px;
   height: 100%;
+  background-color: #F4F2EE;
 }
 
-.app {
+#app {
   height: 100%;
+  background-color: #F4F2EE;
 }
 
 body {
@@ -50,6 +52,10 @@ p {
   font-size: clamp(0.89rem, 0.23vw + 0.84rem, 1rem);
 }
 
+.caption {
+  font-size: clamp(0.71rem, 0.18vw + 0.67rem, 0.8rem);
+}
+
 .defaultBtn {
   border-radius: 16px;
   padding: 8px 16px;
@@ -59,7 +65,15 @@ p {
 }
 .defaultBtn:hover {
   background-color: #161693;
-  color: #ffffff;
+  color: var(--light, #ffffff);
+}
+
+.disabledBtn {
+  border-radius: 16px;
+  padding: 8px 16px;
+  background-color: #c4c9ce;
+  color: var(--dark, #1d1d1f);
+  border: black 2px solid;
 }
 
 .noti {
@@ -86,11 +100,12 @@ p {
 }
 .updateBtn:hover {
   background-color: rgb(35, 78, 170);
-  color: #ffffff;
+  color: var(--light, #ffffff);
 }
 
 .login {
   height: 100vh;
+  background-color: var(--light, #ffffff);
 }
 .login .screen {
   height: 100vh;
@@ -194,11 +209,15 @@ p {
   height: 45px;
 }
 
+.updateRoleListing {
+  background-color: var(--light, #ffffff);
+  padding: 10px 30px;
+  border-radius: 16px;
+}
 .updateRoleListing .header {
-  background-color: rgb(35, 78, 170);
-  color: #ffffff;
-  padding: 8px;
-  border-radius: 8px;
+  background-color: rgb(89, 106, 141);
+  color: var(--light, #ffffff);
+  font-size: 30px;
 }
 .updateRoleListing .searchResults {
   position: absolute;
@@ -206,7 +225,7 @@ p {
   overflow-y: auto;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #fff;
+  background-color: var(--light, #ffffff);
   z-index: 1000;
 }
 .updateRoleListing .result {
@@ -265,8 +284,80 @@ p {
     font-size: calc(0.5em + 0.5vw);
     width: 75%;
   }
+  .updateRoleListing .back {
+    height: 45px;
+    width: 45px;
+  }
 }
 
+.roleAppStatus .roleBorder {
+  padding: 10px 30px;
+  border-radius: 16px;
+  background-color: var(--light, #ffffff);
+}
+.roleAppStatus .tableHeader {
+  font-size: 20px;
+}
+
+.bg-warning {
+  background-color: #c37d16 !important;
+}
+
+.bg-danger {
+  background-color: rgba(203, 17, 45, 0.662745098) !important;
+}
+
+.bg-success {
+  background-color: #41987b !important;
+}
+
+.roleApplicants .job-role-item {
+  background-color: var(--light, #ffffff);
+}
+.roleApplicants .skillBadge {
+  background-color: #c4c9ce !important;
+}
+.roleApplicants .footer {
+  background-color: var(--light, #ffffff) !important;
+}
+.roleApplicants .cardBody {
+  background-color: var(--light, #ffffff);
+}
+
+.jobRoleList :hover .job-role-item {
+  cursor: pointer;
+}
+.jobRoleList .job-role-item .no-underline a {
+  text-decoration: none !important;
+}
+.jobRoleList .job-role-item:hover .no-underline a {
+  text-decoration: underline !important;
+}
+.jobRoleList .job-role-item:hover {
+  background-color: rgb(247, 247, 247);
+}
+.jobRoleList .job-role-item {
+  background-color: var(--light, #ffffff);
+}
+.jobRoleList .skillBadge {
+  background-color: #c4c9ce !important;
+}
+
+.roleDetails {
+  background-color: var(--light, #ffffff);
+}
+.roleDetails #CalculateRoleMatch {
+  background-color: #c4c9ce !important;
+  padding: 8px;
+}
+.roleDetails .bg-success {
+  background-color: #41987b !important;
+  padding: 8px;
+}
+.roleDetails .bg-secondary {
+  background-color: #c4c9ce !important;
+  padding: 8px;
+}
 @media (min-width: 320px) {
   .roleDetails {
     font-size: calc(0.7em + 0.5vw);
@@ -285,7 +376,7 @@ p {
 @media (min-width: 766px) {
   .roleDetails {
     font-size: calc(0.7em + 0.5vw);
-    width: 75%;
+    width: 100%;
   }
   .roleDetails .details {
     display: flex;
@@ -295,6 +386,6 @@ p {
 @media (min-width: 2040px) {
   .roleDetails {
     font-size: calc(0.5em + 0.5vw);
-    width: 75%;
+    width: 100%;
   }
 }

@@ -1,3 +1,88 @@
+<script setup>
+import { ref } from 'vue'
+import { updateRoleListing } from '../service/rolelisting.service'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+let selectedData = null
+
+// Parse the selectedData from the route query
+if (route.query.selectedData) {
+  try {
+    selectedData = JSON.parse(route.query.selectedData)
+  } catch (error) {
+    // Handle the JSON parsing error
+    console.error('Error parsing JSON data:', error)
+  }
+}
+
+// Define the variables
+const role_name = ref(selectedData?.role_name || '')
+const role_listing_open = ref(selectedData?.role_listing_open || '')
+const role_listing_close = ref(selectedData?.role_listing_close || '')
+const role_listing_desc = ref(selectedData?.role_listing_desc || '')
+const role_listing_id = ref(selectedData?.role_listing_id || '')
+const showSuccess = ref(false)
+const showError = ref(false)
+const errors = ref([])
+const id = JSON.parse(localStorage.getItem('id'))
+
+// Update the role listing
+function update() {
+  errors.value = []
+  if (selectedData) {
+    const dataToUpdate = {
+      role_listing_updater: parseInt(id),
+      role_listing_id: selectedData.role_listing_id,
+      role_id: selectedData.role_id,
+      role_listing_desc: role_listing_desc.value,
+      role_listing_open: role_listing_open.value,
+      role_listing_close: role_listing_close.value
+    }
+
+    // Validation for the role listing
+    if (!role_listing_desc.value) {
+      errors.value.push("Role Listing Description can't be empty")
+    }
+
+    // Validation for the role listing open and close date
+    if (role_listing_open.value >= role_listing_close.value) {
+      errors.value.push(
+        'Role Listing Open date must be a date earlier than Role Listing Close date'
+      )
+    }
+
+    // Validation for the role listing close date
+    if (role_listing_close.value < new Date().toISOString().slice(0, 10)) {
+      errors.value.push(
+        'Role Listing Close date must be a date later than or equal to the Current date'
+      )
+    }
+
+    // If there are errors, show the error message
+    if (errors.value.length > 0) {
+      showError.value = true
+    } else {
+      // If there are no errors, show the success message
+      updateRoleListing(dataToUpdate)
+        .then(() => {
+          showError.value = false
+          showSuccess.value = true
+          setTimeout(() => {
+            showSuccess.value = false
+          }, 5000)
+        })
+        .catch((error) => {
+          console.error('Error updating role listing:', error)
+        })
+    }
+  } else {
+    // Handle the case where selectedData is null
+    console.error('selectedData is null')
+  }
+}
+</script>
+
 <template>
   <div class="updateRoleListing container-fluid w-50 text-center">
     <div class="d-flex mt-3 align-items-center">
@@ -17,7 +102,7 @@
         <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
       </ul>
     </div>
-    <h1 class="my-3 header">Update Role Listing</h1>
+    <h1 class="my-3 header p-4">Update Role Listing</h1>
     <div class="col mx-auto text-start">
       <div class="mb-3">
         <label for="roleListingID" class="form-label">Role Listing ID</label>
@@ -82,78 +167,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref } from 'vue'
-import { updateRoleListing } from '../service/rolelisting.service'
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
-let selectedData = null
-
-if (route.query.selectedData) {
-  try {
-    selectedData = JSON.parse(route.query.selectedData)
-  } catch (error) {
-    // Handle the JSON parsing error, e.g., log the error or provide a default value
-    console.error('Error parsing JSON data:', error)
-  }
-}
-
-// Define refs for selectedData properties
-const role_name = ref(selectedData?.role_name || '')
-const role_listing_open = ref(selectedData?.role_listing_open || '')
-const role_listing_close = ref(selectedData?.role_listing_close || '')
-const role_listing_desc = ref(selectedData?.role_listing_desc || '')
-const role_listing_id = ref(selectedData?.role_listing_id || '')
-const showSuccess = ref(false)
-const showError = ref(false)
-const errors = ref([])
-const id = JSON.parse(localStorage.getItem('id'))
-
-function update() {
-  errors.value = []
-  if (selectedData) {
-    const dataToUpdate = {
-      role_listing_updater: parseInt(id),
-      role_listing_id: selectedData.role_listing_id,
-      role_id: selectedData.role_id,
-      role_listing_desc: role_listing_desc.value,
-      role_listing_open: role_listing_open.value,
-      role_listing_close: role_listing_close.value
-    }
-
-    if (!role_listing_desc.value) {
-      errors.value.push("Role Listing Description can't be empty")
-    }
-    if (role_listing_open.value >= role_listing_close.value) {
-      errors.value.push(
-        'Role Listing Open date must be a date earlier than Role Listing Close date'
-      )
-    }
-    if (role_listing_close.value < new Date().toISOString().slice(0, 10)) {
-      errors.value.push(
-        'Role Listing Close date must be a date later than or equal to the Current date'
-      )
-    }
-    if (errors.value.length > 0) {
-      showError.value = true
-    } else {
-      updateRoleListing(dataToUpdate)
-        .then(() => {
-          showError.value = false
-          showSuccess.value = true
-          setTimeout(() => {
-            showSuccess.value = false
-          }, 5000)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    }
-  } else {
-    // Handle the case where selectedData is null
-    console.error('selectedData is null')
-  }
-}
-</script>

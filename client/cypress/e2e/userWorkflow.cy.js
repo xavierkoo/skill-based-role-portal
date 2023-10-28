@@ -71,7 +71,7 @@ describe('User Workflow', () => {
     // Assuming there's at least one job role item
     cy.get('.job-role-item').first().click()
     cy.get('.roleDetails').should('exist')
-    cy.get('.my-auto').should('exist') // role name
+    cy.get('#role_name').should('exist') // role name
     cy.get('.fw-bold').should('exist').contains('Posted On:') // posted on label
     cy.get('.check').should('exist') // posted on date and deadline
     cy.get('.fw-bold.isPosted').should('exist') // posted by or updated by label
@@ -84,26 +84,26 @@ describe('User Workflow', () => {
   it('User-7.1: should display more than one skill for a role that requires more than one skill', () => {
     cy.get('.defaultBtn').click()
     // Assuming there's at least one job role item
-    cy.get('.job-role-item').eq(1).click()
+    cy.get('.job-role-item').eq(2).click()
     cy.get('.skills-container').should('exist').contains('Pascal Programming')
     cy.get('.skills-container').should('exist').contains('Certified Scrum@Scale Practitioner')
   })
 
   it('User-8: should be able to navigate to the application status page', () => {
     cy.get('.defaultBtn').click()
-    cy.get('.nav-link').contains('Application Status').click()
+    cy.get('#status').click()
   })
 
   it('User-9: should display all relevant elements in the application status page', () => {
     cy.get('.defaultBtn').click()
-    cy.get('.nav-link').contains('Application Status').click()
+    cy.get('#status').click()
     cy.get('.table').should('exist')
     cy.get('td').should('exist').contains('applied')
   })
 
   it('User-10: should contain the applied application', () => {
     cy.get('.defaultBtn').click()
-    cy.get('.nav-link').contains('Application Status').click()
+    cy.get('#status').click()
     cy.get('.table').should('exist').contains('Agile Coach (SM)')
     cy.get('.table').contains('applied')
   })

@@ -12,7 +12,9 @@ const mockRoleListings = [
     role_listing_desc: 'This is a sample job role description.',
     role_listing_source: 201,
     role_listing_open: '2023-08-01',
-    role_listing_close: '2023-08-15',
+    role_listing_close: new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split('T')[0],
     role_description: 'Learning Facilitator',
     role_name: 'Talent Attraction',
     role_status: 'active',
@@ -169,7 +171,7 @@ describe('JobRoleList', () => {
     // Mount your Vue component
     const wrapper = mount(JobRoleListView)
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1100))
+    await new Promise((resolve) => setTimeout(resolve, 10))
     // Assert that the component displays "No job roles available."
     expect(wrapper.text()).toContain('No job roles available.')
     // Restore the Axios mock adapter to its original state
@@ -194,7 +196,7 @@ describe('JobRoleList', () => {
     const wrapper = mount(JobRoleListView)
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1100))
+    await new Promise((resolve) => setTimeout(resolve, 10))
     // Ensure that the data is properly set
     expect(wrapper.find('#rname').text()).toContain('Talent Attraction')
     expect(wrapper.findComponent(CalculateRoleMatch).exists()).toBe(true)
@@ -221,7 +223,7 @@ describe('JobRoleList', () => {
     const wrapper = mount(JobRoleListView)
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1100))
+    await new Promise((resolve) => setTimeout(resolve, 10))
     // Ensure that the data is properly set
     expect(wrapper.find('.card-body').exists()).toBe(true)
     expect(wrapper.findComponent(CalculateRoleMatch).exists()).toBe(true)
@@ -254,7 +256,7 @@ describe('JobRoleList', () => {
     // Mount your Vue component
     const wrapper = mount(JobRoleListView)
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1100))
+    await new Promise((resolve) => setTimeout(resolve, 10))
     // Assert that the component displays "No job roles available."
     expect(wrapper.text()).toContain('No job roles available.')
     // Restore the Axios mock adapter to its original state
@@ -279,7 +281,7 @@ describe('JobRoleList', () => {
     const wrapper = mount(JobRoleListView)
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1100))
+    await new Promise((resolve) => setTimeout(resolve, 10))
     // Ensure that the data is properly set
     expect(wrapper.find('#rname').text()).toContain('Talent Attraction')
     expect(wrapper.find('#rstatus').text()).toContain('Active')
@@ -308,7 +310,7 @@ describe('JobRoleList', () => {
     const wrapper = mount(JobRoleListView)
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1100))
+    await new Promise((resolve) => setTimeout(resolve, 10))
     // Ensure that the data is properly set
     expect(wrapper.find('#rname').exists()).toBe(true)
     expect(wrapper.find('.card-body').exists()).toBe(true)
@@ -365,7 +367,7 @@ describe('JobRoleList', () => {
     })
     const wrapper = mount(JobRoleListView)
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1100))
+    await new Promise((resolve) => setTimeout(resolve, 10))
     expect(wrapper.find('#CalculateRoleMatchStaff').exists()).toBe(true)
     expect(wrapper.text()).toContain('% match')
     mock.restore()
@@ -389,8 +391,8 @@ describe('JobRoleList', () => {
     const wrapper = mount(JobRoleListView)
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1100))
-    expect(wrapper.find('#CalculateRoleMatchStaff').text()).toBe('100.00 % match')
+    await new Promise((resolve) => setTimeout(resolve, 10))
+    expect(wrapper.find('#CalculateRoleMatchStaff').text()).toBe('100 % match')
     expect(wrapper.text()).toContain('% match')
     mock.restore()
   })
@@ -413,7 +415,7 @@ describe('JobRoleList', () => {
     const wrapper = mount(JobRoleListView)
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1100))
+    await new Promise((resolve) => setTimeout(resolve, 10))
     expect(wrapper.find('#CalculateRoleMatchStaff').text()).toBe('0 % match')
   })
 
@@ -435,8 +437,8 @@ describe('JobRoleList', () => {
     const wrapper = mount(JobRoleListView)
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1100))
-    expect(wrapper.find('#CalculateRoleMatchStaff').text()).toBe('100.00 % match')
+    await new Promise((resolve) => setTimeout(resolve, 10))
+    expect(wrapper.find('#CalculateRoleMatchStaff').text()).toBe('100 % match')
   })
 
   it('Verifies the successful filtering of open role listings based on selectedSkill', async () => {
@@ -464,7 +466,7 @@ describe('JobRoleList', () => {
     wrapper.vm.selectedSkill = 'Python Programming'
 
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1100))
+    await new Promise((resolve) => setTimeout(resolve, 10))
 
     expect(wrapper.find('#rname').text()).toContain('Talent Attraction')
   })
@@ -494,7 +496,7 @@ describe('JobRoleList', () => {
     wrapper.vm.selectedSkill = 'Python Programming1'
 
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1100))
+    await new Promise((resolve) => setTimeout(resolve, 10))
 
     expect(wrapper.find('#role-error').exists()).toBe(true)
   })
@@ -524,7 +526,7 @@ describe('JobRoleList', () => {
     wrapper.vm.selectedSkill = ['Python Programming', 'Certified Scrum Professional']
 
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1100))
+    await new Promise((resolve) => setTimeout(resolve, 10))
 
     expect(wrapper.find('#role-error').exists()).toBe(true)
     expect(wrapper.find('#role-error').text()).toContain('Please select only 1 skill to filter.')
@@ -548,7 +550,7 @@ describe('JobRoleList', () => {
     const wrapper = mount(JobRoleListView)
     // Wait for the component to finish rendering after axios call
     await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1100))
+    await new Promise((resolve) => setTimeout(resolve, 10))
     // Ensure that the data is properly set
     expect(wrapper.find('#filter').exists()).toBe(true)
     expect(wrapper.find('#filter-label').text()).toContain('Filter by skill:')

@@ -16,8 +16,8 @@ describe('Source Manager Workflow', () => {
     cy.get('#dropdown').select('Source Manager')
     cy.get('.defaultBtn').click()
     cy.get('.status').should('exist')
-    cy.get('.applicants').should('exist')
-    cy.get('.create').should('not.exist')
+    cy.get('#applicants').should('exist')
+    cy.get('#create').should('not.exist')
     cy.get('.logout').should('exist')
     cy.get('.talentNav').should('exist')
   })
@@ -25,8 +25,8 @@ describe('Source Manager Workflow', () => {
   it('SM-4: should direct to view role applicants page when view role applicants button is clicked', () => {
     cy.get('#dropdown').select('Source Manager')
     cy.get('.defaultBtn').click()
-    cy.get('.active.applicants').click()
-    cy.get('h1').should('exist').contains('Role Applicants')
+    cy.get('#applicants').click()
+    cy.get('h2').should('exist').contains('Role Applicants')
   })
 
   it('SM-5: should logout when logout button is clicked', () => {

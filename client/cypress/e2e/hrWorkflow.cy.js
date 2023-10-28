@@ -48,7 +48,7 @@ describe('HR Workflow', () => {
     // Assuming there's at least one job role item
     cy.get('.job-role-item').first().click()
     cy.get('.roleDetails').should('exist')
-    cy.get('.my-auto').should('exist') // role name
+    cy.get('#role_name').should('exist') // role name
     cy.get('.fw-bold').should('exist').contains('Posted On:') // posted on label
     cy.get('.check').should('exist') // posted on date and deadline
     cy.get('.fw-bold.isPosted').should('exist') // posted by or updated by label
@@ -73,7 +73,7 @@ describe('HR Workflow', () => {
     cy.get('#application')
       .should('exist')
       .contains(/Role Listing ID: \d+/) // role listing id dynamic id
-    cy.get('#roleName').should('have.value', 'Agile Coach (SM)')
+    cy.get('#roleName').should('have.value', 'Head, Talent Attraction') // role name
     cy.get('.form-label').should('exist').contains('Why do you want this role? (Max 100 words)')
     cy.get('.form-control').should('exist')
     cy.get('.modal-footer').should('exist').contains('Submit')
@@ -125,23 +125,23 @@ describe('HR Workflow', () => {
   it('HR-13: should navigate to the create role listing page when create role listing nav bar button is clicked', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
-    cy.get('.create').click()
+    cy.get('#create').click()
     cy.get('#exampleModal').should('exist')
   })
 
   it('HR-14: should show error notification when create role listing button is clicked with invalid input', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
-    cy.get('.create').click()
     cy.get('#create').click()
+    cy.get('.defaultBtn').click()
     cy.get('.text-danger').should('exist').contains('Role Listing Creation Failed')
   })
 
   it('HR-15: should direct to view role applicants page when view role applicants button is clicked', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
-    cy.get('.active.applicants').click()
-    cy.get('h1').should('exist').contains('Role Applicants')
+    cy.get('#applicants').click()
+    cy.get('h2').should('exist').contains('Role Applicants')
   })
 
   it('HR-16: should logout when logout button is clicked', () => {
@@ -155,8 +155,8 @@ describe('HR Workflow', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
     cy.get('.status').should('exist')
-    cy.get('.applicants').should('exist')
-    cy.get('.create').should('exist')
+    cy.get('#applicants').should('exist')
+    cy.get('#create').should('exist')
     cy.get('.logout').should('exist')
     cy.get('.talentNav').should('exist') // company logo
   })

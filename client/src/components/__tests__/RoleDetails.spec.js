@@ -89,7 +89,7 @@ const roleDetailsProps = {
   role_listing_desc:
     "The Head, Talent Attraction is responsible for strategic workforce planning to support the organisation's growth strategies through establishing talent sourcing strategies, determining the philosophy for the selection and securing of candidates and overseeing the onboarding and integration of new hires into the organisation. He/She develops various approaches to meet workforce requirements and designs employer branding strategies. He oversees the selection processes and collaborates with business stakeholders for the hiring of key leadership roles. As a department head, he is responsible for setting the direction and articulating goals and objectives for the team, and driving the integration of Skills Frameworks across the organisation's talent attraction plans.The Head, Talent Attraction is an influential and inspiring leader who adopts a broad perspective in the decisions he makes. He is articulate and displays a genuine passion for motivating and developing his team.",
   role_listing_open: '10/11/2023',
-  role_listing_close: '24/11/2023',
+  role_listing_close: '24/11/2024',
   role_skills: [
     'Pascal Programming',
     'Python Programming',
@@ -449,7 +449,7 @@ describe('RoleDetails', () => {
     const bgSuccessElements = wrapper.findAll('.bg-success')
     expect(bgSuccessElements.some((el) => el.text() === 'Python Programming')).toBeTruthy()
     expect(bgSuccessElements.some((el) => el.text() === 'Pascal Programming')).toBeTruthy()
-    expect(wrapper.find('#CalculateRoleMatch').text()).toContain('25.00')
+    expect(wrapper.find('#CalculateRoleMatch').text()).toContain('25')
 
     mock.restore()
   })
@@ -476,7 +476,7 @@ describe('RoleDetails', () => {
     const bgSuccessElements = wrapper.findAll('.bg-success')
     expect(bgSuccessElements.some((el) => el.text() === 'Python Programming')).toBeTruthy()
     expect(bgSuccessElements.some((el) => el.text() === 'Pascal Programming')).toBeTruthy()
-    expect(wrapper.find('#CalculateRoleMatch').text()).toContain('25.00')
+    expect(wrapper.find('#CalculateRoleMatch').text()).toContain('25')
     expect(wrapper.html()).toContain('% match')
   })
 
