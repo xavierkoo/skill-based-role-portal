@@ -3,23 +3,23 @@ describe('HR Workflow', () => {
     cy.visit('http://localhost:8080')
   })
 
-  it('should display the login page', () => {
+  it('HR-1: should display the login page', () => {
     cy.get('.login').should('exist')
   })
 
-  it('should log in as an HR and redirect to the role listings page', () => {
+  it('HR-2: should log in as an HR and redirect to the role listings page displaying a list of available role listings', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
   })
 
-  it('should filter roles by skill successfully', () => {
+  it('HR-3: should filter roles by skill successfully', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
     cy.get('select.form-select').select('Python Programming')
     cy.get('.job-role-item').should('have.length.greaterThan', 0)
   })
 
-  it('should display all relevant details in a job role item', () => {
+  it('HR-4: should display all relevant details in a job role item', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
     // Assuming there's at least one job role item
@@ -34,7 +34,7 @@ describe('HR Workflow', () => {
     cy.get('small').should('exist').contains('Closing Date') // expiry date
   })
 
-  it('should display expanded role details when a role header is clicked', () => {
+  it('HR-5: should display expanded role details when a role header is clicked', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
     // Assuming there's at least one job role item
@@ -42,7 +42,7 @@ describe('HR Workflow', () => {
     cy.get('.card-text').should('exist')
   })
 
-  it('should display all relevant elements in the expanded role details', () => {
+  it('HR-6: should display all relevant elements in the expanded role details', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
     // Assuming there's at least one job role item
@@ -59,14 +59,14 @@ describe('HR Workflow', () => {
     cy.get('.description').should('exist') // description
   })
 
-  it('should open the application modal when apply button is clicked', () => {
+  it('HR-7: should open the application modal when apply button is clicked', () => {
     cy.get('.defaultBtn').click()
     cy.get('.job-role-item').first().click()
     cy.get('.badge.rounded-pill.bg-primary.text-white.p-2').first().click()
     cy.get('#applicationModal').should('exist')
   })
 
-  it('should display all relevant elements in the application modal', () => {
+  it('HR-8: should display all relevant elements in the application modal', () => {
     cy.get('.defaultBtn').click()
     cy.get('.job-role-item').first().click()
     cy.get('.badge.rounded-pill.bg-primary.text-white.p-2').first().click()
@@ -79,7 +79,7 @@ describe('HR Workflow', () => {
     cy.get('.modal-footer').should('exist').contains('Submit')
   })
 
-  it('should display update role listing page when update button is clicked', () => {
+  it('HR-9: should display update role listing page when update button is clicked', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
     cy.get('.job-role-item').first().click()
@@ -87,7 +87,7 @@ describe('HR Workflow', () => {
     cy.get('.updateRoleListing').should('exist')
   })
 
-  it('should return to role listings page when back button is clicked', () => {
+  it('HR-10: should return to role listings page when back button is clicked and display all relevant elements', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
     cy.get('.job-role-item').first().click()
@@ -96,7 +96,7 @@ describe('HR Workflow', () => {
     cy.get('.job-role-item').should('exist')
   })
 
-  it('should return two error messages when update button is clicked with close date that is not later than or equal to the current date and Role Listing Open date not earlier than Role Listing Close date', () => {
+  it('HR-11: should return two error messages when update button is clicked with close date that is not later than or equal to the current date and Role Listing Open date not earlier than Role Listing Close date', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
     cy.get('.job-role-item').first().click()
@@ -111,7 +111,7 @@ describe('HR Workflow', () => {
       'Role Listing Open date must be a date earlier than Role Listing Close date'
     )
   })
-  it('should return a success message when role listing is updated successfully', () => {
+  it('HR-12: should return a success message when role listing is updated successfully', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
     cy.get('.job-role-item').first().click()
@@ -122,14 +122,14 @@ describe('HR Workflow', () => {
     cy.get('.noti').should('exist').contains('Role Listing Successfully Updated')
   })
 
-  it('should navigate to the create role listing page when create role listing nav bar button is clicked', () => {
+  it('HR-13: should navigate to the create role listing page when create role listing nav bar button is clicked', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
     cy.get('.create').click()
     cy.get('#exampleModal').should('exist')
   })
 
-  it('should show error notification when create role listing button is clicked with invalid input', () => {
+  it('HR-14: should show error notification when create role listing button is clicked with invalid input', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
     cy.get('.create').click()
@@ -137,17 +137,27 @@ describe('HR Workflow', () => {
     cy.get('.text-danger').should('exist').contains('Role Listing Creation Failed')
   })
 
-  it('should direct to view role applicants page when view role applicants button is clicked', () => {
+  it('HR-15: should direct to view role applicants page when view role applicants button is clicked', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
     cy.get('.active.applicants').click()
     cy.get('h1').should('exist').contains('Role Applicants')
   })
 
-  it('should logout when logout button is clicked', () => {
+  it('HR-16: should logout when logout button is clicked', () => {
     cy.get('#dropdown').select('HR')
     cy.get('.defaultBtn').click()
     cy.get('.nav-link.logout').first().click()
     cy.get('.login').should('exist')
+  })
+
+  it('HR-17: should only show Create Application, View Role Applicants, Application Status, Company Logo, and Logout options in the Navbar.', () => {
+    cy.get('#dropdown').select('HR')
+    cy.get('.defaultBtn').click()
+    cy.get('.status').should('exist')
+    cy.get('.applicants').should('exist')
+    cy.get('.create').should('exist')
+    cy.get('.logout').should('exist')
+    cy.get('.talentNav').should('exist') // company logo
   })
 })
