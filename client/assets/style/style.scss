@@ -75,15 +75,9 @@ p {
 .disabledBtn {
     border-radius: 16px;
     padding: 8px 16px;
-    background-color: $disabledHover;
+    background-color: #c4c9ce;
     color: $dark;
-    border: none;
-
-    // on hover change background color to disabled hover color
-    &:hover {
-        background-color: $disabledHover;
-        color: $dark;
-    }
+    border: black 2px solid;
 }
 
 
@@ -328,20 +322,18 @@ p {
 
 }
 
-.roleApplicants {
-    .bg-warning {
-        background-color: #c37d16 !important;
-    }
+.bg-warning{
+    background-color: #c37d16 !important;
+}
+.bg-danger{
+    background-color: #cb112da9 !important;
+}
+.bg-success{
+    background-color: #41987b!important;
+}
 
-    .bg-danger {
-        background-color: #cb112da9 !important;
-    }
-
-    .bg-success {
-        background-color: #41987b !important;
-    }
-
-    .job-role-item {
+.roleApplicants{
+    .job-role-item{
         background-color: $light;
     }
 
@@ -359,9 +351,50 @@ p {
     }
 }
 
+.jobRoleList{
+
+    :hover .job-role-item {
+        cursor: pointer;
+    }
+    .job-role-item .no-underline a {
+    text-decoration: none !important;
+    }
+    
+    .job-role-item:hover .no-underline a {
+    text-decoration: underline !important;
+    }
+    .job-role-item:hover {
+    background-color: rgb(247, 247, 247);
+    }
+    .job-role-item{
+        background-color: $light ;
+        
+    }
+    .skillBadge{
+        background-color: #c4c9ce !important;
+    }
+}
+
 
 
 .roleDetails {
+    background-color: $light;
+
+    #CalculateRoleMatch{
+        background-color: #c4c9ce !important;
+        padding:8px;
+    }
+
+    .bg-success{
+        background-color: #41987b !important;
+        padding:8px
+    }
+
+    .bg-secondary{
+        background-color: #c4c9ce !important;
+        padding:8px
+    }
+
     @media (min-width: 320px) {
         font-size: calc(0.7em + 0.5vw);
 
@@ -380,7 +413,7 @@ p {
 
     @media (min-width: 766px) {
         font-size: calc(0.7em + 0.5vw);
-        width: 75%;
+        width: 100%;
 
         .details {
             display: flex;
@@ -390,6 +423,6 @@ p {
 
     @media (min-width: 2040px) {
         font-size: calc(0.5em + 0.5vw);
-        width: 75%;
+        width: 100%;
     }
 }

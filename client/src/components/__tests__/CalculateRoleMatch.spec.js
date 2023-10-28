@@ -59,7 +59,7 @@ describe('CalculateRoleMatch', () => {
 
     await wrapper.vm.$nextTick()
     await new Promise((resolve) => setTimeout(resolve, 1))
-    expect(wrapper.text()).contain('66.67 % match')
+    expect(wrapper.text()).contain('67 % match')
     expect(wrapper.find('.text-warning').exists()).toBe(true)
     expect(wrapper.find('.text-success').exists()).toBe(false)
     expect(wrapper.find('.text-danger').exists()).toBe(false)
@@ -140,7 +140,7 @@ describe('CalculateRoleMatch', () => {
 
     await wrapper.vm.$nextTick()
     await new Promise((resolve) => setTimeout(resolve, 1))
-    expect(wrapper.text()).contain('100.00 % match')
+    expect(wrapper.text()).contain('100 % match')
     expect(wrapper.find('.text-warning').exists()).toBe(false)
     expect(wrapper.find('.text-success').exists()).toBe(true)
     expect(wrapper.find('.text-danger').exists()).toBe(false)

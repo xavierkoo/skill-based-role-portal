@@ -12,9 +12,8 @@ const availableSkills = ref([])
 const selectedSkill = ref('')
 const jobRoles = ref([])
 const userType = ref('')
-// const currentDate = new Date()
+const currentDate = new Date()
 const userID = localStorage.getItem('id')
-const currentDate = new Date('2020-01-16')
 const isMounted = ref(false)
 const currentUserType = ref('')
 const roleDetails = ref({
@@ -74,14 +73,35 @@ const getAvailableSkills = async () => {
 // Set the data
 const setData = (data) => {
   jobRoles.value = data
+  if (userType.value === 'staff' || userType.value === 'manager') {
+    jobRoles.value = jobRoles.value.filter((jobRole) => {
+      //Convert role_listing_close to a date object
+      const closeDate = new Date(jobRole.role_listing_close)
+      const openDate = new Date(jobRole.role_listing_open)
+      // Compare the closeDate with today's date
+      return closeDate >= currentDate && openDate <= currentDate
+    })
+  }
 }
 
 watchEffect(() => {
   // Filter job roles based on selected skill
-  if (selectedSkill.value) {
+  if (selectedSkill.value && userType.value === 'hr') {
     jobRoles.value = initialRoles.value.filter((jobRole) =>
       jobRole.role_skills.includes(selectedSkill.value)
     )
+  } else if (selectedSkill.value && (userType.value === 'staff' || userType.value === 'manager')) {
+    jobRoles.value = initialRoles.value.filter((jobRole) => {
+      //Convert role_listing_close to a date object
+      const closeDate = new Date(jobRole.role_listing_close)
+      const openDate = new Date(jobRole.role_listing_open)
+      // Compare the closeDate with today's date
+      return (
+        closeDate >= currentDate &&
+        openDate <= currentDate &&
+        jobRole.role_skills.includes(selectedSkill.value)
+      )
+    })
   } else {
     // If no skill is selected, show all job roles
     setData(initialRoles.value)
@@ -97,24 +117,7 @@ const getData = async () => {
   } catch (error) {
     console.error('Error fetching data:', error)
   }
-
-  //
-  // TODO - Adjust the SEED Data to include a wider range of joblistings with different dates
-  //
-  // if (userType.value === 'staff') {
-  //   jobRoles.value = jobRoles.value.filter((jobRole) => {
-  //        //Convert role_listing_close to a date object
-  //     const closeDate = new Date(jobRole.role_listing_close)
-
-  //     // Compare the closeDate with today's date
-  //     return closeDate >= currentDate
-  //   })
-  // }
 }
-//     // Compare the closeDate with today's date
-//     return closeDate >= currentDate
-//   })
-// }
 
 // Truncate the text
 function truncateText(text, maxLength) {
@@ -138,7 +141,7 @@ const getUserType = async () => {
         window.addEventListener('resize', updateShouldHide)
         setTimeout(() => {
           isMounted.value = true
-        }, 1000)
+        }, 1)
       }
     })
     .catch((error) => {
@@ -182,7 +185,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="userType == 'staff' || userType == 'hr' || userType == 'manager'">
+  <div v-if="userType == 'staff' || userType == 'hr' || userType == 'manager'" class="jobRoleList">
     <div class="d-flex justify-content-end me-5 mt-3">
       <label id="filter-label" class="me-2 mt-2">Filter by skill:</label>
       <select id="filter" v-model="selectedSkill" class="form-select" style="max-width: 200px">
@@ -204,7 +207,7 @@ onMounted(() => {
               <!-- check if the selectedSkill has more than 1 value -->
               <div v-if="selectedSkill">
                 <p
-                  v-if="selectedSkill?.length > 1"
+                  v-if="Array.isArray(selectedSkill)"
                   id="role-error"
                   class="text-primary text-center"
                 >
@@ -225,50 +228,58 @@ onMounted(() => {
                 <div
                   v-for="(jobRole, key) in jobRoles"
                   :key="key"
-                  class="job-role-item mb-4 border-bottom"
+                  class="job-role-item mb-4 border-bottom shadow-sm p-4 rounded border jobs"
+                  :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
                   @click="goToRolePage(jobRole)"
                 >
-                  <div
-                    class="card-body"
-                    :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
-                  >
+                  <div class="card-body">
                     <div class="row">
-                      <div class="col-md-8 col-xl-8 col-xxl-8">
+                      <div class="col-12">
                         <h5
-                          class="card-title"
+                          class="card-title me-2"
                           :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
                         >
                           <a id="rname" href="#" class="card-link text-normal me-2">{{
                             jobRole.role_name
                           }}</a>
-                          <p
-                            v-if="calculateDaysUntilOpen(jobRole.role_listing_close) < 0"
-                            id="rstatus"
-                            class="badge rounded-pill bg-danger text-white p-2"
-                          >
-                            Inactive
-                          </p>
-                          <p
-                            v-else
-                            id="rstatus"
-                            class="badge rounded-pill bg-success text-white p-2"
-                          >
-                            Active
-                          </p>
                           <CalculateRoleMatch
                             id="CalculateRoleMatchHR"
-                            class="ms-2"
+                            style="padding: 8px"
+                            class="skillBadge"
                             :role-skills="jobRole.role_skills"
                           />
                         </h5>
                       </div>
                       <div class="col">
-                        <p id="rmanage" class="badge rounded-pill bg-secondary text-white p-2">
+                        <p
+                          v-if="
+                            calculateDaysSinceOpen(jobRole.role_listing_open) < 0 ||
+                            calculateDaysUntilOpen(jobRole.role_listing_close) < 0
+                          "
+                          id="rstatus"
+                          class="badge rounded-pill bg-danger text-white me-2 mt-1"
+                          style="padding: 8px"
+                        >
+                          Inactive
+                        </p>
+                        <p
+                          v-else
+                          id="rstatus"
+                          class="badge rounded-pill bg-success text-white me-2 mt-1"
+                          style="padding: 8px 12px"
+                        >
+                          Active
+                        </p>
+                        <p
+                          id="rmanage"
+                          class="badge rounded-pill bg-secondary text-white mt-1"
+                          style="padding: 8px"
+                        >
                           Manage
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
+                            width="12"
+                            height="12"
                             fill="currentColor"
                             class="bi bi-gear"
                             viewBox="0 0 16 16"
@@ -287,7 +298,7 @@ onMounted(() => {
                       <div
                         v-for="(roleSkill, index2) in jobRole.role_skills"
                         :key="index2"
-                        class="skill-badge badge rounded-pill bg-light text-dark p-2 me-2"
+                        class="skill-badge badge rounded-pill bg-light text-dark p-2 me-2 skillBadge"
                       >
                         {{ roleSkill }}
                       </div>
@@ -312,15 +323,13 @@ onMounted(() => {
                 <div
                   v-for="(jobRole, index) in jobRoles"
                   :key="index"
-                  class="job-role-item mb-4 border-bottom"
+                  class="job-role-item mb-4 border-bottom shadow-sm p-4 rounded border jobs"
+                  :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
                   @click="goToRolePage(jobRole)"
                 >
-                  <div
-                    class="card-body"
-                    :class="{ 'bg-light': jobRole.role_name == roleDetails.role_name }"
-                  >
-                    <div class="row">
-                      <div class="col-md-8 col-xl-8 col-xxl-9">
+                  <div class="card-body">
+                    <div class="d-sm-flex justify-content-between">
+                      <div>
                         <h5
                           class="card-title"
                           :class="{ 'no-underline': jobRole.role_name != roleDetails.role_name }"
@@ -330,12 +339,13 @@ onMounted(() => {
                           }}</a>
                           <CalculateRoleMatch
                             id="CalculateRoleMatchStaff"
-                            class="ms-2"
+                            class="ms-2 skillBadge"
+                            style="padding: 8px"
                             :role-skills="jobRole.role_skills"
                           />
                         </h5>
                       </div>
-                      <div class="col">
+                      <div>
                         <p class="badge rounded-pill bg-primary text-white p-2">
                           Apply
                           <svg
@@ -357,7 +367,7 @@ onMounted(() => {
                       <div
                         v-for="(roleSkill, index2) in jobRole.role_skills"
                         :key="index2"
-                        class="badge rounded-pill bg-light text-dark p-2 me-2"
+                        class="badge rounded-pill bg-light text-dark p-2 me-2 skillBadge"
                       >
                         {{ roleSkill }}
                       </div>
@@ -413,16 +423,3 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped>
-:hover .job-role-item {
-  cursor: pointer;
-}
-.job-role-item .no-underline a {
-  text-decoration: none !important;
-}
-
-.job-role-item:hover .no-underline a {
-  text-decoration: underline !important;
-}
-</style>

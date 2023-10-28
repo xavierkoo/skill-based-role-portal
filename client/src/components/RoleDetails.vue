@@ -76,6 +76,7 @@ export default {
     // Fetch the staff application
     const fetchStaffApplication = async (id) => {
       try {
+        applied.value = false
         const applications = await getRoleApplicationById(id)
         for (let app of applications.data.Results) {
           if (app.role_listing_id == props.roleDetails.role_listing_id) {
@@ -128,22 +129,58 @@ export default {
 
 <template>
   <RoleApplication :role-details="roleDetails" />
-  <div class="roleDetails container-fluid px-5">
+  <div class="roleDetails container-fluid p-5 shadow-sm border rounded-3">
     <div class="d-sm-flex justify-content-between">
-      <h1 id="role_name" class="my-auto">
-        {{ roleDetails.role_name == '' ? 'TBC' : roleDetails.role_name }}
-      </h1>
-      <button
-        v-if="user == 'hr'"
-        id="update_btn"
-        role="link"
-        class="updateBtn w-sm-50 my-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view"
-        @click="
-          $router.push({ path: '/update', query: { selectedData: JSON.stringify(roleDetails) } })
-        "
-      >
-        <span class="artdeco-button__text"> Update </span>
-      </button>
+      <div>
+        <h1 id="role_name" class="mb-3">
+          {{ roleDetails.role_name == '' ? 'TBC' : roleDetails.role_name }}
+        </h1>
+      </div>
+      <div class="d-flex justify-content-between">
+        <button
+          v-if="user == 'hr'"
+          id="update_btn"
+          role="link"
+          class="updateBtn w-sm-50 mb-3 me-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view"
+          @click="
+            $router.push({ path: '/update', query: { selectedData: JSON.stringify(roleDetails) } })
+          "
+        >
+          <span class="artdeco-button__text"> Update </span>
+        </button>
+        <button
+          id="apply_btn"
+          role="link"
+          :class="
+            applied
+              ? 'disabledBtn d-flex w-sm-50 mb-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view'
+              : 'defaultBtn d-flex w-sm-50 mb-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view'
+          "
+          data-bs-toggle="modal"
+          data-bs-target="#applicationModal"
+          :disabled="applied"
+        >
+          <div aria-hidden="true" type="link-external" class="artdeco-button__icon" size="small">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              data-supported-dps="16x16"
+              fill="currentColor"
+              class="mercado-match me-1"
+              width="16"
+              height="16"
+              focusable="false"
+            >
+              <path
+                d="M15 1v6h-2V4.41L7.41 10 6 8.59 11.59 3H9V1zm-4 10a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1h2V3H5a3 3 0 00-3 3v5a3 3 0 003 3h5a3 3 0 003-3V9h-2z"
+              ></path>
+            </svg>
+          </div>
+          <span id="applyText" class="artdeco-button__text"
+            >{{ applied ? 'Applied' : 'Apply' }}
+          </span>
+        </button>
+      </div>
     </div>
 
     <div class="details">
@@ -165,7 +202,7 @@ export default {
         }}</a>
       </div>
     </div>
-    <div>
+    <div class="mb-3">
       <span id="closed_on" class="fw-bold">Deadline: </span>
       <span id="close" class="check">{{
         roleDetails.role_listing_close == '' ? 'TBC' : roleDetails.role_listing_close
@@ -209,37 +246,8 @@ export default {
         </div>
       </div>
     </div>
-    <button
-      id="apply_btn"
-      role="link"
-      :class="
-        applied
-          ? 'updateBtn d-flex w-sm-50 my-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view'
-          : 'defaultBtn d-flex w-sm-50 my-3 artdeco-button artdeco-button--icon-right artdeco-button--3 artdeco-button--primary ember-view'
-      "
-      data-bs-toggle="modal"
-      data-bs-target="#applicationModal"
-      :disabled="applied"
-    >
-      <div aria-hidden="true" type="link-external" class="artdeco-button__icon" size="small">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 16 16"
-          data-supported-dps="16x16"
-          fill="currentColor"
-          class="mercado-match me-1"
-          width="16"
-          height="16"
-          focusable="false"
-        >
-          <path
-            d="M15 1v6h-2V4.41L7.41 10 6 8.59 11.59 3H9V1zm-4 10a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1h2V3H5a3 3 0 00-3 3v5a3 3 0 003 3h5a3 3 0 003-3V9h-2z"
-          ></path>
-        </svg>
-      </div>
-      <span id="applyText" class="artdeco-button__text">{{ applied ? 'Applied' : 'Apply' }} </span>
-    </button>
-    <h2 id="descLabel">About the job</h2>
+    <hr />
+    <h2 id="descLabel" class="text-muted">About the job</h2>
     <h5 id="responsibilities" class="my-3">Responsibilities</h5>
     <div id="desc" class="description">
       {{ roleDetails.role_listing_desc == '' ? 'TBC' : roleDetails.role_listing_desc }}
