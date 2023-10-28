@@ -50,32 +50,32 @@ function reset() {
       <div id="navbarSupportedContent" class="collapse navbar-collapse">
         <ul class="navbar-nav me-auto mb-lg-0">
           <li class="nav-item px-1 px-md-3">
-            <router-link to="/rolelisting" class="nav-link status text-center">
+            <router-link id="home" to="/rolelisting" class="nav-link status text-center">
               <font-awesome-icon icon="fa-solid fa-house" size="xl" />
               <div class="caption">Home</div>
             </router-link>
           </li>
           <li v-if="userType == 'hr'" class="nav-item px-1 px-md-3">
-            <router-link to="/create" class="nav-link status text-center">
+            <router-link id="create" to="/create" class="nav-link status text-center">
               <font-awesome-icon icon="fa-solid fa-folder-plus" size="xl" />
               <div class="caption">Create</div></router-link
             >
           </li>
           <li v-if="userType == 'hr' || userType == 'manager'" class="nav-item px-md-3">
-            <router-link to="/roleapplicants" class="nav-link status text-center">
+            <router-link id="applicants" to="/roleapplicants" class="nav-link status text-center">
               <font-awesome-icon icon="fa-solid fa-users-viewfinder" size="xl" />
               <div class="caption">Applicants</div></router-link
             >
           </li>
           <li class="nav-item px-1 px-md-3">
-            <router-link to="/status" class="nav-link status text-center">
+            <router-link id="status" to="/status" class="nav-link status text-center">
               <font-awesome-icon icon="fa-solid fa-suitcase" size="xl" />
               <div class="caption">Status</div></router-link
             >
           </li>
         </ul>
         <ul class="navbar-nav ml-auto mb-lg-0">
-          <router-link to="/" class="nav-link status text-center logout" @click="reset">
+          <router-link id="logout" to="/" class="nav-link status text-center logout" @click="reset">
             <font-awesome-icon icon="fa-solid fa-right-from-bracket" size="xl" />
             <div class="caption">Logout</div></router-link
           >
