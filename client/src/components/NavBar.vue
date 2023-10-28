@@ -24,10 +24,17 @@ function reset() {
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand navbar-light bg-light">
     <div class="container-fluid">
       <router-link to="/rolelisting" class="navbar-brand company"
-        ><img class="talentNav" src="../../assets/style/img/TalentSync.png" alt=""
+        ><img
+          class="talentNav d-none d-sm-block"
+          src="../../assets/style/img/TalentSync.png"
+          alt="" />
+        <img
+          class="talentNav d-block d-sm-none"
+          src="../../assets/style/img/talentsync_small.png"
+          alt=""
       /></router-link>
       <button
         class="navbar-toggler"
@@ -41,27 +48,46 @@ function reset() {
         <span class="navbar-toggler-icon"></span>
       </button>
       <div id="navbarSupportedContent" class="collapse navbar-collapse">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li v-if="userType == 'hr'" class="nav-item">
-            <router-link to="/create" class="nav-link active create" aria-current="page"
-              >Create Role Listing</router-link
+        <ul class="navbar-nav me-auto mb-lg-0">
+          <li class="nav-item px-1 px-md-3">
+            <router-link to="/rolelisting" class="nav-link status text-center">
+              <font-awesome-icon icon="fa-solid fa-house" size="xl" />
+              <div class="caption">Home</div>
+            </router-link>
+          </li>
+          <li v-if="userType == 'hr'" class="nav-item px-1 px-md-3">
+            <router-link to="/create" class="nav-link status text-center">
+              <font-awesome-icon icon="fa-solid fa-folder-plus" size="xl" />
+              <div class="caption">Create</div></router-link
             >
           </li>
-          <li v-if="userType == 'hr' || userType == 'manager'" class="nav-item">
-            <router-link to="/roleapplicants/" class="nav-link active applicants"
-              >View Role Applicants</router-link
+          <li v-if="userType == 'hr' || userType == 'manager'" class="nav-item px-md-3">
+            <router-link to="/roleapplicants" class="nav-link status text-center">
+              <font-awesome-icon icon="fa-solid fa-users-viewfinder" size="xl" />
+              <div class="caption">Applicants</div></router-link
             >
           </li>
-          <li class="nav-item">
-            <router-link to="/status" class="nav-link active status"
-              >Application Status</router-link
+          <li class="nav-item px-1 px-md-3">
+            <router-link to="/status" class="nav-link status text-center">
+              <font-awesome-icon icon="fa-solid fa-suitcase" size="xl" />
+              <div class="caption">Status</div></router-link
             >
           </li>
         </ul>
-        <ul class="navbar-nav ml-auto">
-          <router-link to="/" class="nav-link logout" @click="reset">Logout</router-link>
+        <ul class="navbar-nav ml-auto mb-lg-0">
+          <router-link to="/" class="nav-link status text-center logout" @click="reset">
+            <font-awesome-icon icon="fa-solid fa-right-from-bracket" size="xl" />
+            <div class="caption">Logout</div></router-link
+          >
         </ul>
       </div>
     </div>
   </nav>
 </template>
+
+<style scoped>
+nav a.router-link-exact-active {
+  font-weight: bold;
+  color: #000;
+}
+</style>

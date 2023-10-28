@@ -55,6 +55,10 @@ p {
     font-size: $font-size-base;
 }
 
+.caption {
+    font-size: $font-size-caption
+}
+
 .defaultBtn {
     border-radius: 16px;
     padding: 8px 16px;
@@ -222,8 +226,9 @@ p {
 
 .updateRoleListing {
     background-color: $light;
-    padding:10px 30px;
+    padding: 10px 30px;
     border-radius: 16px;
+
     .header {
         background-color: rgb(89, 106, 141);
         color: $light;
@@ -302,6 +307,7 @@ p {
     @media (min-width: 2040px) {
         font-size: calc(0.5em + 0.5vw);
         width: 75%;
+
         .back {
             height: 45px;
             width: 45px;
@@ -309,39 +315,46 @@ p {
     }
 }
 
-.roleAppStatus{
-    .roleBorder{
-        padding:10px 30px;
+.roleAppStatus {
+    .roleBorder {
+        padding: 10px 30px;
         border-radius: 16px;
         background-color: $light;
     }
-    
-    .tableHeader{
+
+    .tableHeader {
         font-size: 20px;
     }
 
 }
 
-.roleApplicants{
-    .bg-warning{
+.roleApplicants {
+    .bg-warning {
         background-color: #c37d16 !important;
     }
-    .bg-danger{
+
+    .bg-danger {
         background-color: #cb112da9 !important;
     }
-    .bg-success{
-        background-color: #41987b!important;
+
+    .bg-success {
+        background-color: #41987b !important;
     }
-    .job-role-item{
+
+    .job-role-item {
         background-color: $light;
     }
-    .skillBadge{
+
+    .skillBadge {
         background-color: #c4c9ce !important;
     }
-    .footer{
-        background-color: $light !important;;
+
+    .footer {
+        background-color: $light !important;
+        ;
     }
-    .cardBody{
+
+    .cardBody {
         background-color: $light;
     }
 }
