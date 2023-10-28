@@ -150,7 +150,8 @@ onMounted(() => {
       </div>
     </div>
   </div>
-  <div class="updateRoleListing container-fluid w-50 text-center">
+
+  <div class="updateRoleListing container-fluid w-75 w-sm-50 text-center">
     <div class="text-start mt-3">
       <img
         class="back"
