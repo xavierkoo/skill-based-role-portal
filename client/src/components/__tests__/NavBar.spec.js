@@ -79,9 +79,10 @@ describe('NavBar', () => {
     await new Promise((resolve) => setTimeout(resolve, 1))
 
     // Check if the specified Navbar options are visible
-    expect(wrapper.text()).toContain('Create Role Listing')
-    expect(wrapper.html()).toContain('Application Status')
-    expect(wrapper.html()).toContain('View Role Applicants')
+    expect(wrapper.text()).toContain('Home')
+    expect(wrapper.text()).toContain('Create')
+    expect(wrapper.html()).toContain('Status')
+    expect(wrapper.html()).toContain('Applicants')
     expect(wrapper.find('.talentNav').exists()).toBeTruthy()
     expect(wrapper.html()).toContain('Logout')
   })
@@ -114,9 +115,10 @@ describe('NavBar', () => {
     await new Promise((resolve) => setTimeout(resolve, 1))
 
     // Check if the specified Navbar options are visible
-    expect(wrapper.text()).not.toContain('Create Role Listing')
-    expect(wrapper.html()).toContain('Application Status')
-    expect(wrapper.html()).toContain('View Role Applicants')
+    expect(wrapper.text()).toContain('Home')
+    expect(wrapper.text()).not.toContain('Create')
+    expect(wrapper.html()).toContain('Status')
+    expect(wrapper.html()).toContain('Applicants')
     expect(wrapper.find('.talentNav').exists()).toBeTruthy()
     expect(wrapper.html()).toContain('Logout')
   })
@@ -152,8 +154,9 @@ describe('NavBar', () => {
     await new Promise((resolve) => setTimeout(resolve, 1))
 
     // Check if the specified Navbar options are visible
-    expect(wrapper.html()).not.toContain('Create Role Listing')
-    expect(wrapper.html()).toContain('Application Status')
+    expect(wrapper.text()).toContain('Home')
+    expect(wrapper.html()).not.toContain('Create')
+    expect(wrapper.html()).toContain('Status')
     expect(wrapper.find('.talentNav').exists()).toBeTruthy()
     expect(wrapper.html()).toContain('Logout')
   })
@@ -187,7 +190,8 @@ describe('NavBar', () => {
 
     await wrapper.vm.$nextTick()
     await new Promise((resolve) => setTimeout(resolve, 1))
-    const createRoleLink = wrapper.get('a.create')
+
+    const createRoleLink = wrapper.find('#create')
     await createRoleLink.trigger('click')
 
     await new Promise((resolve) => setTimeout(resolve, 1))
@@ -225,13 +229,13 @@ describe('NavBar', () => {
 
     await wrapper.vm.$nextTick()
     await new Promise((resolve) => setTimeout(resolve, 1))
-    const createRoleLink = wrapper.get('a.applicants')
+    const createRoleLink = wrapper.find('#applicants')
     await createRoleLink.trigger('click')
 
     await new Promise((resolve) => setTimeout(resolve, 1))
 
     await router.isReady()
-    expect(router.currentRoute.value.path).toBe('/roleapplicants/')
+    expect(router.currentRoute.value.path).toBe('/roleapplicants')
   })
 
   it("Verify that users are redirected to the 'Application Status' page when 'Application Status' option is clicked.", async () => {
@@ -262,7 +266,7 @@ describe('NavBar', () => {
 
     await wrapper.vm.$nextTick()
     await new Promise((resolve) => setTimeout(resolve, 1))
-    const createRoleLink = wrapper.get('a.status')
+    const createRoleLink = wrapper.find('#status')
     await createRoleLink.trigger('click')
 
     await new Promise((resolve) => setTimeout(resolve, 1))
@@ -375,7 +379,7 @@ describe('NavBar', () => {
     await new Promise((resolve) => setTimeout(resolve, 1))
 
     // Check if 'Application Status' and logo are visible
-    expect(wrapper.html()).toContain('Application Status')
+    expect(wrapper.html()).toContain('Status')
     expect(wrapper.find('.talentNav').exists()).toBeTruthy()
   })
 
@@ -408,8 +412,8 @@ describe('NavBar', () => {
     await wrapper.vm.$nextTick()
     await new Promise((resolve) => setTimeout(resolve, 1))
 
-    expect(wrapper.html()).not.toContain('Create Role Listing')
-    expect(wrapper.html()).not.toContain('View Role Applicants')
+    expect(wrapper.html()).not.toContain('Create')
+    expect(wrapper.html()).not.toContain('Applicants')
   })
 
   it("Verify that HR personnel with maximum privileges can see 'Create Application,', 'View Role Applicants' 'Application Status,' 'Company Name,' and 'Logout' in the Navbar.", async () => {
@@ -442,9 +446,9 @@ describe('NavBar', () => {
     await new Promise((resolve) => setTimeout(resolve, 1))
 
     // Check if all options, including 'Create Role Listing,' are visible
-    expect(wrapper.html()).toContain('Create Role Listing')
-    expect(wrapper.html()).toContain('View Role Applicants')
-    expect(wrapper.html()).toContain('Application Status')
+    expect(wrapper.html()).toContain('Create')
+    expect(wrapper.html()).toContain('Applicants')
+    expect(wrapper.html()).toContain('Status')
     expect(wrapper.find('.talentNav').exists()).toBeTruthy()
     expect(wrapper.html()).toContain('Logout')
   })
@@ -479,9 +483,9 @@ describe('NavBar', () => {
     await new Promise((resolve) => setTimeout(resolve, 1))
 
     // Check if the minimum set of options is visible
-    expect(wrapper.html()).not.toContain('Create Role Listing')
-    expect(wrapper.html()).not.toContain('View Role Applicants')
-    expect(wrapper.html()).toContain('Application Status')
+    expect(wrapper.html()).not.toContain('Create')
+    expect(wrapper.html()).not.toContain('Applicants')
+    expect(wrapper.html()).toContain('Status')
     expect(wrapper.find('.talentNav').exists()).toBeTruthy()
     expect(wrapper.html()).toContain('Logout')
   })

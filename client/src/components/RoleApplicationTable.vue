@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps, onMounted, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { getRoleApplicationById } from '../service/roleApplication.service'
 
 const props = defineProps({
