@@ -34,8 +34,6 @@ export default {
   },
   methods: {
     submit() {
-      console.log(this.roleListingID)
-
       const hasSubmittedApplication = this.applications.some((app) => {
         return (
           app.role_listing_id === this.roleListingID && app.staff_id === localStorage.getItem('id')
@@ -54,8 +52,7 @@ export default {
       }
 
       createRoleApplication(applicationData)
-        .then((result) => {
-          console.log('success' + result)
+        .then(() => {
           this.applications.push(applicationData)
           this.errorMessage = ''
           this.submitted = true
