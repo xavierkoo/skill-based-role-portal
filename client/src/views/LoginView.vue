@@ -51,7 +51,7 @@ function login(user) {
         <div class="col-12 col-xl-6 d-flex justify-content-center align-items-center p-0">
           <div class="form">
             <div class="d-flex justify-content-xl-start justify-content-center">
-              <img class="talent my-4" src="../../assets/style/img/TalentSync.png" alt="" />
+              <img class="talent my-4" src="../../assets/style/img/SBRP.png" alt="" />
             </div>
             <div class="catchphrase mt-5">
               <div class="title">Discover The Perfect Role:</div>

@@ -27,14 +27,8 @@ function reset() {
   <nav class="navbar navbar-expand navbar-light bg-light">
     <div class="container-fluid">
       <router-link to="/rolelisting" class="navbar-brand company"
-        ><img
-          class="talentNav d-none d-sm-block"
-          src="../../assets/style/img/TalentSync.png"
-          alt="" />
-        <img
-          class="talentNav d-block d-sm-none"
-          src="../../assets/style/img/talentsync_small.png"
-          alt=""
+        ><img class="talentNav d-none d-sm-block" src="../../assets/style/img/SBRP.png" alt="" />
+        <img class="talentNav d-block d-sm-none" src="../../assets/style/img/SBRP_small.png" alt=""
       /></router-link>
       <button
         class="navbar-toggler"

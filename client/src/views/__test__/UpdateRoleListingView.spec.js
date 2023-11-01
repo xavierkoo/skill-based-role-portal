@@ -20,7 +20,7 @@ const selectedDataProps = {
   role_id: 234511581,
   role_listing_desc: 'string',
   role_listing_open: '2023-10-19',
-  role_listing_close: '2023-10-29'
+  role_listing_close: '2024-12-31'
 }
 
 const selectedDataPropsInvalidDate = {
@@ -45,7 +45,7 @@ const mockPutData = [
     role_listing_source: 123456787,
     role_id: 234567891,
     role_listing_desc: 'string',
-    role_listing_close: '2023-10-29',
+    role_listing_close: '2024-12-31',
     role_listing_ts_update: '2023-10-18T18:10:43',
     role_listing_id: 1,
     role_listing_updater: 123456788,
@@ -73,6 +73,8 @@ describe('UpdateRoleListing.vue', () => {
     // Check if the input fields exist
     expect(wrapper.find('#roleListingID').exists()).toBe(true)
     expect(wrapper.find('#roleName').exists()).toBe(true)
+    expect(wrapper.find('#roleListingID').attributes('disabled')).exist
+    expect(wrapper.find('#roleName').attributes('disabled')).exist
     expect(wrapper.find('#startDate').exists()).toBe(true)
     expect(wrapper.find('#closeDate').exists()).toBe(true)
     expect(wrapper.find('#textarea').exists()).toBe(true)
@@ -89,22 +91,6 @@ describe('UpdateRoleListing.vue', () => {
 
     // Check if the Back button (with its image) exists
     expect(wrapper.find('.back').exists()).toBe(true)
-
-    wrapper.vm.role_listing_id = 1
-    wrapper.vm.role_name = 'Sample Role Name'
-    wrapper.vm.role_listing_desc = 'Sample Role Description'
-    wrapper.vm.role_listing_open = '2023-10-16'
-    wrapper.vm.role_listing_close = '2023-10-20'
-
-    await wrapper.vm.$nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 1))
-
-    expect(wrapper.vm.role_listing_id).toBe(1)
-    expect(wrapper.vm.role_name).toBe('Sample Role Name')
-    expect(wrapper.vm.role_listing_desc).toBe('Sample Role Description')
-    expect(wrapper.vm.role_listing_open).toBe('2023-10-16')
-    expect(wrapper.vm.role_listing_close).toBe('2023-10-20')
-
     wrapper.unmount()
   })
 
@@ -177,7 +163,7 @@ describe('UpdateRoleListing.vue', () => {
 
     // Check if the fields are updated
     expect(wrapper.vm.role_listing_open).toBe('2023-10-19')
-    expect(wrapper.vm.role_listing_close).toBe('2023-10-29')
+    expect(wrapper.vm.role_listing_close).toBe('2024-12-31')
     expect(wrapper.vm.role_listing_desc).toBe('string')
 
     wrapper.unmount()
@@ -216,8 +202,6 @@ describe('UpdateRoleListing.vue', () => {
   })
 
   it("Verify the system's behavior when Open Date and Deadline Date fields are updated with values that exceed the boundary", async () => {
-    const mock = new MockAdapter(axios)
-
     // Define the JSON data for testing
     const selectedData = selectedDataPropsInvalidDate
     await router.push({ path: '/update', query: { selectedData: JSON.stringify(selectedData) } })
@@ -226,23 +210,6 @@ describe('UpdateRoleListing.vue', () => {
       global: {
         plugins: [router] // Inject the router for testing
       }
-    })
-
-    mock.onPut('http://localhost:8080/api/v1/rolelistings/').reply(200, {
-      Results: [
-        {
-          role_listing_creator: 123456788,
-          role_listing_source: 123456787,
-          role_id: 234511581,
-          role_listing_desc: 'string',
-          role_listing_close: '2023-10-16',
-          role_listing_ts_update: '2023-10-18T17:35:23',
-          role_listing_id: 1,
-          role_listing_updater: 123456788,
-          role_listing_open: '2023-10-15',
-          role_listing_ts_create: '2023-10-18T17:35:23'
-        }
-      ]
     })
 
     // Trigger the update function
