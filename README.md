@@ -48,6 +48,12 @@ In the `client` folder run the following command:
 npm run test:unit
 ```
 
+Retrieve test coverage report with the following command:
+
+```sh
+npm run coverage
+```
+
 ### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
 
 **1. Install Cypress**
