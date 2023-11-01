@@ -545,36 +545,33 @@ describe('RoleDetails', () => {
     expect(wrapper.html()).toContain('% match')
   })
 
-  it('Verifies how the system handles role skill matching when user have no skills', async () => {
+  it('Verifies how the system handles role skill matching when user have all skills required for role', async () => {
     //user with no skills
-    localStorage.setItem('id', 123456781)
+    localStorage.setItem('id', 123456789)
     const mock = new MockAdapter(axios)
-    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456781').reply(200, {
-      Results: [
-        {
-          f_name: 'AH GAO',
-          l_email: 'TAN',
-          email: 'tan_ah_gao@all-in-one.com.sg',
-          biz_address: '60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051',
-          sys_role: 'staff',
-          dept: 'FINANCE',
-          staff_id: 123456781,
-          phone: '65-1234-5678'
-        }
-      ]
+    mock.onGet('http://localhost:8080/api/v1/staffdetails/123456789').reply(200, {
+      Results: staffDetailsForStaff
     })
-    mock.onGet('http://localhost:8080/api/v1/staffskills/123456781').reply(200, {
-      Results: []
+    mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
+      Results: staffSkillsForStaff
     })
-    const roleDetails = roleDetailsProps
+    const roleDetails = {
+      role_name: 'Head, Talent Attraction',
+      role_listing_desc:
+        "The Head, Talent Attraction is responsible for strategic workforce planning to support the organisation's growth strategies through establishing talent sourcing strategies, determining the philosophy for the selection and securing of candidates and overseeing the onboarding and integration of new hires into the organisation. He/She develops various approaches to meet workforce requirements and designs employer branding strategies. He oversees the selection processes and collaborates with business stakeholders for the hiring of key leadership roles. As a department head, he is responsible for setting the direction and articulating goals and objectives for the team, and driving the integration of Skills Frameworks across the organisation's talent attraction plans.The Head, Talent Attraction is an influential and inspiring leader who adopts a broad perspective in the decisions he makes. He is articulate and displays a genuine passion for motivating and developing his team.",
+      role_listing_open: '10/11/2023',
+      role_listing_close: '24/11/2024',
+      role_skills: ['Certified Scrum Developer', 'Python Programming'],
+      role_listing_creator: ['Vincent Rex', 'colins_vincent_rex@all-in-one.com.sg'],
+      role_listing_updater: ['Updater Rex', 'colins_vincent_rex@all-in-one.com.sg']
+    }
 
     const wrapper = mount(RoleDetails, {
       props: {
         roleDetails: roleDetails
       }
     })
-    wrapper.vm.staffSkills = ['Python Programming']
     await new Promise((resolve) => setTimeout(resolve, 1))
-    expect(wrapper.find('#CalculateRoleMatch').text()).toBe('0 % match')
+    expect(wrapper.find('#CalculateRoleMatch').text()).toBe('100 % match')
   })
 })
