@@ -65,7 +65,7 @@ describe('CalculateRoleMatch', () => {
     expect(wrapper.find('.text-danger').exists()).toBe(false)
   })
 
-  it('Check standard items in calculate role amtch', async () => {
+  it('Check standard items in calculate role match', async () => {
     localStorage.setItem('id', 123456789)
     const mock = new MockAdapter(axios)
     mock.onGet('http://localhost:8080/api/v1/staffskills/123456789').reply(200, {
