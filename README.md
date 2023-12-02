@@ -1,4 +1,4 @@
-# Project Skill-based Role Portal (SBRP)
+# Skill-based Role Portal (SBRP)
 Link to GitHub Repo [here](https://github.com/SPM-LMS-T6/project-SBRPg8t6).
 
 The All-In-One Staff Skill-based Role Portal is designed to streamline the application process for roles based on individual skill sets. Staff can apply for desired roles and view matches according to skills acquired and logged in the Learning Journey Planning System. HR and recruitment managers can assess applicants by examining the skills they've developed through courses, as documented by the Learning & Development team. Furthermore, the HR team has the capability to list all open positions. We are gearing up for the portal's inaugural release, which will showcase five key features: <br>
